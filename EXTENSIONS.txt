@@ -1,0 +1,2 @@
+1. Prettier - Code formatter | spaces: 2
+2. Live - Go Live
