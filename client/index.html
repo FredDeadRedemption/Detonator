@@ -11,12 +11,27 @@
     <div>
       <canvas class="canvas"></canvas>
     </div>
+    <!--Server Message Form-->
+    <form id="form">
+      <label for="message">Message to server</label><br />
+      <input type="text" id="input" name="sometext" />
+    </form>
     <script src="./js/script.js"></script>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script>
       //init connection
       var socket = io();
+
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
     </script>
-    <button onclick="yeehaw()">yeehaw</button>
   </body>
 </html>

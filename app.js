@@ -17,20 +17,25 @@ app.get("/", (req, res) => {
 });
 app.use("/client", express.static(__dirname + "/client"));
 
-//user connect
-io.on("connection", (socket) => {
-  console.log("user connected: " + socket.id);
-
-  //user disconnect
-  socket.on("disconnect", () => {
-    console.log("user disconnected: " + socket.id);
-  });
-});
-
 server.listen(port, (error) => {
   if (error) {
     console.error("error: ", error);
   } else {
     console.log("server running on port: " + port);
   }
+});
+
+//user connect
+io.on("connection", (socket) => {
+  console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
+
+  //message from form
+  socket.on("chat message", (msg) => {
+    console.log("message: " + msg);
+  });
+
+  //user disconnect
+  socket.on("disconnect", () => {
+    console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
+  });
 });
