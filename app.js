@@ -15,7 +15,7 @@ const io = new Server(server);
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
 });
-app.use("/client", express.static(__dirname + "/client"));
+app.use(express.static(__dirname + "/client"));
 
 server.listen(port, (error) => {
   if (error) {
@@ -29,7 +29,7 @@ server.listen(port, (error) => {
 io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
 
-  //message from form
+  //recieve message from user
   socket.on("chat message", (msg) => {
     console.log("message: " + msg);
   });

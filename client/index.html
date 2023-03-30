@@ -5,17 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smash Brorz</title>
-    <link href="style.css" rel="stylesheet" />
+    <link href="./style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
     <div>
-      <canvas class="canvas"></canvas>
+      <!--Server Message Form-->
+      <form id="form">
+        <label for="message" style="color: green">Message to server:</label><br />
+        <input type="text" id="input" name="sometext" />
+      </form>
+      <div>
+        <canvas class="canvas"></canvas>
+      </div>
     </div>
-    <!--Server Message Form-->
-    <form id="form">
-      <label for="message">Message to server</label><br />
-      <input type="text" id="input" name="sometext" />
-    </form>
     <script src="./js/script.js"></script>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script>
