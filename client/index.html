@@ -8,6 +8,7 @@
     <link href="./style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
+    <p class="text" style="color: white"></p>
     <div>
       <!--Server Message Form-->
       <form id="form">
@@ -18,6 +19,7 @@
         <canvas class="canvas"></canvas>
       </div>
     </div>
+    
     <script src="./js/script.js"></script>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script>
@@ -34,6 +36,13 @@
           input.value = "";
         }
       });
+
+      socket.on("chat message", (msg) => {
+        //document.querySelector(".text").textContent = msg;
+        console.log(msg);
+      });
+
+      
     </script>
   </body>
 </html>

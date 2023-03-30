@@ -32,6 +32,7 @@ io.on("connection", (socket) => {
   //recieve message from user
   socket.on("chat message", (msg) => {
     console.log("message: " + msg);
+    io.emit("chat message", msg);
   });
 
   //user disconnect
