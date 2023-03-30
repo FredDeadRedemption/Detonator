@@ -34,6 +34,10 @@
           input.value = "";
         }
       });
+
+      socket.on("chat message", (msg) => {
+        console.log(msg);
+      });
     </script>
   </body>
 </html>

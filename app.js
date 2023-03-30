@@ -29,9 +29,10 @@ server.listen(port, (error) => {
 io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
 
-  //recieve message from user
+  //recieve message from form
   socket.on("chat message", (msg) => {
     console.log("message: " + msg);
+    io.emit("chat message", msg);
   });
 
   //user disconnect
