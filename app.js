@@ -17,8 +17,14 @@ app.get("/", (req, res) => {
 });
 app.use("/client", express.static(__dirname + "/client"));
 
+//user connect
 io.on("connection", (socket) => {
   console.log("user connected: " + socket.id);
+
+  //user disconnect
+  socket.on("disconnect", () => {
+    console.log("user disconnected: " + socket.id);
+  });
 });
 
 server.listen(port, (error) => {
