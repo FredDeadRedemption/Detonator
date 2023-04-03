@@ -35,6 +35,13 @@ io.on("connection", (socket) => {
     io.emit("chat message", msg);
   });
 
+  //dev log
+  /*
+  socket.onAny((event, args) => {
+    console.log(event, args);
+  });
+  */
+
   //user disconnect
   socket.on("disconnect", () => {
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
