@@ -29,14 +29,53 @@ server.listen(port, (error) => {
 io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
 
-  //recieve message from form
+  //recieve & emit message
   socket.on("chat message", (msg) => {
     console.log("message: " + msg);
     io.emit("chat message", msg);
   });
 
+  //dev log
+  /*
+  socket.onAny((event, args) => {
+    console.log(event, args);
+  });
+  */
+
   //user disconnect
   socket.on("disconnect", () => {
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
+  });
+
+  //user keydown
+  socket.on("keydown", (event) => {
+    switch (event) {
+      case "a":
+        console.log("key: a");
+        break;
+      case "d":
+        console.log("key: d");
+        break;
+      case " ":
+        console.log("key: space");
+        break;
+    }
+  });
+
+  //user keyup
+  socket.on("keyup", (event) => {
+    switch (event.key) {
+      case "a":
+        //
+        break;
+      case "d":
+        //
+        break;
+    }
+  });
+
+  //user click
+  socket.on("click", (click) => {
+    console.log(click.x, click.y);
   });
 });

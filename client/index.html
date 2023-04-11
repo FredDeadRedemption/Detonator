@@ -19,16 +19,18 @@
         <canvas class="canvas"></canvas>
       </div>
     </div>
-    
-    <script src="./js/script.js"></script>
+
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-    <script>
+    <script type="module" src="./js/script.js"></script>
+    <script type="module">
       //init connection
       var socket = io();
 
       var form = document.getElementById("form");
       var input = document.getElementById("input");
 
+      //test
+      //sender besked til server
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         if (input.value) {
@@ -37,12 +39,11 @@
         }
       });
 
+      //modtager besked fra server
       socket.on("chat message", (msg) => {
         document.querySelector(".text").textContent = msg;
         console.log(msg);
       });
-
-      
     </script>
   </body>
 </html>
