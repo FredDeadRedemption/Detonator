@@ -2,8 +2,17 @@ body {
   background-color: #282828;
 }
 
+
+.main {
+  width: 1024px;
+  height: 576px;
+  
+  display: flex;
+      justify-content: center;
+
+  
+}
 .canvas {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  
+ 
 }
