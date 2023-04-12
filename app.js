@@ -23,14 +23,24 @@ server.listen(port, (error) => {
   }
 });
 
+var USER_LIST = [];
+
+const { usernameIsInvalid } = require("./server/components/username");
+
 //user connect
 io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
 
   //recieve & emit message
-  socket.on("chat message", (msg) => {
-    console.log("message: " + msg);
-    io.emit("chat message", msg);
+  socket.on("usernameSelect", (userName) => {
+    if (usernameIsInvalid(userName, USER_LIST)) {
+      USER_LIST.push(userName);
+      socket.userName = userName;
+    }
+
+    console.table(USER_LIST);
+    console.log("username: " + userName);
+    io.emit("usernameSelect", userName);
   });
 
   //dev log
@@ -42,6 +52,7 @@ io.on("connection", (socket) => {
 
   //user disconnect
   socket.on("disconnect", () => {
+    USER_LIST.splice(socket.userName);
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 

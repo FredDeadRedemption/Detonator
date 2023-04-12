@@ -9,6 +9,7 @@ canvas.middle = canvas.width / 2; //y axis middle
 
 //client socket
 var socket = io();
+export default socket;
 
 // animate background
 ctx.fillRect(0, 0, canvas.width, canvas.width);

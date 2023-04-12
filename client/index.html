@@ -24,6 +24,7 @@
     <script type="module" src="./js/script.js"></script>
     <script type="module">
       //init connection
+      import socket from "./js/script.js";
 
       var form = document.getElementById("form");
       var input = document.getElementById("input");
@@ -33,13 +34,13 @@
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         if (input.value) {
-          socket.emit("chat message", input.value);
+          socket.emit("usernameSelect", input.value);
           input.value = "";
         }
       });
 
       //modtager besked fra server
-      socket.on("chat message", (msg) => {
+      socket.on("usernameSelect", (msg) => {
         document.querySelector(".text").textContent = msg;
         console.log(msg);
       });
