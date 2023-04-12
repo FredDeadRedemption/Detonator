@@ -54,3 +54,5 @@ canvas.addEventListener("click", (event) => {
   };
   socket.emit("click", click);
 });
+
+function animate() {}
