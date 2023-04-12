@@ -2,17 +2,13 @@ body {
   background-color: #282828;
 }
 
-
 .main {
   width: 1024px;
   height: 576px;
-  
-  display: flex;
-      justify-content: center;
 
-  
+  display: flex;
+  justify-content: center;
 }
 .canvas {
-  
- 
+  position: absolute;
 }
