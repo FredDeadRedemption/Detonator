@@ -8,9 +8,7 @@ const server = http.createServer(app);
 
 const port = 420;
 
-const { Server } = require("socket.io");
-
-const io = new Server(server);
+const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/index.html");
