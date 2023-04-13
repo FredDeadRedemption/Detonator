@@ -15,7 +15,7 @@ export default socket;
 ctx.fillRect(0, 0, canvas.width, canvas.width);
 
 //test square
-ctx.fillStyle = "red";
+ctx.fillStyle = "blue";
 ctx.fillRect(50, 50, 50, 50);
 
 window.addEventListener("keydown", (event) => {
