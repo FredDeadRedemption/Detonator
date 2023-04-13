@@ -40,7 +40,16 @@ button {
 }
 .Login {
     font-family: 'Times New Roman', Times, serif;
-    
-
+    font-weight: bold;
+    color: white;
+    width: 200px;
+    font-size: 18px;
+    padding: 0;
+    margin: 25px;
+}
+#Submit {
+    margin-top: 15px;
+    size: 20px;
+    margin-left: 128.375px;
 }
 
