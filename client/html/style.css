@@ -1,0 +1,46 @@
+
+h1 {
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 50px;
+    position: absolute;
+    top: 0;
+    padding: 0px;
+    margin: 50px;
+}
+.btn-group button {
+    padding: 0;
+    margin: 25px;
+    width: 200px;
+    display: table;
+    border-radius: 10px;
+  }
+body {
+    background-image: url(ssb.gif);
+    background-size: cover;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    background: transparent;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+#back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    border-radius: 10px;
+}
+.Login {
+    font-family: 'Times New Roman', Times, serif;
+    
+
+}
+
