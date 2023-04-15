@@ -54,6 +54,11 @@ button {
     width: 100px;
     border-radius: 10px;
 }
+.form-name {
+    color: red;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
 form .form-group{
     position: relative;
     border-bottom: 2px solid #adadad;
