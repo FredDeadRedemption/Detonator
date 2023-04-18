@@ -24,8 +24,22 @@ server.listen(port, (error) => {
 });
 
 var USER_LIST = [];
+var player = undefined;
 
 const { usernameIsInvalid } = require("./server/components/username");
+const { default: socket } = require("./client/js/script");
+
+const keys = {
+  a: {
+    pressed: false,
+  },
+  d: {
+    pressed: false,
+  },
+  space: {
+    pressed: false,
+  },
+};
 
 //user connect
 io.on("connection", (socket) => {
@@ -60,13 +74,17 @@ io.on("connection", (socket) => {
   socket.on("keydown", (event) => {
     switch (event) {
       case "a":
+        keys.a.pressed = true;
         console.log("key: a");
         break;
       case "d":
+        keys.d.pressed = true;
         console.log("key: d");
         break;
       case " ":
-        console.log("key: space");
+        if (player.position.y > 450) {
+          player.velocity.y = -15;
+        }
         break;
     }
   });
@@ -75,10 +93,10 @@ io.on("connection", (socket) => {
   socket.on("keyup", (event) => {
     switch (event.key) {
       case "a":
-        //
+        keys.a.pressed = false;
         break;
       case "d":
-        //
+        keys.d.pressed = false;
         break;
     }
   });
@@ -88,3 +106,7 @@ io.on("connection", (socket) => {
     console.log(click.x, click.y);
   });
 });
+
+setInterval(() => {
+  io.emit("playerState", player);
+}, 1000 / 25); //25 fps
