@@ -71,7 +71,3 @@ function animate() {
 }
 
 animate();
-<<<<<<< Updated upstream
-=======
-*/
->>>>>>> Stashed changes

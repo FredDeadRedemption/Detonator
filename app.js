@@ -23,17 +23,6 @@ server.listen(port, (error) => {
   }
 });
 
-<<<<<<< Updated upstream
-var USER_LIST = [];
-var player = undefined;
-
-const { usernameIsInvalid } = require("./server/components/username");
-const { default: socket } = require("./client/js/script");
-=======
-// const { Sprite } = require("./server/sprite.js");
-const { usernameIsInvalid } = require("./server/components/username.js");
->>>>>>> Stashed changes
-
 const keys = {
   a: {
     pressed: false,
