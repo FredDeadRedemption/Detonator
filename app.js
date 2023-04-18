@@ -23,11 +23,12 @@ server.listen(port, (error) => {
   }
 });
 
+const Sprite = require("./server/sprite.js");
+
 var USER_LIST = [];
 var player = undefined;
 
 const { usernameIsInvalid } = require("./server/components/username");
-const { default: socket } = require("./client/js/script");
 
 const keys = {
   a: {
@@ -50,6 +51,16 @@ io.on("connection", (socket) => {
     if (usernameIsInvalid(userName, USER_LIST)) {
       USER_LIST.push(userName);
       socket.userName = userName;
+      socket.sprite = new Sprite({
+        position: {
+          x: 250,
+          y: 180,
+        },
+        velocity: {
+          x: 0,
+          y: 5,
+        },
+      });
     }
 
     console.table(USER_LIST);

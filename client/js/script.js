@@ -9,6 +9,7 @@ canvas.middle = canvas.width / 2; //y axis middle
 
 //client socket
 var socket = io();
+export default socket;
 
 // animate background
 ctx.fillRect(0, 0, canvas.width, canvas.width);
@@ -60,11 +61,13 @@ socket.on("playerState", (playerState) => {
   player = playerState;
 });
 
+/*
 function animate() {
   window.requestAnimationFrame(animate);
-  c.fillStyle = "black";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
 }
+*/
 
-animate();
+//animate();
