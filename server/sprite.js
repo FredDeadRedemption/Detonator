@@ -31,3 +31,5 @@ class Sprite {
     } else this.velocity.y += gravity;
   }
 }
+
+exports.Sprite = Sprite;

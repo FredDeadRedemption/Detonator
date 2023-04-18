@@ -9,12 +9,13 @@ canvas.middle = canvas.width / 2; //y axis middle
 
 //client socket
 var socket = io();
+export default socket;
 
 // animate background
 ctx.fillRect(0, 0, canvas.width, canvas.width);
 
 //test square
-ctx.fillStyle = "red";
+ctx.fillStyle = "blue";
 ctx.fillRect(50, 50, 50, 50);
 
 window.addEventListener("keydown", (event) => {
@@ -62,12 +63,14 @@ socket.on("playerState", (playerState) => {
   console.log("yeehaw");
 });
 
+/*
 function animate() {
   console.log(player);
   window.requestAnimationFrame(animate);
-  c.fillStyle = "black";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
 }
+*/
 
-animate();
+//animate();

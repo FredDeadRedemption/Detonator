@@ -51,6 +51,16 @@ io.on("connection", (socket) => {
     if (usernameIsInvalid(userName, SOCKET_LIST)) {
       SOCKET_LIST.push(userName);
       socket.userName = userName;
+      socket.sprite = new Sprite({
+        position: {
+          x: 250,
+          y: 180,
+        },
+        velocity: {
+          x: 0,
+          y: 5,
+        },
+      });
     }
 
     console.table(SOCKET_LIST);
