@@ -1,5 +1,5 @@
-const spriteHeight = 300;
-const spriteWidth = 150;
+const spriteHeight = 48;
+const spriteWidth = 48;
 const gameHealth = 1000;
 const gravity = 15;
 
@@ -10,8 +10,7 @@ class Sprite {
     this.team = team;
     this.width = spriteWidth;
     this.height = spriteHeight;
-    this.image = new Image();
-    this.image.src = imageSrc;
+    this.imageSrc = imageSrc;
     this.lastKey;
     this.isAttacking;
     this.health = gameHealth;

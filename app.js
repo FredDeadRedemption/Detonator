@@ -23,11 +23,16 @@ server.listen(port, (error) => {
   }
 });
 
+<<<<<<< Updated upstream
 var USER_LIST = [];
 var player = undefined;
 
 const { usernameIsInvalid } = require("./server/components/username");
 const { default: socket } = require("./client/js/script");
+=======
+// const { Sprite } = require("./server/sprite.js");
+const { usernameIsInvalid } = require("./server/components/username.js");
+>>>>>>> Stashed changes
 
 const keys = {
   a: {
@@ -41,21 +46,29 @@ const keys = {
   },
 };
 
+var SOCKET_LIST = [];
+
 //user connect
 io.on("connection", (socket) => {
+  socket.id = Math.random();
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
+  socket.x = 150;
+  socket.y = 150;
+  SOCKET_LIST[socket.id] = socket;
 
+  /*
   //recieve & emit message
   socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, USER_LIST)) {
-      USER_LIST.push(userName);
+    if (usernameIsInvalid(userName, SOCKET_LIST)) {
+      SOCKET_LIST.push(userName);
       socket.userName = userName;
     }
 
-    console.table(USER_LIST);
+    console.table(SOCKET_LIST);
     console.log("username: " + userName);
     io.emit("usernameSelect", userName);
   });
+  */
 
   //dev log
   /*
@@ -66,7 +79,7 @@ io.on("connection", (socket) => {
 
   //user disconnect
   socket.on("disconnect", () => {
-    USER_LIST.splice(socket.userName);
+    SOCKET_LIST.splice(socket.userName);
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
@@ -82,9 +95,11 @@ io.on("connection", (socket) => {
         console.log("key: d");
         break;
       case " ":
-        if (player.position.y > 450) {
-          player.velocity.y = -15;
+        /*
+        if (socket.position.y > 450) {
+          socket.velocity.y = -15;
         }
+        */
         break;
     }
   });
@@ -108,5 +123,11 @@ io.on("connection", (socket) => {
 });
 
 setInterval(() => {
-  io.emit("playerState", player);
+  for (let i = 0; i < SOCKET_LIST.length; i++) {
+    var socket = SOCKET_LIST[i];
+    socket.emit("playerState", {
+      x: socket.x,
+      y: socket.y,
+    });
+  }
 }, 1000 / 25); //25 fps
