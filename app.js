@@ -82,8 +82,9 @@ io.on("connection", (socket) => {
   //user disconnect
   socket.on("disconnect", () => {
     //console.log(SOCKET_LIST);
-    SOCKET_LIST.splice(socket.userName);
+    //SOCKET_LIST.splice(socket.userName);
     //console.log(SOCKET_LIST);
+    SOCKET_LIST.splice(socket.id);
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
@@ -97,6 +98,7 @@ io.on("connection", (socket) => {
         console.log("key: d");
         break;
       case " ":
+        console.log("key: space");
         /*
         if (socket.position.y > 450) {
           socket.velocity.y = -15;
@@ -124,16 +126,19 @@ io.on("connection", (socket) => {
 
 //emit playerstate
 setInterval(() => {
-  var playerDataPack = [];
+  var playerDataPacks = [];
   for (let i in SOCKET_LIST) {
     var socket = SOCKET_LIST[i];
-    playerDataPack.push({
+    socket.x++;
+    socket.y++;
+    playerDataPacks.push({
       x: socket.x,
       y: socket.y,
     });
   }
 
   for (let i in SOCKET_LIST) {
-    socket.emit("playerState", playerDataPack[i]);
+    let socket = SOCKET_LIST[i];
+    socket.emit("playerState", playerDataPacks);
   }
 }, 1000 / 25); //25 fps
