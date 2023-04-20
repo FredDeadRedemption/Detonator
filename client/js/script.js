@@ -55,22 +55,15 @@ canvas.addEventListener("click", (event) => {
   socket.emit("click", click);
 });
 
-socket.on("playerState", (playerState) => {
-  ctx.fillStyle = "black";
-  //ctx.fillRect(0, 0, canvas.width, canvas.height);
+socket.on("playerState", (playerData) => {
   ctx.fillStyle = "red";
-  ctx.fillRect(playerState.x, playerState.y, 50, 50);
+
+  ctx.fillRect(playerData.x, playerData.y, 50, 50);
+
   console.log("yeehaw");
 });
 
-/*
-function animate() {
-  console.log(player);
-  window.requestAnimationFrame(animate);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  player.update();
+function animate(data) {
+  ctx.fillStyle = "red";
+  ctx.fillRect(data.x, data.y, 50, 50);
 }
-*/
-
-//animate();
