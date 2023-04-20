@@ -11,12 +11,8 @@ canvas.middle = canvas.width / 2; //y axis middle
 var socket = io();
 export default socket;
 
-// animate background
+//initial background animation
 ctx.fillRect(0, 0, canvas.width, canvas.width);
-
-//test square
-ctx.fillStyle = "blue";
-ctx.fillRect(50, 50, 50, 50);
 
 window.addEventListener("keydown", (event) => {
   //client keydown
@@ -56,7 +52,8 @@ canvas.addEventListener("click", (event) => {
 });
 
 socket.on("playerState", (playerData) => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.width);
   ctx.fillStyle = "red";
 
   for (let i = 0; i < playerData.length; i++) {

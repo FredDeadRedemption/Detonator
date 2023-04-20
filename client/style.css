@@ -20,11 +20,10 @@ body {
 .canvasContainer {
   position: absolute;
   display: inline-block;
-  width: 87.2%;
-  height: 100%;
+  width: 1024px;
+  height: 576px;
   right: 0;
 }
 .canvas {
   position: absolute;
-  display: inline-block;
 }
