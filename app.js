@@ -11,7 +11,7 @@ const port = 420;
 const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/client/StartPage.html");
+  res.sendFile(__dirname + "/client/index.html");
 });
 app.use(express.static(__dirname + "/client"));
 
@@ -24,9 +24,6 @@ server.listen(port, (error) => {
 });
 
 var SOCKET_LIST = [];
-
-
-const { usernameIsInvalid } = require("./server/components/username");
 
 //user connect
 io.on("connection", (socket) => {
@@ -51,27 +48,14 @@ io.on("connection", (socket) => {
           x: 0,
           y: 5,
         },
-      });*/
-  //join lobby
-  socket.on("join-lobby", (userId) => {
-    socket.broadcast.emit("user-connected", userId);
-  });
-
-  //recieve & emit message
-  socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, SOCKET_LIST) && SOCKET_LIST.length < 5) {
-      SOCKET_LIST[socket.id].usernames = userName;
-      //socket.userName = userName;
-
-      console.log(SOCKET_LIST.usernames);
-      io.emit("user-count", SOCKET_LIST.length);
-      console.log("user count" + SOCKET_LIST.length);
+      });
     }
-    
+
+    console.table(SOCKET_LIST);
     console.log("username: " + userName);
-    io.emit("usernameSelect", SOCKET_LIST[socket.id].usernames);
+    io.emit("usernameSelect", userName);
   });
- 
+  */
 
   //dev log
   /*
@@ -82,7 +66,6 @@ io.on("connection", (socket) => {
 
   //user disconnect
   socket.on("disconnect", () => {
-
     delete SOCKET_LIST[socket.id];
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
