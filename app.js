@@ -11,7 +11,7 @@ const port = 420;
 const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/client/index.html");
+  res.sendFile(__dirname + "/client/lobby.html");
 });
 app.use(express.static(__dirname + "/client"));
 
@@ -37,6 +37,8 @@ const keys = {
 
 var SOCKET_LIST = [];
 
+const { usernameIsInvalid } = require("./server/components/username");
+
 //user connect
 io.on("connection", (socket) => {
   socket.id = Math.random();
@@ -60,14 +62,29 @@ io.on("connection", (socket) => {
           x: 0,
           y: 5,
         },
-      });
+      });*/
+  //join lobby
+  socket.on("join-lobby", (userId) => {
+    socket.broadcast.emit("user-connected", userId);
+    
+  });
+
+  //recieve & emit message
+  socket.on("usernameSelect", (userName) => {
+    if (usernameIsInvalid(userName, USER_LIST) && USER_LIST.length < 5) {
+      USER_LIST.push(userName);
+      socket.userName = userName;
+
+      io.emit("user-count", USER_LIST.length);
+      console.log("user count" + USER_LIST.length);
     }
+    
 
     console.table(SOCKET_LIST);
     console.log("username: " + userName);
-    io.emit("usernameSelect", userName);
+    io.emit("usernameSelect", USER_LIST);
   });
-  */
+ 
 
   //dev log
   /*
