@@ -80,6 +80,7 @@ io.on("connection", (socket) => {
         console.log("key: d");
         break;
       case " ":
+        console.log("key: space");
         /*
         if (socket.position.y > 450) {
           socket.velocity.y = -15;
