@@ -3,12 +3,28 @@ body {
 }
 
 .main {
-  width: 1024px;
+  position: absolute;
+  width: 1174px;
   height: 576px;
+}
 
-  display: flex;
-  justify-content: center;
+.lobbyContainer {
+  position: absolute;
+  display: inline-block;
+  width: 12.8%;
+  height: 100%;
+  left: 0;
+  background-color: paleturquoise;
+}
+
+.canvasContainer {
+  position: absolute;
+  display: inline-block;
+  width: 87.2%;
+  height: 100%;
+  right: 0;
 }
 .canvas {
   position: absolute;
+  display: inline-block;
 }
