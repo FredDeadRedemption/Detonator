@@ -62,6 +62,7 @@ io.on("connection", (socket) => {
       SOCKET_LIST.push(userName);
       socket.userName = userName;
 
+      console.log(SOCKET_LIST);
       io.emit("user-count", SOCKET_LIST.length);
       console.log("user count" + SOCKET_LIST.length);
     }
@@ -80,7 +81,9 @@ io.on("connection", (socket) => {
 
   //user disconnect
   socket.on("disconnect", () => {
+    //console.log(SOCKET_LIST);
     SOCKET_LIST.splice(socket.userName);
+    //console.log(SOCKET_LIST);
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 

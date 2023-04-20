@@ -38,7 +38,7 @@
       import socket from "./js/script.js";
 
       var main = document.getElementById("main");
-      main.style.display = "none";
+      //main.style.display = "none";
 
       var form = document.getElementById("form");
       var input = document.getElementById("input");
@@ -54,10 +54,10 @@
       });
 
       //modtager besked fra server
-      socket.on("usernameSelect", (USER_LIST) => {
-        document.querySelector(".usernames").textContent = USER_LIST;
+      socket.on("usernameSelect", (SOCKET_LIST) => {
+        document.querySelector(".usernames").textContent = SOCKET_LIST;
         //input.remove();
-        console.log(USER_LIST);
+        console.log(USSOCKET_LISTER_LIST);
       });
     </script>
 
