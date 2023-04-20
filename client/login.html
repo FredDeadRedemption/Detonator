@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Pagestyle.css">
+    <title>SSB</title>
+</head>
+<body>
+    <p class="userCount"></p>
+    <p class="usernames" style="color: white"></p>
+    <div class="Center">
+        <section class="Title">
+            <h1>SSB</h1>
+            <h3 class="form-name">Login</h3>
+        </section>
+        <form id="form" action="" method="post">
+        <div class="form-group">
+            <input type="text" id="input" class="form-control" id="username" name="username" required>
+            <span></span>
+            <label for="username">Username</label>
+        </div>
+        <input id="Submit" type="submit" value="Login">
+    </div>
+    <div class="main" id="main">
+        <canvas class="canvas"></canvas>
+    </div>
+</form>
+    <a href="createLogin.html">
+        <button type="button" id="back"> Back</button>
+    </a>
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    <script type="module" src="./js/script.js"></script>
+    <script type="module">
+      //init connection
+      import socket from "./js/script.js";
+
+      var main = document.getElementById("main");
+      main.style.display = "none";
+
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+
+      //test
+      //sender besked til server
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("usernameSelect", input.value);
+          input.value = "";
+        }
+      });
+
+      //modtager besked fra server
+      socket.on("usernameSelect", (SOCKET_LIST) => {
+        document.querySelector(".usernames").textContent = SOCKET_LIST;
+        //input.remove();
+        console.log(SOCKET_LIST);
+      });
+    </script>
+
+    <script type="module" src="./js/lobby.js">//Lobby script</script>
+</body>
+</html>
