@@ -11,7 +11,7 @@ const port = 420;
 const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/client/lobby.html");
+  res.sendFile(__dirname + "/client/StartPage.html");
 });
 app.use(express.static(__dirname + "/client"));
 
@@ -66,23 +66,20 @@ io.on("connection", (socket) => {
   //join lobby
   socket.on("join-lobby", (userId) => {
     socket.broadcast.emit("user-connected", userId);
-    
   });
 
   //recieve & emit message
   socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, USER_LIST) && USER_LIST.length < 5) {
-      USER_LIST.push(userName);
+    if (usernameIsInvalid(userName, SOCKET_LIST) && SOCKET_LIST.length < 5) {
+      SOCKET_LIST.push(userName);
       socket.userName = userName;
 
-      io.emit("user-count", USER_LIST.length);
-      console.log("user count" + USER_LIST.length);
+      io.emit("user-count", SOCKET_LIST.length);
+      console.log("user count" + SOCKET_LIST.length);
     }
     
-
-    console.table(SOCKET_LIST);
     console.log("username: " + userName);
-    io.emit("usernameSelect", USER_LIST);
+    io.emit("usernameSelect", SOCKET_LIST);
   });
  
 
@@ -141,9 +138,9 @@ io.on("connection", (socket) => {
 setInterval(() => {
   for (let i = 0; i < SOCKET_LIST.length; i++) {
     var socket = SOCKET_LIST[i];
-    socket.emit("playerState", {
+    /*socket.emit("playerState", {
       x: socket.x,
       y: socket.y,
-    });
+    });*/
   }
 }, 1000 / 25); //25 fps

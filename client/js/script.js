@@ -1,4 +1,9 @@
 "use strict";
+
+//client socket
+var socket = io();
+export default socket;
+
 //ctx
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -6,10 +11,6 @@ const ctx = canvas.getContext("2d");
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
-
-//client socket
-var socket = io();
-export default socket;
 
 // animate background
 ctx.fillRect(0, 0, canvas.width, canvas.width);
