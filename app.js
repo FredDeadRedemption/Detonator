@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 
   //user disconnect
   socket.on("disconnect", () => {
-    SOCKET_LIST.splice(socket.id);
+    delete SOCKET_LIST[socket.id];
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
