@@ -56,14 +56,10 @@ canvas.addEventListener("click", (event) => {
 });
 
 socket.on("playerState", (playerData) => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "red";
 
-  ctx.fillRect(playerData.x, playerData.y, 50, 50);
-
-  console.log("yeehaw");
+  for (let i = 0; i < playerData.length; i++) {
+    ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
+  }
 });
-
-function animate(data) {
-  ctx.fillStyle = "red";
-  ctx.fillRect(data.x, data.y, 50, 50);
-}
