@@ -23,50 +23,39 @@ server.listen(port, (error) => {
   }
 });
 
+var Player = require("./server/components/sprite").Sprite;
+
+console.log(Player);
+
 var SOCKET_LIST = [];
+var PLAYER_LIST = [];
 
 //user connect
 io.on("connection", (socket) => {
   socket.id = Math.random();
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
-  socket.x = 150;
-  socket.y = 150;
   SOCKET_LIST[socket.id] = socket;
 
-  /*
-  //recieve & emit message
-  socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, SOCKET_LIST)) {
-      SOCKET_LIST.push(userName);
-      socket.userName = userName;
-      socket.sprite = new Sprite({
-        position: {
-          x: 250,
-          y: 180,
-        },
-        velocity: {
-          x: 0,
-          y: 5,
-        },
-      });
-    }
-
-    console.table(SOCKET_LIST);
-    console.log("username: " + userName);
-    io.emit("usernameSelect", userName);
+  var player = new Player({
+    id: socket.id,
+    position: {
+      x: 300,
+      y: 175,
+    },
+    velocity: {
+      x: 0,
+      y: 5,
+    },
+    color: "red",
   });
-  */
 
-  //dev log
-  /*
-  socket.onAny((event, args) => {
-    console.log(event, args);
-  });
-  */
+  PLAYER_LIST[socket.id] = player;
+  console.log(PLAYER_LIST[socket.id]);
 
   //user disconnect
   socket.on("disconnect", () => {
     delete SOCKET_LIST[socket.id];
+    delete PLAYER_LIST[socket.id];
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
@@ -109,13 +98,14 @@ io.on("connection", (socket) => {
 //emit playerstate
 setInterval(() => {
   var playerDataPacks = [];
-  for (let i in SOCKET_LIST) {
-    var socket = SOCKET_LIST[i];
-    socket.x++;
-    socket.y++;
+  for (let i in PLAYER_LIST) {
+    var player = PLAYER_LIST[i];
+    player.position.x++;
+    player.position.y++;
     playerDataPacks.push({
-      x: socket.x,
-      y: socket.y,
+      x: player.position.x,
+      y: player.position.y,
+      color: player.color,
     });
   }
 

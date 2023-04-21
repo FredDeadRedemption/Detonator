@@ -1,24 +1,32 @@
 const spriteHeight = 48;
 const spriteWidth = 48;
-const gameHealth = 1000;
+const gameHealth = 100;
 const gravity = 15;
 
 class Sprite {
-  constructor({ position, velocity, team, imageSrc }) {
+  constructor({ id, position, velocity, color }) {
+    this.id = id;
     this.position = position;
     this.velocity = velocity;
-    this.team = team;
+    this.color = color;
     this.width = spriteWidth;
     this.height = spriteHeight;
-    this.imageSrc = imageSrc;
+    this.imageSrc;
     this.lastKey;
     this.isAttacking;
     this.health = gameHealth;
   }
 
   draw() {
+    ctx.fillstyle = this.team;
+    ctx.fillrect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  /*
+  draw() {
     ctx.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
   }
+  */
 
   update() {
     this.draw();

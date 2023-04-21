@@ -51,12 +51,14 @@ canvas.addEventListener("click", (event) => {
   socket.emit("click", click);
 });
 
+//game tick
 socket.on("playerState", (playerData) => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.width);
   ctx.fillStyle = "red";
 
   for (let i = 0; i < playerData.length; i++) {
+    ctx.fillStyle = playerData[i].color;
     ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
   }
 });
