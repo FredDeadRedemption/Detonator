@@ -26,8 +26,8 @@ server.listen(port, (error) => {
 const Player = require("./server/components/sprite").Sprite;
 const randomColor = require("./server/components/rngcolor").randomColor;
 
-var SOCKET_LIST = [];
-var PLAYER_LIST = [];
+let SOCKET_LIST = [];
+let PLAYER_LIST = [];
 
 //settings
 let gravity = 0.6;
@@ -38,8 +38,10 @@ let jumpPower = 18;
 io.on("connection", (socket) => {
   socket.id = Math.random();
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
+  //save user
   SOCKET_LIST[socket.id] = socket;
 
+  //spawn player object
   let player = new Player({
     id: socket.id,
     position: {
@@ -53,6 +55,7 @@ io.on("connection", (socket) => {
     color: randomColor(),
   });
 
+  //save player objects
   PLAYER_LIST[socket.id] = player;
 
   console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
@@ -69,10 +72,10 @@ io.on("connection", (socket) => {
     let player = PLAYER_LIST[socket.id];
     switch (event) {
       case "a":
-        player.velocity.x = -movementSpeed;
+        player.pressingKey.a = true;
         break;
       case "d":
-        player.velocity.x = movementSpeed;
+        player.pressingKey.d = true;
         break;
       case " ":
         if (player.position.y > 520) {
@@ -85,13 +88,12 @@ io.on("connection", (socket) => {
   //user keyup
   socket.on("keyup", (event) => {
     let player = PLAYER_LIST[socket.id];
-    switch (event.key) {
+    switch (event) {
       case "a":
-        console.log("ye");
-        player.velocity.x = 0;
+        player.pressingKey.a = false;
         break;
       case "d":
-        player.velocity.x = 0;
+        player.pressingKey.d = false;
         break;
     }
   });
@@ -110,13 +112,21 @@ setInterval(() => {
     let player = PLAYER_LIST[i];
 
     //player physics
-
     player.position.x += player.velocity.x;
     player.position.y += player.velocity.y;
+    player.velocity.x = 0;
 
+    //player jumping
     if (player.position.y + player.height + player.velocity.y >= 576) {
       player.velocity.y = 0;
     } else player.velocity.y += gravity;
+
+    //player left/right movement
+    if (player.pressingKey.a) {
+      player.velocity.x = -movementSpeed;
+    } else if (player.pressingKey.d) {
+      player.velocity.x = movementSpeed;
+    }
 
     //player datapack
     playerDataPacks.push({

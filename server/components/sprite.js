@@ -15,6 +15,11 @@ class Sprite {
     this.lastKey;
     this.isAttacking;
     this.health = gameHealth;
+    this.pressingKey = {
+      a: false,
+      d: false,
+      space: false,
+    };
   }
 
   draw() {
