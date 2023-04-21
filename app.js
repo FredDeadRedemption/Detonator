@@ -24,6 +24,7 @@ server.listen(port, (error) => {
 });
 
 var SOCKET_LIST = [];
+var userNameList = [];
 
 
 const { usernameIsInvalid } = require("./server/components/username");
@@ -34,6 +35,7 @@ io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
   socket.x = 150;
   socket.y = 150;
+  socket.username = undefined;
   SOCKET_LIST[socket.id] = socket;
 
   /*
@@ -60,16 +62,19 @@ io.on("connection", (socket) => {
   //recieve & emit message
   socket.on("usernameSelect", (userName) => {
     if (usernameIsInvalid(userName, SOCKET_LIST) && SOCKET_LIST.length < 5) {
-      SOCKET_LIST[socket.id].usernames = userName;
+      userNameList.push(userName);
+      SOCKET_LIST[socket.id].username = userName;
       //socket.userName = userName;
 
-      console.log(SOCKET_LIST.usernames);
-      io.emit("user-count", SOCKET_LIST.length);
-      console.log("user count" + SOCKET_LIST.length);
+      console.log(userNameList);
+      console.log(SOCKET_LIST.username);
+      io.emit("user-count", userNameList.length);
+      console.log("user count" + userNameList.length);
     }
     
     console.log("username: " + userName);
-    io.emit("usernameSelect", SOCKET_LIST[socket.id].usernames);
+    
+    io.emit("usernameSelect", SOCKET_LIST.username);
   });
  
 

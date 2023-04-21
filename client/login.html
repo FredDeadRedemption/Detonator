@@ -54,10 +54,10 @@
       });
 
       //modtager besked fra server
-      socket.on("usernameSelect", (SOCKET_LIST) => {
-        document.querySelector(".usernames").textContent = SOCKET_LIST;
+      socket.on("usernameSelect", (name) => {
+        document.querySelector(".usernames").textContent = name;
         //input.remove();
-        console.log(SOCKET_LIST);
+        console.log(name);
       });
     </script>
 
