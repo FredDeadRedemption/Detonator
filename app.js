@@ -25,35 +25,23 @@ server.listen(port, (error) => {
 
 var SOCKET_LIST = [];
 var userNameList = [];
+let i = 0;
 
 
 const { usernameIsInvalid } = require("./server/components/username");
 
 //user connect
 io.on("connection", (socket) => {
+  i++;
   socket.id = Math.random();
+  
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
   socket.x = 150;
   socket.y = 150;
   socket.username = undefined;
   SOCKET_LIST[socket.id] = socket;
 
-  /*
-  //recieve & emit message
-  socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, SOCKET_LIST)) {
-      SOCKET_LIST.push(userName);
-      socket.userName = userName;
-      socket.sprite = new Sprite({
-        position: {
-          x: 250,
-          y: 180,
-        },
-        velocity: {
-          x: 0,
-          y: 5,
-        },
-      });*/
+  
   //join lobby
   socket.on("join-lobby", (userId) => {
     socket.broadcast.emit("user-connected", userId);
@@ -67,7 +55,9 @@ io.on("connection", (socket) => {
       //socket.userName = userName;
 
       console.log(userNameList);
-      console.log(SOCKET_LIST.username);
+      for(let i in socket.id) {
+        console.log(SOCKET_LIST[i].username);
+      }
       io.emit("user-count", userNameList.length);
       console.log("user count" + userNameList.length);
     }
@@ -90,7 +80,10 @@ io.on("connection", (socket) => {
     //console.log(SOCKET_LIST);
     //SOCKET_LIST.splice(socket.userName);
     //console.log(SOCKET_LIST);
-    SOCKET_LIST.splice(socket.id);
+    i--;
+    console.log("Username was deleted" + SOCKET_LIST[socket.id]);
+    delete SOCKET_LIST[socket.id];
+    console.log("Username was deleted" + SOCKET_LIST[socket.id]);
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
