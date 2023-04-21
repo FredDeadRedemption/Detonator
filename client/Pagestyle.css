@@ -1,19 +1,26 @@
-
 h1 {
     color: white;
     font-family: 'Times New Roman', Times, serif;
     font-size: 50px;
     top: 0;
+    left: 600px;
     position: absolute;
 }
+
+h3 {
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    left: 50%;
+}
+
 .btn-group button {
     position: relative;
     top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
     width: 200px;
     display: table;
-  }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -26,15 +33,19 @@ body {
     display: flex;
     overflow: hidden;
 }
-.center{
+
+.center {
     position: absolute;
+    width: 1174px;
+    height: 576px;
     top: 50%;
-    left: 50%;
+    left: 500px;
     transform: translate(-50%, -50%);
     width: 400px;
     border-radius: 10px;
-    box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
 }
+
 button {
     font-family: 'Times New Roman', Times, serif;
     font-size: 18px;
@@ -46,6 +57,7 @@ button {
     margin: 25px;
     border-radius: 10px;
 }
+
 #back {
     position: absolute;
     left: 0;
@@ -53,6 +65,7 @@ button {
     width: 100px;
     border-radius: 10px;
 }
+
 .form-name {
     color: white;
     font-family: 'Times New Roman', Times, serif;
@@ -60,13 +73,16 @@ button {
     padding-bottom: 25px;
     text-align: center;
 }
-form .form-group{
+
+form .form-group {
     background-color: red;
     position: relative;
     border-bottom: 2px solid #adadad;
     border-radius: 10px;
+    left: 50%;
     margin: 30px 0;
 }
+
 .form-group {
     position: relative;
     border-bottom: 2px solid #adadad;
@@ -78,10 +94,10 @@ form .form-group{
     padding: 0;
     margin: 25px 0;
     top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
 }
-.form-group input{
+
+.form-group input {
     width: 100%;
     padding: 0 5px;
     height: 40px;
@@ -90,7 +106,8 @@ form .form-group{
     background: none;
     outline: none;
 }
-.form-group label{
+
+.form-group label {
     position: absolute;
     top: 50%;
     left: 5px;
@@ -100,7 +117,8 @@ form .form-group{
     pointer-events: none;
     transition: .5s;
 }
-.form-group span::before{
+
+.form-group span::before {
     content: '';
     position: absolute;
     top: 40px;
@@ -109,13 +127,15 @@ form .form-group{
     height: 2px;
     background: red;
     transition: .5s;
-  }
-  .form-group input:focus ~ label,
-  .form-group input:valid ~ label{
+}
+
+.form-group input:focus~label,
+.form-group input:valid~label {
     top: -8px;
     color: white;
-  }
-input[type="submit"]{
+}
+
+input[type="submit"] {
     width: 100%;
     height: 50px;
     border: 1px solid;
@@ -126,10 +146,9 @@ input[type="submit"]{
     font-weight: 700;
     cursor: pointer;
     outline: none;
-  }
-  input[type="submit"]:hover{
+}
+
+input[type="submit"]:hover {
     border-color: red;
     transition: .5s;
-  }
-
-
+}
