@@ -24,17 +24,14 @@ server.listen(port, (error) => {
 });
 
 var SOCKET_LIST = [];
-var userNameList = [];
-let i = 0;
-
 
 const { usernameIsInvalid } = require("./server/components/username");
 
 //user connect
 io.on("connection", (socket) => {
-  i++;
   socket.id = Math.random();
-  
+
+  socket.emit("join-lobby", socket.id);
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
   socket.x = 150;
   socket.y = 150;
@@ -50,11 +47,9 @@ io.on("connection", (socket) => {
   //recieve & emit message
   socket.on("usernameSelect", (userName) => {
     if (usernameIsInvalid(userName, SOCKET_LIST) && SOCKET_LIST.length < 5) {
-      userNameList.push(userName);
       SOCKET_LIST[socket.id].username = userName;
       //socket.userName = userName;
-
-      console.log(userNameList);
+      
       for(let i in socket.id) {
         console.log(SOCKET_LIST[i].username);
       }
