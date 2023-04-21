@@ -18,7 +18,6 @@ window.addEventListener("keydown", (event) => {
   //client keydown
   switch (event.key) {
     case "a":
-      console.log(event.key);
       socket.emit("keydown", "a");
       break;
     case "d":
