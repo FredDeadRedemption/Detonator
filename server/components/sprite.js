@@ -1,5 +1,5 @@
-const spriteHeight = 48;
-const spriteWidth = 48;
+const spriteHeight = 50;
+const spriteWidth = 50;
 const gameHealth = 100;
 const gravity = 15;
 

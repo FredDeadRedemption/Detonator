@@ -23,12 +23,16 @@ server.listen(port, (error) => {
   }
 });
 
-var Player = require("./server/components/sprite").Sprite;
-
-console.log(Player);
+const Player = require("./server/components/sprite").Sprite;
+const randomColor = require("./server/components/rngcolor").randomColor;
 
 var SOCKET_LIST = [];
 var PLAYER_LIST = [];
+
+//settings
+let gravity = 0.6;
+let movementSpeed = 8;
+let jumpPower = 18;
 
 //user connect
 io.on("connection", (socket) => {
@@ -36,7 +40,7 @@ io.on("connection", (socket) => {
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
   SOCKET_LIST[socket.id] = socket;
 
-  var player = new Player({
+  let player = new Player({
     id: socket.id,
     position: {
       x: 300,
@@ -46,11 +50,12 @@ io.on("connection", (socket) => {
       x: 0,
       y: 5,
     },
-    color: "red",
+    color: randomColor(),
   });
 
   PLAYER_LIST[socket.id] = player;
-  console.log(PLAYER_LIST[socket.id]);
+
+  console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
 
   //user disconnect
   socket.on("disconnect", () => {
@@ -61,30 +66,32 @@ io.on("connection", (socket) => {
 
   //user keydown
   socket.on("keydown", (event) => {
+    let player = PLAYER_LIST[socket.id];
     switch (event) {
       case "a":
-        console.log("key: a");
+        player.velocity.x = -movementSpeed;
         break;
       case "d":
-        console.log("key: d");
+        player.velocity.x = movementSpeed;
         break;
       case " ":
-        console.log("key: space");
-        /*
-        if (socket.position.y > 450) {
-          socket.velocity.y = -15;
+        if (player.position.y > 520) {
+          player.velocity.y = -jumpPower;
         }
-        */
         break;
     }
   });
 
   //user keyup
   socket.on("keyup", (event) => {
+    let player = PLAYER_LIST[socket.id];
     switch (event.key) {
       case "a":
+        console.log("ye");
+        player.velocity.x = 0;
         break;
       case "d":
+        player.velocity.x = 0;
         break;
     }
   });
@@ -95,13 +102,23 @@ io.on("connection", (socket) => {
   });
 });
 
-//emit playerstate
+//gametick
 setInterval(() => {
-  var playerDataPacks = [];
+  let playerDataPacks = [];
+  //loop players
   for (let i in PLAYER_LIST) {
-    var player = PLAYER_LIST[i];
-    player.position.x++;
-    player.position.y++;
+    let player = PLAYER_LIST[i];
+
+    //player physics
+
+    player.position.x += player.velocity.x;
+    player.position.y += player.velocity.y;
+
+    if (player.position.y + player.height + player.velocity.y >= 576) {
+      player.velocity.y = 0;
+    } else player.velocity.y += gravity;
+
+    //player datapack
     playerDataPacks.push({
       x: player.position.x,
       y: player.position.y,
@@ -109,8 +126,9 @@ setInterval(() => {
     });
   }
 
+  //emit player data packs
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
   }
-}, 1000 / 25); //25 fps
+}, 1000 / 156); //~64ms tick
