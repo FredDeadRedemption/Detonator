@@ -26,8 +26,8 @@ server.listen(port, (error) => {
 const Player = require("./server/components/sprite").Sprite;
 const randomColor = require("./server/components/rngcolor").randomColor;
 
-let SOCKET_LIST = [];
-let PLAYER_LIST = [];
+let SOCKET_LIST = []; //contains current connection
+let PLAYER_LIST = []; //contains current player objects
 
 //settings
 let gravity = 0.6;
@@ -38,7 +38,7 @@ let jumpPower = 18;
 io.on("connection", (socket) => {
   socket.id = Math.random();
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
-  //save user
+  //store connection
   SOCKET_LIST[socket.id] = socket;
 
   //spawn player object
@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
     color: randomColor(),
   });
 
-  //save player objects
+  //store player object
   PLAYER_LIST[socket.id] = player;
 
   console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
@@ -116,7 +116,7 @@ setInterval(() => {
     player.position.y += player.velocity.y;
     player.velocity.x = 0;
 
-    //player jumping
+    //player jumping physics
     if (player.position.y + player.height + player.velocity.y >= 576) {
       player.velocity.y = 0;
     } else player.velocity.y += gravity;
