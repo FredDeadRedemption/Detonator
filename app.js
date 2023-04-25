@@ -75,7 +75,6 @@ io.on("connection", (socket) => {
     //console.log(SOCKET_LIST);
     //SOCKET_LIST.splice(socket.userName);
     //console.log(SOCKET_LIST);
-    i--;
     console.log("Username was deleted" + SOCKET_LIST[socket.id]);
     delete SOCKET_LIST[socket.id];
     console.log("Username was deleted" + SOCKET_LIST[socket.id]);
