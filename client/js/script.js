@@ -70,10 +70,13 @@ socket.on("playerState", (playerData) => {
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
-    const node = document.createElement("li");
-    let usernameText = document.createTextNode(playerData[i].username);
-    node.appendChild(usernameText);
-    //let usernameText = document.createElement(playerData[i].username);
-    lobby.appendChild(node);
   }
+});
+
+socket.on("username-select", (username) => {
+  const node = document.createElement("li");
+  let usernameText = document.createTextNode(username);
+  node.appendChild(usernameText);
+  //let usernameText = document.createElement(playerData[i].username);
+  lobby.appendChild(node);
 });
