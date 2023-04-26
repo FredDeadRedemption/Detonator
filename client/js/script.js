@@ -66,7 +66,7 @@ socket.on("playerState", (playerData) => {
     ctx.fillStyle = playerData[i].color;
     ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
     ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length/2 * (25/2))), playerData[i].y - 20);
+    ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
