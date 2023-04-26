@@ -78,9 +78,9 @@ socket.on("playerState", (playerData) => {
 
 
 socket.on("username-select", (username) => {
-  const node = document.createElement("li");
+  const list = document.createElement("li");
   let usernameText = document.createTextNode(username);
+  //usernameText.style.color = "white";
   node.appendChild(usernameText);
-  //let usernameText = document.createElement(playerData[i].username);
-  lobby.appendChild(node);
+  lobby.appendChild(list);
 });
