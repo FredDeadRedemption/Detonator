@@ -8,7 +8,6 @@
     <link href="./style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    
     <div>
       <!--Server Message Form-->
       <form id="form">
@@ -19,7 +18,7 @@
         <div class="lobbyContainer">
           <p class="usernames" style="color: white"></p>
         </div>
-          
+
         <div class="canvasContainer">
           <canvas class="canvas"></canvas>
           <!--1024x576-->
@@ -48,9 +47,8 @@
       });
 
       //modtager besked fra server
-      socket.on("usernameSelect", (msg) => {
-        document.querySelector(".text").textContent = msg;
-        console.log(msg);
+      socket.on("usernameSelect", (username) => {
+        document.querySelector(".text").textContent = username;
       });
     </script>
   </body>
