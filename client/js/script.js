@@ -56,6 +56,8 @@ socket.on("playerState", (playerData) => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.width);
 
+  //render platform
+
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     ctx.fillStyle = playerData[i].color;
@@ -63,4 +65,7 @@ socket.on("playerState", (playerData) => {
     ctx.fillStyle = "rgb(255,255,255)";
     ctx.fillText(playerData[i].username,playerData[i].x+(25-(playerData[i].username.length)*3), playerData[i].y-20);
   }
+
+
+
 });

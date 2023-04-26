@@ -115,6 +115,7 @@ io.on("connection", (socket) => {
 //gametick
 setInterval(() => {
   let playerDataPacks = [];
+
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
