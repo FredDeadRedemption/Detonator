@@ -60,5 +60,7 @@ socket.on("playerState", (playerData) => {
   for (let i = 0; i < playerData.length; i++) {
     ctx.fillStyle = playerData[i].color;
     ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(playerData[i].username,playerData[i].x+(25-(playerData[i].username.length)*3), playerData[i].y-20);
   }
 });

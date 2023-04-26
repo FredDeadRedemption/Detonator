@@ -4,7 +4,7 @@ const gameHealth = 100;
 const gravity = 15;
 
 class Sprite {
-  constructor({ id, position, velocity, color }) {
+  constructor({ id, position, velocity, color, username }) {
     this.id = id;
     this.position = position;
     this.velocity = velocity;
@@ -20,6 +20,7 @@ class Sprite {
       d: false,
       space: false,
     };
+    this.username = username;
   }
 
   draw() {
