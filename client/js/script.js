@@ -8,6 +8,7 @@ const lobby = document.querySelector(".lobbyContainer");
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
+ctx.font = "25px Verdana";
 
 //client socket
 var socket = io();
@@ -65,7 +66,7 @@ socket.on("playerState", (playerData) => {
     ctx.fillStyle = playerData[i].color;
     ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
     ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(playerData[i].username,playerData[i].x+(25-(playerData[i].username.length)*3), playerData[i].y-20);
+    ctx.fillText(playerData[i].username, playerData[i].x + (25 - playerData[i].username.length * 3), playerData[i].y - 20);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
@@ -75,7 +76,4 @@ socket.on("playerState", (playerData) => {
     //let usernameText = document.createElement(playerData[i].username);
     lobby.appendChild(node);
   }
-  
-
-
 });
