@@ -8,6 +8,7 @@ const lobby = document.querySelector(".lobbyContainer");
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
+ctx.font = "25px Verdana";
 
 //client socket
 var socket = io();
@@ -65,22 +66,23 @@ socket.on("playerState", (playerData) => {
     ctx.fillStyle = playerData[i].color;
     ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
     ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(playerData[i].username,playerData[i].x+(25-(playerData[i].username.length)*3), playerData[i].y-20);
+    ctx.fillText(playerData[i].username, playerData[i].x + (25 - playerData[i].username.length * 3), playerData[i].y - 20);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
-    
   }
-
-  
-
 });
-
 
 socket.on("username-select", (username) => {
   const list = document.createElement("li");
   let usernameText = document.createTextNode(username);
   //usernameText.style.color = "white";
   node.appendChild(usernameText);
+<<<<<<< HEAD
   lobby.appendChild(list);
 });
+=======
+  //let usernameText = document.createElement(playerData[i].username);
+  lobby.appendChild(node);
+});
+>>>>>>> bbd227f403f239f948635298220de9ab19426579
