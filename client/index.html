@@ -12,7 +12,7 @@
     <div>
       <!--Server Message Form-->
       <form id="form">
-        <label for="message" style="color: green">Message to server:</label><br />
+        <label for="message" style="color: black">Select username:</label><br />
         <input type="text" id="input" name="sometext" />
       </form>
       <div class="main">
@@ -40,6 +40,7 @@
         if (input.value) {
           socket.emit("usernameSelect", input.value);
           input.value = "";
+          form.remove();
         }
       });
 

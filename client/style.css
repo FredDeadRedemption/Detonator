@@ -1,5 +1,5 @@
 body {
-  background-color: #282828;
+  background-color: #6b6b6b;
 }
 
 .main {
@@ -14,7 +14,9 @@ body {
   width: 12.8%;
   height: 100%;
   left: 0;
-  background-color: paleturquoise;
+  background-color: rgb(34, 34, 34);
+  padding: auto;
+  box-shadow: rgb(143, 188, 255, 0.55) 0px 0px 36px 0px inset;
 }
 
 .canvasContainer {
