@@ -24,7 +24,7 @@ server.listen(port, (error) => {
 });
 
 const Player = require("./server/components/sprite").Sprite;
-const randomColor = require("./server/components/rngcolor").randomColor;
+const randomColor = require("./server/components/util").randomColor;
 
 let SOCKET_LIST = []; //contains current connection
 let PLAYER_LIST = []; //contains current player objects
