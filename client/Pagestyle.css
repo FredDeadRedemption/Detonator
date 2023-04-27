@@ -4,13 +4,11 @@ h1 {
     font-family: 'Times New Roman', Times, serif;
     font-size: 50px;
     top: 0;
+    justify-content: center;
     position: absolute;
 }
-.btn-group button {
+div.btn-group button {
     position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 200px;
     display: table;
   }
@@ -26,12 +24,8 @@ body {
     display: flex;
     overflow: hidden;
 }
-.center{
+div.Center{
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
     border-radius: 10px;
     box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
 }
