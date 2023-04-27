@@ -62,7 +62,6 @@ io.on("connection", (socket) => {
     PLAYER_LIST[socket.id] = player;
 
     socket.emit("usernameSelect", username);
-    console.log("SUT");
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
 
