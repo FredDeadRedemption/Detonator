@@ -44,7 +44,6 @@ io.on("connection", (socket) => {
   socket.on("usernameSelect", (username) => {
     //spawn player object
     let player = new Player({
-      id: socket.id,
       position: {
         x: 300,
         y: 175,
@@ -54,7 +53,7 @@ io.on("connection", (socket) => {
         y: 5,
       },
       color: randomColor(),
-      username: username
+      username: username,
     });
 
     //store player object
@@ -64,11 +63,6 @@ io.on("connection", (socket) => {
     console.log("SUT");
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
-  
-
-  
-
-  
 
   //user disconnect
   socket.on("disconnect", () => {
@@ -144,7 +138,7 @@ setInterval(() => {
       x: player.position.x,
       y: player.position.y,
       color: player.color,
-      username: player.username
+      username: player.username,
     });
   }
 
