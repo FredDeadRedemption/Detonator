@@ -25,7 +25,7 @@ let game = {
 };
 
 socket.on("usernameSelect", () => {
-  console.log("yehaw");
+  console.log("username has been selected. Starting game..");
   game.start();
 });
 
