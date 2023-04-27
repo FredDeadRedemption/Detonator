@@ -17,40 +17,58 @@ export default socket;
 //initial background animation
 ctx.fillRect(0, 0, canvas.width, canvas.width);
 
+let game = {
+  isRunning: false,
+  start() {
+    this.isRunning = true;
+  },
+};
+
+socket.on("usernameSelect", () => {
+  console.log("yehaw");
+  game.start();
+});
+
 window.addEventListener("keydown", (event) => {
   //client keydown
-  switch (event.key) {
-    case "a":
-      socket.emit("keydown", "a");
-      break;
-    case "d":
-      socket.emit("keydown", "d");
-      break;
-    case " ":
-      socket.emit("keydown", " ");
-      break;
+  if (game.isRunning) {
+    switch (event.key) {
+      case "a":
+        socket.emit("keydown", "a");
+        break;
+      case "d":
+        socket.emit("keydown", "d");
+        break;
+      case " ":
+        socket.emit("keydown", " ");
+        break;
+    }
   }
 });
 
 window.addEventListener("keyup", (event) => {
   //client keyup
-  switch (event.key) {
-    case "a":
-      socket.emit("keyup", "a");
-      break;
-    case "d":
-      socket.emit("keyup", "d");
-      break;
+  if (game.isRunning) {
+    switch (event.key) {
+      case "a":
+        socket.emit("keyup", "a");
+        break;
+      case "d":
+        socket.emit("keyup", "d");
+        break;
+    }
   }
 });
 
 canvas.addEventListener("click", (event) => {
   //client click
-  let click = {
-    x: event.pageX,
-    y: event.pageY,
-  };
-  socket.emit("click", click);
+  if (game.isRunning) {
+    let click = {
+      x: event.pageX,
+      y: event.pageY,
+    };
+    socket.emit("click", click);
+  }
 });
 
 //game tick
@@ -77,6 +95,6 @@ socket.on("username-select", (username) => {
   const list = document.createElement("li");
   let usernameText = document.createTextNode(username);
   //usernameText.style.color = "white";
-  node.appendChild(usernameText);
+  //node.appendChild(usernameText);
   lobby.appendChild(list);
 });
