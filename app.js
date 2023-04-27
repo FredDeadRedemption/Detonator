@@ -11,7 +11,7 @@ const port = 420;
 const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/client/StartPage.html");
+  res.sendFile(__dirname + "/client/index.html");
 });
 app.use(express.static(__dirname + "/client"));
 
@@ -23,9 +23,16 @@ server.listen(port, (error) => {
   }
 });
 
-var SOCKET_LIST = [];
+const Player = require("./server/components/sprite").Sprite;
+const randomColor = require("./server/components/util").randomColor;
 
-const { usernameIsInvalid } = require("./server/components/username");
+let SOCKET_LIST = []; //contains current connection
+let PLAYER_LIST = []; //contains current player objects
+
+//settings
+let gravity = 0.6;
+let movementSpeed = 8;
+let jumpPower = 18;
 
 //user connect
 io.on("connection", (socket) => {
@@ -33,80 +40,65 @@ io.on("connection", (socket) => {
 
   socket.emit("join-lobby", socket.id);
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
-  socket.x = 150;
-  socket.y = 150;
-  socket.username = undefined;
+  //store connection
   SOCKET_LIST[socket.id] = socket;
 
-  
-  //join lobby
-  socket.on("join-lobby", (userId) => {
-    socket.broadcast.emit("user-connected", userId);
-  });
+  socket.on("usernameSelect", (username) => {
+    //spawn player object
+    let player = new Player({
+      position: {
+        x: 300,
+        y: 175,
+      },
+      velocity: {
+        x: 0,
+        y: 5,
+      },
+      color: randomColor(),
+      username: username,
+    });
 
-  //recieve & emit message
-  socket.on("usernameSelect", (userName) => {
-    if (usernameIsInvalid(userName, SOCKET_LIST) && SOCKET_LIST.length < 5) {
-      SOCKET_LIST[socket.id].username = userName;
-      //socket.userName = userName;
-      
-      for(let i in socket.id) {
-        console.log(SOCKET_LIST[i].username);
-      }
-      io.emit("user-count", userNameList.length);
-      console.log("user count" + userNameList.length);
-    }
-    
-    console.log("username: " + userName);
-    
-    io.emit("usernameSelect", SOCKET_LIST.username);
-  });
- 
+    //store player object
+    PLAYER_LIST[socket.id] = player;
 
-  //dev log
-  /*
-  socket.onAny((event, args) => {
-    console.log(event, args);
+    socket.emit("usernameSelect", username);
+    console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
-  */
 
   //user disconnect
   socket.on("disconnect", () => {
-    //console.log(SOCKET_LIST);
-    //SOCKET_LIST.splice(socket.userName);
-    //console.log(SOCKET_LIST);
-    console.log("Username was deleted" + SOCKET_LIST[socket.id]);
     delete SOCKET_LIST[socket.id];
-    console.log("Username was deleted" + SOCKET_LIST[socket.id]);
+    delete PLAYER_LIST[socket.id];
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
   //user keydown
   socket.on("keydown", (event) => {
+    let player = PLAYER_LIST[socket.id];
     switch (event) {
       case "a":
-        console.log("key: a");
+        player.pressingKey.a = true;
         break;
       case "d":
-        console.log("key: d");
+        player.pressingKey.d = true;
         break;
       case " ":
-        console.log("key: space");
-        /*
-        if (socket.position.y > 450) {
-          socket.velocity.y = -15;
+        if (player.position.y > 520) {
+          player.velocity.y = -jumpPower;
         }
-        */
         break;
     }
   });
 
   //user keyup
   socket.on("keyup", (event) => {
-    switch (event.key) {
+    let player = PLAYER_LIST[socket.id];
+    switch (event) {
       case "a":
+        player.pressingKey.a = false;
         break;
       case "d":
+        player.pressingKey.d = false;
         break;
     }
   });
@@ -117,21 +109,43 @@ io.on("connection", (socket) => {
   });
 });
 
-//emit playerstate
+//gametick
 setInterval(() => {
-  var playerDataPacks = [];
-  for (let i in SOCKET_LIST) {
-    var socket = SOCKET_LIST[i];
-    socket.x++;
-    socket.y++;
+  let playerDataPacks = [];
+
+  //loop players
+  for (let i in PLAYER_LIST) {
+    let player = PLAYER_LIST[i];
+
+    //player physics
+    player.position.x += player.velocity.x;
+    player.position.y += player.velocity.y;
+    player.velocity.x = 0;
+
+    //player jumping physics
+    if (player.position.y + player.height + player.velocity.y >= 576) {
+      player.velocity.y = 0;
+    } else player.velocity.y += gravity;
+
+    //player left/right movement
+    if (player.pressingKey.a) {
+      player.velocity.x = -movementSpeed;
+    } else if (player.pressingKey.d) {
+      player.velocity.x = movementSpeed;
+    }
+
+    //player datapack
     playerDataPacks.push({
-      x: socket.x,
-      y: socket.y,
+      x: player.position.x,
+      y: player.position.y,
+      color: player.color,
+      username: player.username,
     });
   }
 
+  //emit player data packs
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
   }
-}, 1000 / 25); //25 fps
+}, 1000 / 156); //~64ms tick

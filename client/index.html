@@ -8,15 +8,17 @@
     <link href="./style.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <p class="text" style="color: white"></p>
     <div>
       <!--Server Message Form-->
       <form id="form">
-        <label for="message" style="color: green">Message to server:</label><br />
+        <label for="message" style="color: black">Select username:</label><br />
         <input type="text" id="input" name="sometext" />
       </form>
       <div class="main">
-        <div class="lobbyContainer"></div>
+        <div class="lobbyContainer">
+          <p class="usernames" style="color: white"></p>
+        </div>
+
         <div class="canvasContainer">
           <canvas class="canvas"></canvas>
           <!--1024x576-->
@@ -40,13 +42,13 @@
         if (input.value) {
           socket.emit("usernameSelect", input.value);
           input.value = "";
+          form.remove();
         }
       });
 
       //modtager besked fra server
-      socket.on("usernameSelect", (msg) => {
-        document.querySelector(".text").textContent = msg;
-        console.log(msg);
+      socket.on("usernameSelect", (username) => {
+        //document.querySelector(".text").textContent = username;
       });
     </script>
   </body>
