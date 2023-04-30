@@ -9,6 +9,8 @@ canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
 ctx.font = "25px Verdana";
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
 
 //client socket
 var socket = io();
@@ -71,6 +73,19 @@ canvas.addEventListener("click", (event) => {
   }
 });
 
+const foxImgIdle = new Image();
+foxImgIdle.src = "/img/fox.png";
+const foxImgLeft = new Image();
+foxImgLeft.src = "/img/fox_left.png";
+const foxImgRight = new Image();
+foxImgRight.src = "/img/fox_right.png";
+const foxImgJump = new Image();
+foxImgJump.src = "/img/fox_jump.png";
+console.log(foxImgIdle.src);
+
+let currentFrame = 0;
+let imageFrameDimension = 0;
+
 //game tick
 socket.on("playerState", (playerData) => {
   //render background
@@ -79,10 +94,38 @@ socket.on("playerState", (playerData) => {
 
   //render platform
 
+  //frame for animation loop
+  currentFrame++;
+  if (currentFrame > 30) {
+    currentFrame = 0;
+  }
+
+  //update imageFrame based on gameframe
+  if (currentFrame < 10) {
+    imageFrameDimension = 0;
+  } else if (currentFrame > 10 && currentFrame < 20) {
+    imageFrameDimension = 60;
+  } else if (currentFrame > 20) {
+    imageFrameDimension = 120;
+  }
+
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
-    ctx.fillStyle = playerData[i].color;
-    ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
+    //sprite animations
+    if (playerData[i].y < 450) {
+      //jumping
+      ctx.drawImage(foxImgJump, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else if (playerData[i].pressingKey.a) {
+      //moving left
+      ctx.drawImage(foxImgLeft, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else if (playerData[i].pressingKey.d) {
+      //moving right
+      ctx.drawImage(foxImgRight, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else {
+      //idle
+      ctx.drawImage(foxImgIdle, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    }
+    //username animation
     ctx.fillStyle = "rgb(255,255,255)";
     ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
 

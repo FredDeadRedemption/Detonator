@@ -54,7 +54,6 @@ io.on("connection", (socket) => {
         x: 0,
         y: 5,
       },
-      color: randomColor(),
       username: username,
     });
 
@@ -83,7 +82,7 @@ io.on("connection", (socket) => {
         player.pressingKey.d = true;
         break;
       case " ":
-        if (player.position.y > 520) {
+        if (player.position.y > 510) {
           player.velocity.y = -jumpPower;
         }
         break;
@@ -138,7 +137,11 @@ setInterval(() => {
     playerDataPacks.push({
       x: player.position.x,
       y: player.position.y,
-      color: player.color,
+      pressingKey: {
+        a: player.pressingKey.a,
+        d: player.pressingKey.d,
+      },
+      imageSrc: player.imageSrc,
       username: player.username,
     });
   }
