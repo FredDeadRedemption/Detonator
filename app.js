@@ -31,8 +31,8 @@ let PLAYER_LIST = []; //contains current player objects
 
 //settings
 let gravity = 0.6;
-let movementSpeed = 8;
-let jumpPower = 18;
+let movementSpeed = 5.5;
+let jumpPower = 16;
 
 //user connect
 io.on("connection", (socket) => {
