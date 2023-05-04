@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 const http = require("http");
+const { Platform } = require("./server/components/platform");
 
 const server = http.createServer(app);
 
@@ -28,11 +29,48 @@ const randomColor = require("./server/components/util").randomColor;
 
 let SOCKET_LIST = []; //contains current connection
 let PLAYER_LIST = []; //contains current player objects
+let PLATFORM_LIST = [];
 
 //settings
 let gravity = 0.6;
 let movementSpeed = 5.5;
 let jumpPower = 16;
+
+
+//spawn platform objects
+let floor = new Platform({
+  position: {
+    x: 0,
+    y: 566
+  },
+  height: 10,
+  width: 1024,
+  color: "rgb(50,105,50)"
+});
+PLATFORM_LIST.push({
+  x: floor.position.x,
+  y: floor.position.y,
+  height: floor.height,
+  width: floor.width,
+  color: floor.color,
+});
+let platform1 = new Platform({
+  position: {
+    x: 500,
+    y: 400
+  },
+  height: 30,
+  width: 90,
+  color: "rgb(255,0,0)"
+});
+PLATFORM_LIST.push({
+  x: platform1.position.x,
+  y: platform1.position.y,
+  height: platform1.height,
+  width: platform1.width,
+  color: platform1.color,
+});
+
 
 //user connect
 io.on("connection", (socket) => {
@@ -82,8 +120,10 @@ io.on("connection", (socket) => {
         player.pressingKey.d = true;
         break;
       case " ":
-        if (player.position.y > 510) {
+        if (!player.isJumping) {
           player.velocity.y = -jumpPower;
+
+          player.isJumping = true;
         }
         break;
     }
@@ -121,10 +161,25 @@ setInterval(() => {
     player.position.y += player.velocity.y;
     player.velocity.x = 0;
 
+
+    let playerFeetPos = player.position.y + player.height + player.velocity.y;
+
+    
+    
     //player jumping physics
-    if (player.position.y + player.height + player.velocity.y >= 576) {
-      player.velocity.y = 0;
-    } else player.velocity.y += gravity;
+       //Platform collision
+      for(let i in PLATFORM_LIST) {
+        console.log("Player x: " + player.position.x);
+        console.log("Platforms start x: " + PLATFORM_LIST[i].x);
+        console.log("Platforms slut x: " + parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width));
+        if (playerFeetPos >= PLATFORM_LIST[i].y && 
+          (player.position.x >= PLATFORM_LIST[i].x || player.position.x <= parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width))) {
+          player.velocity.y = 0;
+          player.isJumping = false;
+        }
+        else player.velocity.y += gravity;
+      }
+    
 
     //player left/right movement
     if (player.pressingKey.a) {
@@ -143,6 +198,7 @@ setInterval(() => {
       },
       imageSrc: player.imageSrc,
       username: player.username,
+      isJumping: player.isJumping
     });
   }
 
@@ -150,5 +206,10 @@ setInterval(() => {
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
+    //emit platform datapacks
+    socket.emit("platform", PLATFORM_LIST);
+    
   }
+
+  
 }, 1000 / 156); //~64ms tick

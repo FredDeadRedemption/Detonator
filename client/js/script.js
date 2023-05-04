@@ -86,6 +86,16 @@ console.log(foxImgIdle.src);
 let currentFrame = 0;
 let imageFrameDimension = 0;
 
+socket.on("platform", (platforms) => {
+
+  for(let i in platforms) {
+    ctx.fillStyle = platforms[i].color;
+    ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width,platforms[i].height);
+  }
+
+});
+
+
 //game tick
 socket.on("playerState", (playerData) => {
   //render background
@@ -112,7 +122,7 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (playerData[i].y < 450) {
+    if (playerData[i].isJumping) {
       //jumping
       ctx.drawImage(foxImgJump, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
     } else if (playerData[i].pressingKey.a) {

@@ -17,6 +17,7 @@ class Sprite {
       space: false,
     };
     this.username = username;
+    this.isJumping = false;
   }
 }
 
