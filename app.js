@@ -12,7 +12,7 @@ const port = 420;
 const io = require("socket.io")(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/client/index.html");
+  res.sendFile(__dirname + "/client/StartPage.html");
 });
 app.use(express.static(__dirname + "/client"));
 
