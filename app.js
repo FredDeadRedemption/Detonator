@@ -56,7 +56,7 @@ PLATFORM_LIST.push({
 });
 let platform1 = new Platform({
   position: {
-    x: 500,
+    x: 250,
     y: 400
   },
   height: 30,
@@ -169,13 +169,13 @@ setInterval(() => {
     //player jumping physics
        //Platform collision
       for(let i in PLATFORM_LIST) {
-        console.log("Player x: " + player.position.x);
-        console.log("Platforms start x: " + PLATFORM_LIST[i].x);
-        console.log("Platforms slut x: " + parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width));//parseInt fungerer ikke, den addere som var det strings
+        let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
+    
         if (playerFeetPos >= PLATFORM_LIST[i].y && 
-          (player.position.x >= PLATFORM_LIST[i].x || player.position.x <= parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width))) {//parseInt fungerer ikke, den addere som var det strings
+          (player.position.x >= PLATFORM_LIST[i].x && player.position.x <= platformXWidth)) {//Det virker nu, men fordi player x ikke er true for alle platform x, bliver gravity ikke disablet (ring hvis du ikke forstår)
           player.velocity.y = 0;
           player.isJumping = false;
+          
         }
         else player.velocity.y += gravity;
       }
