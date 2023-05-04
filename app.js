@@ -171,9 +171,9 @@ setInterval(() => {
       for(let i in PLATFORM_LIST) {
         console.log("Player x: " + player.position.x);
         console.log("Platforms start x: " + PLATFORM_LIST[i].x);
-        console.log("Platforms slut x: " + parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width));
+        console.log("Platforms slut x: " + parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width));//parseInt fungerer ikke, den addere som var det strings
         if (playerFeetPos >= PLATFORM_LIST[i].y && 
-          (player.position.x >= PLATFORM_LIST[i].x || player.position.x <= parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width))) {
+          (player.position.x >= PLATFORM_LIST[i].x || player.position.x <= parseInt(PLATFORM_LIST[i].x)+parseInt(PLATFORM_LIST[i].width))) {//parseInt fungerer ikke, den addere som var det strings
           player.velocity.y = 0;
           player.isJumping = false;
         }
