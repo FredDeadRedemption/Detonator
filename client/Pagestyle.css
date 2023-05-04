@@ -24,7 +24,7 @@ h3 {
 body {
     margin: 0;
     padding: 0;
-    background-image: url(ssb.gif);
+    background-image: url(/img/ssb.gif);
     background-size: cover;
     height: 100vh;
     width: 200vh;
