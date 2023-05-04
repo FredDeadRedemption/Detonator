@@ -44,6 +44,9 @@ window.addEventListener("keydown", (event) => {
       case " ":
         socket.emit("keydown", " ");
         break;
+      case "s":
+        socket.emit("keydown", "s");
+        break;
     }
   }
 });
@@ -57,6 +60,9 @@ window.addEventListener("keyup", (event) => {
         break;
       case "d":
         socket.emit("keyup", "d");
+        break;
+      case "s":
+        socket.emit("keyup", "s");
         break;
     }
   }

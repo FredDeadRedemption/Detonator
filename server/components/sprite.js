@@ -15,9 +15,10 @@ class Sprite {
       a: false,
       d: false,
       space: false,
+      s: false,
     };
     this.username = username;
-    this.isJumping = false;
+    this.isJumping = true;
   }
 }
 

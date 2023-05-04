@@ -40,11 +40,11 @@ let jumpPower = 16;
 //spawn platform objects
 let floor = new Platform({
   position: {
-    x: 0,
+    x: -100, //100 pixels off screen to avoid falling off
     y: 566
   },
-  height: 10,
-  width: 1024,
+  height: 700,
+  width: 1224, //100 pixels off screen to avoid falling off
   color: "rgb(50,105,50)"
 });
 PLATFORM_LIST.push({
@@ -53,6 +53,7 @@ PLATFORM_LIST.push({
   height: floor.height,
   width: floor.width,
   color: floor.color,
+  unpassable: true,
 });
 let platform1 = new Platform({
   position: {
@@ -60,7 +61,7 @@ let platform1 = new Platform({
     y: 400
   },
   height: 30,
-  width: 90,
+  width: 200,
   color: "rgb(255,0,0)"
 });
 PLATFORM_LIST.push({
@@ -69,6 +70,38 @@ PLATFORM_LIST.push({
   height: platform1.height,
   width: platform1.width,
   color: platform1.color,
+});
+let platform2 = new Platform({
+  position: {
+    x: 450,
+    y: 200
+  },
+  height: 30,
+  width: 400,
+  color: "rgb(0,0,255)"
+});
+PLATFORM_LIST.push({
+  x: platform2.position.x,
+  y: platform2.position.y,
+  height: platform2.height,
+  width: platform2.width,
+  color: platform2.color,
+});
+let platform3 = new Platform({
+  position: {
+    x: 100,
+    y: 100
+  },
+  height: 30,
+  width: 150,
+  color: "rgb(0,255,0)"
+});
+PLATFORM_LIST.push({
+  x: platform3.position.x,
+  y: platform3.position.y,
+  height: platform3.height,
+  width: platform3.width,
+  color: platform3.color,
 });
 
 
@@ -90,7 +123,7 @@ io.on("connection", (socket) => {
       },
       velocity: {
         x: 0,
-        y: 5,
+        y: 0,
       },
       username: username,
     });
@@ -126,6 +159,9 @@ io.on("connection", (socket) => {
           player.isJumping = true;
         }
         break;
+      case "s":
+        player.pressingKey.s = true;
+        break;
     }
   });
 
@@ -138,6 +174,9 @@ io.on("connection", (socket) => {
         break;
       case "d":
         player.pressingKey.d = false;
+        break;
+      case "s":
+        player.pressingKey.s = false;
         break;
     }
   });
@@ -162,29 +201,44 @@ setInterval(() => {
     player.velocity.x = 0;
 
 
-    let playerFeetPos = player.position.y + player.height + player.velocity.y;
+    let playerFeetPos = player.position.y + player.height;
 
-    
-    
     //player jumping physics
        //Platform collision
       for(let i in PLATFORM_LIST) {
         let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
-    
-        if (playerFeetPos >= PLATFORM_LIST[i].y && 
-          (player.position.x >= PLATFORM_LIST[i].x && player.position.x <= platformXWidth)) {//Det virker nu, men fordi player x ikke er true for alle platform x, bliver gravity ikke disablet (ring hvis du ikke forstår)
+        
+        //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
+        if (
+          playerFeetPos >= PLATFORM_LIST[i].y && 
+          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) && 
+          (player.position.x+(player.width/2) >= PLATFORM_LIST[i].x && 
+          player.position.x+(player.width/2) <= platformXWidth) &&
+          player.isJumping &&
+          player.velocity.y > 0 &&
+          (!player.pressingKey.s && !PLATFORM_LIST[i].unpassable || PLATFORM_LIST[i].unpassable)
+        ) {
           player.velocity.y = 0;
+          player.position.y = PLATFORM_LIST[i].y - player.height
           player.isJumping = false;
-          
         }
-        else player.velocity.y += gravity;
+
+        //handle player walking off edge
+        if (playerFeetPos >= PLATFORM_LIST[i].y && !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height)&& 
+          (player.position.x+(player.width/2) <= PLATFORM_LIST[i].x || player.position.x+(player.width/2) >= platformXWidth) &&
+          !player.isJumping) {
+            player.isJumping = true;
+          }
+      }
+      if (player.isJumping) {
+        player.velocity.y += gravity;
       }
     
 
     //player left/right movement
-    if (player.pressingKey.a) {
+    if (player.pressingKey.a && player.position.x+(player.width/2) >= 0) {
       player.velocity.x = -movementSpeed;
-    } else if (player.pressingKey.d) {
+    } else if (player.pressingKey.d && player.position.x+(player.width/2) <= 1024) {
       player.velocity.x = movementSpeed;
     }
 

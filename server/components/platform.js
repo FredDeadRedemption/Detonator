@@ -4,6 +4,7 @@ class Platform {
     this.height = height;
     this.width = width;
     this.color = color;
+    this.unpassable = false;
   }
 }
 
