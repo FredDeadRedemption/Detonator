@@ -1,66 +1,143 @@
 "use strict";
+//ctx
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+
+const lobby = document.querySelector(".lobbyContainer");
+
+canvas.width = 1024;
+canvas.height = 576;
+canvas.middle = canvas.width / 2; //y axis middle
+ctx.font = "25px Verdana";
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
 
 //client socket
 var socket = io();
 export default socket;
 
-//ctx
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = 1024;
-canvas.height = 576;
-canvas.middle = canvas.width / 2; //y axis middle
-
-// animate background
+//initial background animation
 ctx.fillRect(0, 0, canvas.width, canvas.width);
 
-//test square
-ctx.fillStyle = "blue";
-ctx.fillRect(50, 50, 50, 50);
+let game = {
+  isRunning: false,
+  start() {
+    this.isRunning = true;
+  },
+};
+
+socket.on("usernameSelect", () => {
+  console.log("username has been selected. Starting game..");
+  game.start();
+});
 
 window.addEventListener("keydown", (event) => {
   //client keydown
-  switch (event.key) {
-    case "a":
-      console.log(event.key);
-      socket.emit("keydown", "a");
-      break;
-    case "d":
-      socket.emit("keydown", "d");
-      break;
-    case " ":
-      socket.emit("keydown", " ");
-      break;
+  if (game.isRunning) {
+    switch (event.key) {
+      case "a":
+        socket.emit("keydown", "a");
+        break;
+      case "d":
+        socket.emit("keydown", "d");
+        break;
+      case " ":
+        socket.emit("keydown", " ");
+        break;
+    }
   }
 });
 
 window.addEventListener("keyup", (event) => {
   //client keyup
-  switch (event.key) {
-    case "a":
-      socket.emit("keyup", "a");
-      break;
-    case "d":
-      socket.emit("keyup", "d");
-      break;
+  if (game.isRunning) {
+    switch (event.key) {
+      case "a":
+        socket.emit("keyup", "a");
+        break;
+      case "d":
+        socket.emit("keyup", "d");
+        break;
+    }
   }
 });
 
 canvas.addEventListener("click", (event) => {
   //client click
-  let click = {
-    x: event.pageX,
-    y: event.pageY,
-  };
-  socket.emit("click", click);
+  if (game.isRunning) {
+    let click = {
+      x: event.pageX,
+      y: event.pageY,
+    };
+    socket.emit("click", click);
+  }
 });
 
-socket.on("playerState", (playerData) => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "red";
+const foxImgIdle = new Image();
+foxImgIdle.src = "/img/fox.png";
+const foxImgLeft = new Image();
+foxImgLeft.src = "/img/fox_left.png";
+const foxImgRight = new Image();
+foxImgRight.src = "/img/fox_right.png";
+const foxImgJump = new Image();
+foxImgJump.src = "/img/fox_jump.png";
+console.log(foxImgIdle.src);
 
-  for (let i = 0; i < playerData.length; i++) {
-    ctx.fillRect(playerData[i].x, playerData[i].y, 50, 50);
+let currentFrame = 0;
+let imageFrameDimension = 0;
+
+//game tick
+socket.on("playerState", (playerData) => {
+  //render background
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.width);
+
+  //render platform
+
+  //frame for animation loop
+  currentFrame++;
+  if (currentFrame > 30) {
+    currentFrame = 0;
   }
+
+  //update imageFrame based on gameframe
+  if (currentFrame < 10) {
+    imageFrameDimension = 0;
+  } else if (currentFrame > 10 && currentFrame < 20) {
+    imageFrameDimension = 60;
+  } else if (currentFrame > 20) {
+    imageFrameDimension = 120;
+  }
+
+  //render playerdata
+  for (let i = 0; i < playerData.length; i++) {
+    //sprite animations
+    if (playerData[i].y < 450) {
+      //jumping
+      ctx.drawImage(foxImgJump, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else if (playerData[i].pressingKey.a) {
+      //moving left
+      ctx.drawImage(foxImgLeft, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else if (playerData[i].pressingKey.d) {
+      //moving right
+      ctx.drawImage(foxImgRight, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    } else {
+      //idle
+      ctx.drawImage(foxImgIdle, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    }
+    //username animation
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
+
+    //Usernames in lobby
+    //usernameList.textContent = playerData[i].username;
+  }
+});
+
+socket.on("username-select", (username) => {
+  const list = document.createElement("li");
+  let usernameText = document.createTextNode(username);
+  //usernameText.style.color = "white";
+  //node.appendChild(usernameText);
+  lobby.appendChild(list);
 });
