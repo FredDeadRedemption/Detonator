@@ -3,7 +3,8 @@ h1 {
     font-family: 'Times New Roman', Times, serif;
     font-size: 50px;
     top: 0;
-    left: 600px;
+    left: 50%;
+    transform: translate(-50%, 50%);
     position: absolute;
 }
 
@@ -16,7 +17,6 @@ h3 {
 .btn-group button {
     position: relative;
     top: 50%;
-    transform: translate(-50%, -50%);
     width: 200px;
     display: table;
 }
@@ -34,20 +34,11 @@ body {
     overflow: hidden;
 }
 
-.center {
-    position: absolute;
-    width: 1174px;
-    height: 576px;
-    top: 50%;
-    left: 500px;
-    transform: translate(-50%, -50%);
-    width: 400px;
-}
-
 div.Center {
     position: absolute;
-    border-radius: 10px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 button {
