@@ -224,9 +224,11 @@ setInterval(() => {
         }
 
         //handle player walking off edge
-        if (playerFeetPos >= PLATFORM_LIST[i].y && !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height)&& 
+        if ((playerFeetPos >= PLATFORM_LIST[i].y && !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height)&& 
           (player.position.x+(player.width/2) <= PLATFORM_LIST[i].x || player.position.x+(player.width/2) >= platformXWidth) &&
-          !player.isJumping) {
+          !player.isJumping) || 
+          (player.pressingKey.s && !PLATFORM_LIST[i].unpassable)
+          ) {
             player.isJumping = true;
           }
       }
