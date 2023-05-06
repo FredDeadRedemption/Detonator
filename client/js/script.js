@@ -92,12 +92,11 @@ console.log(foxImgIdle.src);
 let currentFrame = 0;
 let imageFrameDimension = 0;
 
+let platformList = undefined;
+
 socket.on("platform", (platforms) => {
 
-  for(let i in platforms) {
-    ctx.fillStyle = platforms[i].color;
-    ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width,platforms[i].height);
-  }
+  platformList = platforms;
 
 });
 
@@ -109,6 +108,10 @@ socket.on("playerState", (playerData) => {
   ctx.fillRect(0, 0, canvas.width, canvas.width);
 
   //render platform
+  for(let i in platformList) {
+    ctx.fillStyle = platformList[i].color;
+    ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width,platformList[i].height);
+  }
 
   //frame for animation loop
   currentFrame++;
