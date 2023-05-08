@@ -36,16 +36,15 @@ let gravity = 0.6;
 let movementSpeed = 5.5;
 let jumpPower = 16;
 
-
 //spawn platform objects
 let floor = new Platform({
   position: {
     x: -100, //100 pixels off screen to avoid falling off
-    y: 566
+    y: 566,
   },
   height: 700,
   width: 1224, //100 pixels off screen to avoid falling off
-  color: "rgb(50,105,50)"
+  color: "#004f43",
 });
 PLATFORM_LIST.push({
   x: floor.position.x,
@@ -58,11 +57,11 @@ PLATFORM_LIST.push({
 let platform1 = new Platform({
   position: {
     x: 250,
-    y: 400
+    y: 400,
   },
   height: 30,
   width: 200,
-  color: "rgb(255,0,0)"
+  color: randomColor(),
 });
 PLATFORM_LIST.push({
   x: platform1.position.x,
@@ -74,11 +73,11 @@ PLATFORM_LIST.push({
 let platform2 = new Platform({
   position: {
     x: 450,
-    y: 200
+    y: 200,
   },
   height: 30,
   width: 400,
-  color: "rgb(0,0,255)"
+  color: randomColor(),
 });
 PLATFORM_LIST.push({
   x: platform2.position.x,
@@ -90,11 +89,11 @@ PLATFORM_LIST.push({
 let platform3 = new Platform({
   position: {
     x: 100,
-    y: 100
+    y: 100,
   },
   height: 30,
   width: 150,
-  color: "rgb(0,255,0)"
+  color: randomColor(),
 });
 PLATFORM_LIST.push({
   x: platform3.position.x,
@@ -103,7 +102,6 @@ PLATFORM_LIST.push({
   width: platform3.width,
   color: platform3.color,
 });
-
 
 //user connect
 io.on("connection", (socket) => {
@@ -200,47 +198,47 @@ setInterval(() => {
     player.position.y += player.velocity.y;
     player.velocity.x = 0;
 
-
     let playerFeetPos = player.position.y + player.height;
 
     //player jumping physics
-       //Platform collision
-      for(let i in PLATFORM_LIST) {
-        let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
-        
-        //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
-        if (
-          playerFeetPos >= PLATFORM_LIST[i].y && 
-          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) && 
-          (player.position.x+(player.width/2) >= PLATFORM_LIST[i].x && 
-          player.position.x+(player.width/2) <= platformXWidth) &&
-          player.isJumping &&
-          player.velocity.y > 0 &&
-          (!player.pressingKey.s && !PLATFORM_LIST[i].unpassable || PLATFORM_LIST[i].unpassable)
-        ) {
-          player.velocity.y = 0;
-          player.position.y = PLATFORM_LIST[i].y - player.height
-          player.isJumping = false;
-        }
+    //Platform collision
+    for (let i in PLATFORM_LIST) {
+      let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
 
-        //handle player walking off edge by setting isjumping to true if the player walks off or holds s
-        if ((playerFeetPos >= PLATFORM_LIST[i].y && !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height)&& 
-          (player.position.x+(player.width/2) <= PLATFORM_LIST[i].x || player.position.x+(player.width/2) >= platformXWidth) &&
-          !player.isJumping) || 
-          (player.pressingKey.s && !PLATFORM_LIST[i].unpassable)
-          ) {
-            player.isJumping = true;
-          }
+      //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
+      if (
+        playerFeetPos >= PLATFORM_LIST[i].y &&
+        !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) &&
+        player.position.x + player.width / 2 >= PLATFORM_LIST[i].x &&
+        player.position.x + player.width / 2 <= platformXWidth &&
+        player.isJumping &&
+        player.velocity.y > 0 &&
+        ((!player.pressingKey.s && !PLATFORM_LIST[i].unpassable) || PLATFORM_LIST[i].unpassable)
+      ) {
+        player.velocity.y = 0;
+        player.position.y = PLATFORM_LIST[i].y - player.height;
+        player.isJumping = false;
       }
-      if (player.isJumping) {
-        player.velocity.y += gravity;
+
+      //handle player walking off edge by setting isjumping to true if the player walks off or holds s
+      if (
+        (playerFeetPos >= PLATFORM_LIST[i].y &&
+          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) &&
+          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].x || player.position.x + player.width / 2 >= platformXWidth) &&
+          !player.isJumping) ||
+        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable)
+      ) {
+        player.isJumping = true;
       }
-    
+    }
+    if (player.isJumping) {
+      player.velocity.y += gravity;
+    }
 
     //player left/right movement
-    if (player.pressingKey.a && player.position.x+(player.width/2) >= 0) {
+    if (player.pressingKey.a && player.position.x + player.width / 2 >= 0) {
       player.velocity.x = -movementSpeed;
-    } else if (player.pressingKey.d && player.position.x+(player.width/2) <= 1024) {
+    } else if (player.pressingKey.d && player.position.x + player.width / 2 <= 1024) {
       player.velocity.x = movementSpeed;
     }
 
@@ -254,7 +252,7 @@ setInterval(() => {
       },
       imageSrc: player.imageSrc,
       username: player.username,
-      isJumping: player.isJumping
+      isJumping: player.isJumping,
     });
   }
 
@@ -264,8 +262,5 @@ setInterval(() => {
     socket.emit("playerState", playerDataPacks);
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
-    
   }
-
-  
 }, 1000 / 156); //~64ms tick

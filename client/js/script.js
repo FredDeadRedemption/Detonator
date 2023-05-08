@@ -79,6 +79,8 @@ canvas.addEventListener("click", (event) => {
   }
 });
 
+const backgroundImg = new Image();
+backgroundImg.src = "/img/background.png";
 const foxImgIdle = new Image();
 foxImgIdle.src = "/img/fox.png";
 const foxImgLeft = new Image();
@@ -90,27 +92,25 @@ foxImgJump.src = "/img/fox_jump.png";
 console.log(foxImgIdle.src);
 
 let currentFrame = 0;
-let imageFrameDimension = 0;
+let imageFrame = 0;
 
 let platformList = undefined;
 
 socket.on("platform", (platforms) => {
-
   platformList = platforms;
-
 });
-
 
 //game tick
 socket.on("playerState", (playerData) => {
   //render background
   ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.width);
+  ctx.drawImage(backgroundImg, 0, 0, 1360, 768, 0, 0, canvas.width, canvas.height);
+  //ctx.fillRect(0, 0, canvas.width, canvas.width);
 
   //render platform
-  for(let i in platformList) {
+  for (let i in platformList) {
     ctx.fillStyle = platformList[i].color;
-    ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width,platformList[i].height);
+    ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width, platformList[i].height);
   }
 
   //frame for animation loop
@@ -121,11 +121,11 @@ socket.on("playerState", (playerData) => {
 
   //update imageFrame based on gameframe
   if (currentFrame < 10) {
-    imageFrameDimension = 0;
+    imageFrame = 0;
   } else if (currentFrame > 10 && currentFrame < 20) {
-    imageFrameDimension = 60;
+    imageFrame = 60;
   } else if (currentFrame > 20) {
-    imageFrameDimension = 120;
+    imageFrame = 120;
   }
 
   //render playerdata
@@ -133,16 +133,16 @@ socket.on("playerState", (playerData) => {
     //sprite animations
     if (playerData[i].isJumping) {
       //jumping
-      ctx.drawImage(foxImgJump, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
     } else if (playerData[i].pressingKey.a) {
       //moving left
-      ctx.drawImage(foxImgLeft, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      ctx.drawImage(foxImgLeft, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
     } else if (playerData[i].pressingKey.d) {
       //moving right
-      ctx.drawImage(foxImgRight, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      ctx.drawImage(foxImgRight, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
     } else {
       //idle
-      ctx.drawImage(foxImgIdle, 0, imageFrameDimension, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
     }
     //username animation
     ctx.fillStyle = "rgb(255,255,255)";
