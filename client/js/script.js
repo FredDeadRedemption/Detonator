@@ -83,8 +83,11 @@ canvas.addEventListener("click", (event) => {
   }
 });
 
+//background sprite img
 const backgroundImg = new Image();
 backgroundImg.src = "/img/background.png";
+
+//fox sprite img
 const foxImgIdle = new Image();
 foxImgIdle.src = "/img/fox.png";
 const foxImgLeft = new Image();
@@ -94,6 +97,10 @@ foxImgRight.src = "/img/fox_right.png";
 const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
 console.log(foxImgIdle.src);
+
+//bomb sprite img
+const bombImg = new Image();
+bombImg.src = "/img/bomb.png";
 
 let currentFrame = 0;
 let imageFrame = 0;
@@ -160,7 +167,8 @@ socket.on("playerState", (playerData) => {
 socket.on("bombState", (bombData) => {
   ctx.fillStyle = "black";
   for (let i = 0; i < bombData.length; i++) {
-    ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
+    ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombData[i].x, bombData[i].y, 50, 50);
+    //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
   }
 });
 
