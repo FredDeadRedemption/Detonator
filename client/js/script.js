@@ -1,4 +1,5 @@
 "use strict";
+
 //ctx
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -153,6 +154,13 @@ socket.on("playerState", (playerData) => {
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
+  }
+});
+
+socket.on("bombState", (bombData) => {
+  ctx.fillStyle = "black";
+  for (let i = 0; i < bombData.length; i++) {
+    ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
   }
 });
 

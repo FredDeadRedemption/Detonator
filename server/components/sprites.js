@@ -7,7 +7,7 @@ exports.Sprite = class Sprite {
     this.velocity = velocity;
     this.width = 60;
     this.height = 60;
-    this.lastKey;
+    this.lastKey = "a";
     this.isAttacking;
     this.health = 100;
     this.pressingKey = {
@@ -38,8 +38,8 @@ exports.Bomb = class Bomb {
     this.position = position;
     this.velocity = velocity;
     this.blastRadius = {
-      height: 200,
-      width: 200,
+      height: 300,
+      width: 300,
     };
     this.team = team;
   }
