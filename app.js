@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 
 const http = require("http");
-const { Platform } = require("./server/components/platform");
 
 const server = http.createServer(app);
 
@@ -24,7 +23,8 @@ server.listen(port, (error) => {
   }
 });
 
-const Player = require("./server/components/sprite").Sprite;
+const Player = require("./server/components/sprites").Sprite;
+const Platform = require("./server/components/sprites").Platform;
 const randomColor = require("./server/components/util").randomColor;
 
 let SOCKET_LIST = []; //contains current connection
@@ -153,7 +153,6 @@ io.on("connection", (socket) => {
       case " ":
         if (!player.isJumping) {
           player.velocity.y = -jumpPower;
-
           player.isJumping = true;
         }
         break;
@@ -200,7 +199,6 @@ setInterval(() => {
 
     let playerFeetPos = player.position.y + player.height;
 
-    //player jumping physics
     //Platform collision
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
@@ -231,6 +229,8 @@ setInterval(() => {
         player.isJumping = true;
       }
     }
+
+    //player jumping physics
     if (player.isJumping) {
       player.velocity.y += gravity;
     }

@@ -1,6 +1,6 @@
 "use strict";
 
-function usernameIsInvalid(username, userlist) {
+exports.usernameIsInvalid = function usernameIsInvalid(username, userlist) {
   if (username.length > 36) {
     return false;
   }
@@ -10,6 +10,4 @@ function usernameIsInvalid(username, userlist) {
     }
   }
   return true;
-}
-
-exports.usernameIsInvalid = usernameIsInvalid;
+};

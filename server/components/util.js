@@ -1,4 +1,6 @@
-function randomColor() {
+"use strict";
+
+exports.randomColor = function randomColor() {
   const number = Math.random();
   let color;
 
@@ -13,6 +15,4 @@ function randomColor() {
   }
 
   return color;
-}
-
-exports.randomColor = randomColor;
+};
