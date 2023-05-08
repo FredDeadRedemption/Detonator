@@ -44,7 +44,7 @@ let floor = new Platform({
   },
   height: 700,
   width: 1224, //100 pixels off screen to avoid falling off
-  color: "#004f43",
+  color: "rgb(0, 0, 0, 0.1)",
 });
 PLATFORM_LIST.push({
   x: floor.position.x,
