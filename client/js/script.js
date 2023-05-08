@@ -104,7 +104,7 @@ socket.on("platform", (platforms) => {
 socket.on("playerState", (playerData) => {
   //render background
   ctx.fillStyle = "black";
-  ctx.drawImage(backgroundImg, 0, 0, 1360, 768, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImg, 0, 0, 1856, 1024, 0, 0, canvas.width, canvas.height);
   //ctx.fillRect(0, 0, canvas.width, canvas.width);
 
   //render platform
