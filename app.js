@@ -26,12 +26,14 @@ server.listen(port, (error) => {
 const Player = require("./server/components/sprites").Sprite;
 const Platform = require("./server/components/sprites").Platform;
 const Bomb = require("./server/components/sprites").Bomb;
+const Explosion = require("./server/components/sprites").Explosion;
 const randomColor = require("./server/components/util").randomColor;
 
 let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
 let PLATFORM_LIST = [];
 let BOMB_LIST = []; //contains active bombs
+let EXPLOSION_LIST = []; //contains active bombs
 
 //settings
 let gravity = 0.6;
@@ -211,10 +213,30 @@ function spawnBomb(player) {
   });
 }
 
+function spawnExplosion(bomb, radius) {
+  let explosion = new Explosion({
+    position: {
+      x: bomb.position.x,
+      y: bomb.position.y,
+    },
+    radius: radius
+    
+  });
+
+  EXPLOSION_LIST.push({
+    position: {
+      x: explosion.position.x - (radius/2),
+      y: explosion.position.y - (radius/2),
+    },
+    radius: explosion.radius
+  });
+}
+
 //gametick
 setInterval(() => {
   let playerDataPacks = [];
   let bombDataPacks = [];
+  let explosionDataPacks = [];
 
   //loop players
   for (let i in PLAYER_LIST) {
@@ -241,7 +263,7 @@ setInterval(() => {
         player.velocity.y > 0 &&
         ((!player.pressingKey.s && !PLATFORM_LIST[i].unpassable) || PLATFORM_LIST[i].unpassable)
       ) {
-        console.log("collision: " + PLATFORM_LIST[i].unpassable);
+        
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].y - player.height;
         player.isJumping = false;
@@ -260,8 +282,9 @@ setInterval(() => {
           playerFeetPos == PLATFORM_LIST[i].y
         )
       ) {   
+        
         player.isJumping = true;
-        console.log("fall through: " + PLATFORM_LIST[i].unpassable);
+        
       }
     }
 
@@ -278,6 +301,32 @@ setInterval(() => {
     }
 
     //bomb collision
+    for(let i in BOMB_LIST) {
+      let bomb = BOMB_LIST[i];
+
+      //console.log("player x: " + player.position.x + ", y: " + player.position.y);
+      //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
+      //player
+      if((bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width) && 
+         (bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height) && 
+         (bomb.team != player.team)) {
+        console.log("HIT!");
+        spawnExplosion(bomb, 100);
+        
+        BOMB_LIST.splice(i, 1);
+
+      }
+
+      //platform
+
+
+      //delete on out screen
+      if(bomb.position.x < 0 || bomb.position.x > 1024 || bomb.position.y < 0 || bomb.position.y > 576) {
+        BOMB_LIST.splice(i, 1);
+      }
+
+    }
+    
 
 
     //update player data pack
@@ -309,6 +358,25 @@ setInterval(() => {
     bombDataPacks.push({
       x: bomb.position.x,
       y: bomb.position.y,
+      team: bomb.team
+    });
+  }
+
+  //loop explosions
+  for (let i in EXPLOSION_LIST) {
+    let explosion = EXPLOSION_LIST[i];
+
+    explosion.fadeTime -= 1;
+    if (explosion.fadeTime <= 0) {
+      EXPLOSION_LIST.splice(i, 1);
+    }
+    console.log(explosion.fadeTime);
+
+    //update bomb data pack
+    explosionDataPacks.push({
+      x: explosion.position.x,
+      y: explosion.position.y,
+      radius: explosion.radius
     });
   }
 
@@ -317,6 +385,7 @@ setInterval(() => {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
     socket.emit("bombState", bombDataPacks);
+    socket.emit("explosionState", explosionDataPacks);
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }

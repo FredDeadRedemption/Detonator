@@ -102,13 +102,27 @@ console.log(foxImgIdle.src);
 const bombImg = new Image();
 bombImg.src = "/img/bomb.png";
 
+//explosion sprite img
+const explosionImg = new Image();
+explosionImg.src = "/img/explosion.png";
+
 let currentFrame = 0;
 let imageFrame = 0;
 
 let platformList = undefined;
+let bombList = undefined;
+let explosionList = undefined;
 
 socket.on("platform", (platforms) => {
   platformList = platforms;
+});
+
+socket.on("bombState", (bombData) => {
+  bombList = bombData;
+});
+
+socket.on("explosionState", (explosionData) => {
+  explosionList = explosionData;
 });
 
 //game tick
@@ -122,6 +136,26 @@ socket.on("playerState", (playerData) => {
   for (let i in platformList) {
     ctx.fillStyle = platformList[i].color;
     ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width, platformList[i].height);
+  }
+
+  //render bomb
+  for (let i in bombList) {
+    //ctx.fillStyle = "black";
+    ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 50, 50);
+    //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
+
+    //DEBUG
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(bombList[i].x, bombList[i].x-32, bombList[i].y);
+    ctx.fillText(bombList[i].y, bombList[i].x-32, bombList[i].y+18);
+
+    ctx.font = "25px Verdana";//back to original
+  }
+
+  //render explosion
+  for (let i in explosionList) {
+    ctx.drawImage(explosionImg, 0, imageFrame, 60, 60, explosionList[i].x, explosionList[i].y, explosionList[i].radius, explosionList[i].radius);
   }
 
   //frame for animation loop
@@ -164,16 +198,21 @@ socket.on("playerState", (playerData) => {
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
+
+    //DEBUG
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(playerData[i].x, playerData[i].x-32, playerData[i].y);
+    ctx.fillText(playerData[i].y, playerData[i].x-32, playerData[i].y+18);
+    ctx.fillStyle = "rgb(255,0,255)";
+    ctx.fillRect(playerData[i].x, playerData[i].y, 5, 5);
+
+    ctx.font = "25px Verdana";//back to original
+
   }
 });
 
-socket.on("bombState", (bombData) => {
-  ctx.fillStyle = "black";
-  for (let i = 0; i < bombData.length; i++) {
-    ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombData[i].x, bombData[i].y, 50, 50);
-    //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
-  }
-});
+
 
 socket.on("username-select", (username) => {
   const list = document.createElement("li");

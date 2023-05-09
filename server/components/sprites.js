@@ -38,10 +38,20 @@ exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
     this.position = position;
     this.velocity = velocity;
+    this.width = 27; //9*3 from its sprites pixels
+    this.height = 27;
     this.blastRadius = {
       height: 300,
       width: 300,
     };
     this.team = team;
+  }
+};
+
+exports.Explosion = class Explosion {
+  constructor({ position, radius }) {
+    this.position = position;
+    this.radius = radius;
+    this.fadeTime = 1000;
   }
 };
