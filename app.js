@@ -40,71 +40,59 @@ let movementSpeed = 5.5;
 let jumpPower = 16;
 
 //spawn platform objects
-let floor = new Platform({
+let platform = [];
+    //Floor
+platform[0] = new Platform({
   position: {
     x: -100, //100 pixels off screen to avoid falling off
     y: 566,
   },
   height: 700,
   width: 1224, //100 pixels off screen to avoid falling off
-  color: "rgb(0, 0, 0, 0.1)",
+  color: "rgb(255, 255, 255)"
 });
-PLATFORM_LIST.push({
-  x: floor.position.x,
-  y: floor.position.y,
-  height: floor.height,
-  width: floor.width,
-  color: floor.color,
-  unpassable: true,
-});
-let platform1 = new Platform({
+platform[0].unpassable = true;
+    //Platform 1
+platform[1] = new Platform({
   position: {
     x: 250,
     y: 400,
   },
   height: 30,
   width: 200,
-  color: randomColor(),
+  color: randomColor()
 });
-PLATFORM_LIST.push({
-  x: platform1.position.x,
-  y: platform1.position.y,
-  height: platform1.height,
-  width: platform1.width,
-  color: platform1.color,
-});
-let platform2 = new Platform({
+    //Platform 2
+platform[2] = new Platform({
   position: {
     x: 450,
     y: 200,
   },
   height: 30,
   width: 400,
-  color: randomColor(),
+  color: randomColor()
 });
-PLATFORM_LIST.push({
-  x: platform2.position.x,
-  y: platform2.position.y,
-  height: platform2.height,
-  width: platform2.width,
-  color: platform2.color,
-});
-let platform3 = new Platform({
+    //Platform 3
+platform[3] = new Platform({
   position: {
     x: 100,
     y: 100,
   },
   height: 30,
   width: 150,
-  color: randomColor(),
+  color: randomColor()
 });
-PLATFORM_LIST.push({
-  x: platform3.position.x,
-  y: platform3.position.y,
-  height: platform3.height,
-  width: platform3.width,
-  color: platform3.color,
-});
+
+for(let i in platform) {
+  PLATFORM_LIST.push({
+    x: platform[i].position.x,
+    y: platform[i].position.y,
+    height: platform[i].height,
+    width: platform[i].width,
+    color: platform[i].color,
+    unpassable: platform[i].unpassable,
+  });
+}
 
 //user connect
 io.on("connection", (socket) => {
@@ -240,6 +228,7 @@ setInterval(() => {
         player.velocity.y > 0 &&
         ((!player.pressingKey.s && !PLATFORM_LIST[i].unpassable) || PLATFORM_LIST[i].unpassable)
       ) {
+        console.log("collision: " + PLATFORM_LIST[i].unpassable);
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].y - player.height;
         player.isJumping = false;
@@ -248,12 +237,18 @@ setInterval(() => {
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
         (playerFeetPos >= PLATFORM_LIST[i].y &&
-          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) &&
+          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
           (player.position.x + player.width / 2 <= PLATFORM_LIST[i].x || player.position.x + player.width / 2 >= platformXWidth) &&
           !player.isJumping) ||
-        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable)
-      ) {
+        (
+          player.pressingKey.s && 
+          !PLATFORM_LIST[i].unpassable &&
+          (player.position.x + player.width / 2 >= PLATFORM_LIST[i].x && player.position.x + player.width / 2 <= platformXWidth) &&
+          playerFeetPos == PLATFORM_LIST[i].y
+        )
+      ) {   
         player.isJumping = true;
+        console.log("fall through: " + PLATFORM_LIST[i].unpassable);
       }
     }
 
