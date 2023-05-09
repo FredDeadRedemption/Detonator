@@ -220,15 +220,14 @@ function spawnExplosion(bomb, radius) {
       y: bomb.position.y,
     },
     radius: radius
-    
   });
-
   EXPLOSION_LIST.push({
     position: {
       x: explosion.position.x - (radius/2),
       y: explosion.position.y - (radius/2),
     },
-    radius: explosion.radius
+    radius: explosion.radius,
+    fadeTime: explosion.fadeTime
   });
 }
 
@@ -365,12 +364,11 @@ function gametick() {
   //loop explosions
   for (let i in EXPLOSION_LIST) {
     let explosion = EXPLOSION_LIST[i];
-
-    explosion.fadeTime -= 1;
+    explosion.fadeTime = explosion.fadeTime - 1;
     if (explosion.fadeTime <= 0) {
       EXPLOSION_LIST.splice(i, 1);
     }
-    console.log(explosion.fadeTime);
+    //console.log(explosion.fadeTime);
 
     //update bomb data pack
     explosionDataPacks.push({

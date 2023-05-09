@@ -52,6 +52,6 @@ exports.Explosion = class Explosion {
   constructor({ position, radius }) {
     this.position = position;
     this.radius = radius;
-    this.fadeTime = 1000;
+    this.fadeTime = 20;
   }
 };
