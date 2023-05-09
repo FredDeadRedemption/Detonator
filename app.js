@@ -211,8 +211,12 @@ function spawnBomb(player) {
   });
 }
 
+
+
+
+
 //gametick
-setInterval(() => {
+function gametick() {
   let playerDataPacks = [];
   let bombDataPacks = [];
 
@@ -320,4 +324,48 @@ setInterval(() => {
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }
-}, 1000 / 156); //~64ms tick
+
+
+
+
+};
+
+//allows us to get time from program start
+//alternative to "window.performance.now" which is not available in server environment
+const { PerformanceObserver, performance } = require('node:perf_hooks');
+
+//get current time from program start
+let msPrev = performance.now()
+
+//set to desired fps
+const fps = 60
+
+//calculate ms pr. frame
+const msPerFrame = 1000 / fps
+
+function requestAnimationFrame(f){
+  setImmediate(()=>f(Date.now()))
+}
+
+//animate gametick in chosen fps
+function animate() {
+  //request next frame, msPrev is now actually previous time
+  requestAnimationFrame(animate);
+
+  //get current time from program start
+  const msNow = performance.now()
+
+  //time passed between current frame and previous frame
+  const msPassed = msNow - msPrev
+
+  //execute gametick if enough time passed to match desired fps and subtract excess time, otherwise return
+  if (msPassed < msPerFrame) {
+    return;
+  } else {
+    const excessTime = msPassed % msPerFrame
+    msPrev = msNow - excessTime
+    gametick()
+  }
+}
+
+animate()
