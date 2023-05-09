@@ -115,6 +115,7 @@ io.on("connection", (socket) => {
         y: 0,
       },
       username: username,
+      team: randomColor()
     });
 
     //store player object
@@ -185,16 +186,28 @@ function spawnBomb(player) {
   player.lastKey == "a" ? (throwingDirection = -6) : (throwingDirection = 5);
 
   //spawn bomb & store in bomb list
+ let bomb = new Bomb({
+  position: {
+    x: player.position.x,
+    y: player.position.y,
+  },
+  velocity: {
+    x: throwingDirection,
+    y: -12,
+  },
+  team: player.team
+ });
+
   BOMB_LIST.push({
     position: {
-      x: player.position.x,
-      y: player.position.y,
+      x: bomb.position.x,
+      y: bomb.position.y,
     },
     velocity: {
-      x: throwingDirection,
-      y: -12,
+      x: bomb.velocity.x,
+      y: bomb.velocity.y,
     },
-    team: player.team,
+    team: bomb.team,
   });
 }
 
@@ -264,6 +277,9 @@ setInterval(() => {
       player.velocity.x = movementSpeed;
     }
 
+    //bomb collision
+
+
     //update player data pack
     playerDataPacks.push({
       x: player.position.x,
@@ -275,6 +291,7 @@ setInterval(() => {
       imageSrc: player.imageSrc,
       username: player.username,
       isJumping: player.isJumping,
+      team: player.team
     });
   }
 
