@@ -117,7 +117,7 @@ io.on("connection", (socket) => {
         y: 0,
       },
       username: username,
-      team: randomColor()
+      team: randomColor(),
     });
 
     //store player object
@@ -210,6 +210,7 @@ function spawnBomb(player) {
       y: bomb.velocity.y,
     },
     team: bomb.team,
+    damage: bomb.damage,
   });
 }
 
@@ -240,6 +241,15 @@ function gametick() {
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
+
+    //player death
+    if (player.dead) {
+      player.isJumping = true
+      player.position.y = -1000;
+      player.position.x = 512
+      player.health = player.maxHealth;
+      player.dead = false;
+    }
 
     //player physics
     player.position.x += player.velocity.x;
@@ -288,7 +298,8 @@ function gametick() {
     }
 
     //player jumping physics
-    if (player.isJumping) {
+
+    if (player.isJumping && player.velocity.y <= player.terminalVelocity) {
       player.velocity.y += gravity;
     }
 
@@ -311,6 +322,12 @@ function gametick() {
          (bomb.team != player.team)) {
         console.log("HIT!");
         spawnExplosion(bomb, 100);
+        player.health = player.health - bomb.damage;
+        if (player.health <= 0) {
+          //kill player
+          player.dead = true;
+          console.log(player.username + " has died");
+        }
         
         BOMB_LIST.splice(i, 1);
 

@@ -2,14 +2,15 @@
 
 //player sprite
 exports.Sprite = class Sprite {
-  constructor({ position, velocity, username, team }) {
+  constructor({ position, velocity, username, team, socketId }) {
     this.position = position;
     this.velocity = velocity;
     this.width = 60;
     this.height = 60;
     this.lastKey = "a";
     this.isAttacking;
-    this.health = 100;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.pressingKey = {
       a: false,
       d: false,
@@ -19,6 +20,8 @@ exports.Sprite = class Sprite {
     this.username = username;
     this.isJumping = true;
     this.team = team;
+    this.dead = false;
+    this.terminalVelocity = 6.5;
   }
 };
 
@@ -45,6 +48,7 @@ exports.Bomb = class Bomb {
       width: 300,
     };
     this.team = team;
+    this.damage = 25;
   }
 };
 
