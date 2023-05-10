@@ -25,14 +25,12 @@ server.listen(port, (error) => {
 
 //component imports
 const Player = require("./server/components/sprites").Sprite;
-const Platform = require("./server/components/sprites").Platform;
 const Bomb = require("./server/components/sprites").Bomb;
 const Explosion = require("./server/components/sprites").Explosion;
-const randomColor = require("./server/components/util").randomColor;
 
 let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
-let PLATFORM_LIST = [];
+let PLATFORM_LIST = require("./server/components/platforms").allPlatforms;
 let BOMB_LIST = []; //contains active bombs
 let EXPLOSION_LIST = []; //contains active bombs
 
@@ -41,61 +39,6 @@ let gravity = 0.6;
 let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let jumpPower = 16;
-
-//spawn platform objects
-let platform = [];
-//Floor
-platform[0] = new Platform({
-  position: {
-    x: -100, //100 pixels off screen to avoid falling off
-    y: 566,
-  },
-  height: 700,
-  width: 1224, //100 pixels off screen to avoid falling off
-  color: "rgb(255, 255, 255)",
-});
-platform[0].unpassable = true;
-//Platform 1
-platform[1] = new Platform({
-  position: {
-    x: 250,
-    y: 400,
-  },
-  height: 30,
-  width: 200,
-  color: randomColor(),
-});
-//Platform 2
-platform[2] = new Platform({
-  position: {
-    x: 450,
-    y: 200,
-  },
-  height: 30,
-  width: 400,
-  color: randomColor(),
-});
-//Platform 3
-platform[3] = new Platform({
-  position: {
-    x: 100,
-    y: 100,
-  },
-  height: 30,
-  width: 150,
-  color: randomColor(),
-});
-
-for (let i in platform) {
-  PLATFORM_LIST.push({
-    x: platform[i].position.x,
-    y: platform[i].position.y,
-    height: platform[i].height,
-    width: platform[i].width,
-    color: platform[i].color,
-    unpassable: platform[i].unpassable,
-  });
-}
 
 //user connect
 io.on("connection", (socket) => {
@@ -136,7 +79,7 @@ io.on("connection", (socket) => {
     console.log("\x1b[31m", "user disconnected: " + socket.id, "\x1b[0m");
   });
 
-  //user keydown
+  //user keydown events
   socket.on("keydown", (event) => {
     let player = PLAYER_LIST[socket.id];
     switch (event) {
@@ -158,11 +101,16 @@ io.on("connection", (socket) => {
         player.pressingKey.s = true;
         break;
       case "k":
-        spawnBomb(player);
+        player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
+        break;
     }
   });
 
-  //user keyup
+  function detonateBomb(player) {
+    console.log(player.dead);
+  }
+
+  //user keyup events
   socket.on("keyup", (event) => {
     let player = PLAYER_LIST[socket.id];
     switch (event) {

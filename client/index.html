@@ -4,43 +4,42 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smash Brorz</title>
+    <title>BangBros</title>
     <link href="./style.css" type="text/css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/client/img/favicon.png" />
   </head>
   <body>
-    <div>
-      <!--Server Message Form-->
-
+    <div class="selectionMenu">
+      <!---->
       <!--Select team-->
       <form id="form">
         <label for="team">Select a team:</label>
-        <select id="team" onchange="ReadTeam(this)">
-          <option value="green">Green</option>
+        <select id="team" onchange="readTeam(this)">
+          <option value="red">Red</option>
           <option value="blue">Blue</option>
         </select>
-
+        <!---->
         <!--Select role-->
         <label for="role">Select a role:</label>
-        <select id="role" onchange="ReadRole(this)">
+        <select id="role" onchange="readRole(this)">
           <option value="bomber">Bomber</option>
           <option value="detonator">Detonator</option>
         </select>
-
+        <!---->
         <!--Select username-->
         <label for="message" style="color: black">Select username:</label>
         <input type="text" id="input" name="sometext" />
       </form>
-
-      <!--main containers-->
-      <div class="main">
-        <div class="lobbyContainer">
-          <p class="usernames" style="color: white"></p>
-        </div>
-
-        <div class="canvasContainer">
-          <canvas class="canvas"></canvas>
-          <!--1024x576-->
-        </div>
+    </div>
+    <!--main container-->
+    <div class="mainContainer">
+      <!--lobby-->
+      <div class="lobbyContainer">
+        <p class="usernames" style="color: white"></p>
+      </div>
+      <!--game screen-->
+      <div class="canvasContainer">
+        <canvas class="canvas"></canvas>
       </div>
     </div>
 
@@ -53,11 +52,11 @@
       var form = document.getElementById("form");
       var name = document.getElementById("input");
 
-      function ReadTeam(obj) {
+      function readTeam(obj) {
         var team = obj.value;
       }
 
-      function ReadRole(obj) {
+      function readRole(obj) {
         var role = obj.value;
       }
       //test
@@ -65,9 +64,6 @@
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         if (name.value) {
-          console.log("name selected:", name.value);
-          console.log("team selected:", team.value);
-          console.log("role selected:", role.value);
           socket.emit("clientSelections", name.value, team.value, role.value);
           input.name = "";
           form.remove();

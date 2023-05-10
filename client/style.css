@@ -2,7 +2,7 @@ body {
   background-color: #6b6b6b;
 }
 
-.main {
+.mainContainer {
   position: absolute;
   width: 1174px;
   height: 576px;
