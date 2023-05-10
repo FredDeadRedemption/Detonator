@@ -29,7 +29,7 @@ exports.PLATFORM_LIST = [
   {
     position: {
       x: 10,
-      y: 350,
+      y: 349,
     },
     height: 30,
     width: 240,
@@ -40,7 +40,7 @@ exports.PLATFORM_LIST = [
   {
     position: {
       x: 774,
-      y: 350,
+      y: 351,
     },
     height: 30,
     width: 240,
@@ -62,7 +62,7 @@ exports.PLATFORM_LIST = [
   {
     position: {
       x: 712,
-      y: 100,
+      y: 101,
     },
     height: 30,
     width: 100,
@@ -73,7 +73,7 @@ exports.PLATFORM_LIST = [
   {
     position: {
       x: 250,
-      y: 100,
+      y: 99,
     },
     height: 30,
     width: 100,

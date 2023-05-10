@@ -224,6 +224,7 @@ function gametick() {
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
 
+
       //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
       if (
         playerFeetPos >= PLATFORM_LIST[i].position.y &&
@@ -237,17 +238,24 @@ function gametick() {
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].position.y - player.height;
         player.isJumping = false;
+        console.log("platform: "+i);
       }
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
         (playerFeetPos >= PLATFORM_LIST[i].position.y &&
           !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
-          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
+          (
+            (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
+            (player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x-movementSpeed && player.position.x + player.width / 2 <= platformXWidth+movementSpeed)
+          ) &&
           !player.isJumping) ||
         (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
+        console.log("platform 10: "+(PLATFORM_LIST[i].position.x-10));
+        console.log("platform x: "+PLATFORM_LIST[i].position.x);
+        console.log("player: " +(player.position.x + player.width / 2));
       }
     }
 
