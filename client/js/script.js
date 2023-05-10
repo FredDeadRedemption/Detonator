@@ -155,10 +155,10 @@ socket.on("playerState", (playerData) => {
     //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
 
     //DEBUG
-    ctx.font = "20px Verdana";
-    ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(bombList[i].x, bombList[i].x - 32, bombList[i].y);
-    ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
+    // ctx.font = "20px Verdana";
+    // ctx.fillStyle = "rgb(255,255,255)";
+    // ctx.fillText(bombList[i].x, bombList[i].x - 32, bombList[i].y);
+    // ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
 
     ctx.font = "25px Verdana"; //back to original
   }
@@ -210,14 +210,14 @@ socket.on("playerState", (playerData) => {
     //usernameList.textContent = playerData[i].username;
 
     //DEBUG
-    ctx.font = "20px Verdana";
-    ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(playerData[i].x, playerData[i].x - 32, playerData[i].y);
-    ctx.fillText(playerData[i].y, playerData[i].x - 32, playerData[i].y + 18);
-    ctx.fillStyle = "rgb(255,0,255)";
-    ctx.fillRect(playerData[i].x, playerData[i].y, 5, 5);
+    // ctx.font = "20px Verdana";
+    // ctx.fillStyle = "rgb(255,255,255)";
+    // ctx.fillText(playerData[i].x, playerData[i].x - 32, playerData[i].y);
+    // ctx.fillText(playerData[i].y, playerData[i].x - 32, playerData[i].y + 18);
+    // ctx.fillStyle = "rgb(255,0,255)";
+    // ctx.fillRect(playerData[i].x, playerData[i].y, 5, 5);
 
-    ctx.font = "25px Verdana"; //back to original
+    // ctx.font = "25px Verdana"; //back to original
   }
 });
 

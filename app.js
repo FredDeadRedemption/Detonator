@@ -162,8 +162,12 @@ function spawnBomb(player) {
       x: bomb.velocity.x,
       y: bomb.velocity.y,
     },
+    height: bomb.height,
+    width: bomb.width,
     team: bomb.team,
     damage: bomb.damage,
+    isFlying: bomb.isFlying,
+    friction: bomb.friction,
   });
 }
 
@@ -215,7 +219,6 @@ function gametick() {
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
 
-
       //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
       if (
         playerFeetPos >= PLATFORM_LIST[i].position.y &&
@@ -229,7 +232,6 @@ function gametick() {
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].position.y - player.height;
         player.isJumping = false;
-        console.log("platform: "+i);
       }
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
@@ -238,16 +240,30 @@ function gametick() {
           !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
           (
             (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
-            (player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x-movementSpeed && player.position.x + player.width / 2 <= platformXWidth+movementSpeed)
+            (player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x-movementSpeed && player.position.x + player.width / 2 <= platformXWidth+movementSpeed) //avoids confusion when multiple platforms share same y level space
           ) &&
           !player.isJumping) ||
         (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
-        console.log("platform 10: "+(PLATFORM_LIST[i].position.x-10));
-        console.log("platform x: "+PLATFORM_LIST[i].position.x);
-        console.log("player: " +(player.position.x + player.width / 2));
       }
+      //platform bomb collision
+      // for (let i in BOMB_LIST) {
+      //   let bomb = BOMB_LIST[i];
+
+      //   if (
+      //       bomb.position.y >= PLATFORM_LIST[i].position.y &&
+      //       bomb.isFlying
+
+      //     ) {
+      //       console.log(PLATFORM_LIST[i].position.y)
+      //       bomb.isFlying = false;
+      //       bomb.velocity.y = 0;
+      //       //bomb.position.y = PLATFORM_LIST[i].position.y;
+            
+      //   }
+
+      // }
     }
 
     //player jumping physics
@@ -286,8 +302,8 @@ function gametick() {
       //platform
 
       //delete on out screen
-      if (bomb.position.x < -32 || bomb.position.x > 1024 || bomb.position.y > 576) {
-        BOMB_LIST.splice(i, 1);
+      if (bomb.position.x < -32 || bomb.position.x > 1024) {
+        bomb.velocity.x = -bomb.velocity.x
       }
     }
 
@@ -310,10 +326,21 @@ function gametick() {
     let bomb = BOMB_LIST[i];
 
     //bomb physics
+    if (bomb.isFlying) {
+      bomb.position.y += bomb.velocity.y;
+      bomb.velocity.y += bombGravity;
+    }
     bomb.position.x += bomb.velocity.x;
-    bomb.position.y += bomb.velocity.y;
+    if (!bomb.isFlying) {
+      if (bomb.velocity.x > 0) {
+        bomb.velocity.x -= bomb.friction
+      }
+      if (bomb.velocity.x < 0) {
+        bomb.velocity.x += bomb.friction
+      }
+    }
     //bomb.velocity.x = 0;
-    bomb.velocity.y += bombGravity;
+
 
     //update bomb data pack
     bombDataPacks.push({
@@ -321,6 +348,38 @@ function gametick() {
       y: bomb.position.y,
       team: bomb.team,
     });
+
+    //bomb platform collision
+    for (i in PLATFORM_LIST) {
+      bombFeetPos = bomb.position.y + (bomb.height*2)
+      platform = PLATFORM_LIST[i];
+      platformWidth = platform.position.x + platform.width
+      if (
+        bombFeetPos >= platform.position.y &&
+        !(bombFeetPos >= platform.position.y + platform.height) &&
+        bomb.position.x + bomb.width / 2 >= platform.position.x &&
+        bomb.position.x + bomb.width / 2 <= platformWidth &&
+        bomb.velocity.y > 0 &&
+        bomb.isFlying
+        ) {
+        bomb.velocity.y = 0;
+        bomb.isFlying = false;
+        bomb.position.y = platform.position.y - bomb.height*1.9
+      }
+
+      if (
+        (bombFeetPos >= platform.position.y &&
+          !(bombFeetPos >= platform.position.y + platform.height) && //The is between the top and bottom of the platform
+          (
+            (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
+            (bomb.position.x + bomb.width / 2 >= platform.position.x-20 && bomb.position.x + bomb.width / 2 <= platformWidth+20) //avoids confusion when multiple platforms share same y level space
+          ) &&
+          !bomb.isFlying)
+      ) {
+        bomb.isFlying = true;
+      }
+
+    }
   }
 
   //loop explosions

@@ -24,7 +24,7 @@ exports.PLATFORM_LIST = [
     width: 250,
     color: randomColor(),
     unpassable: false,
-  },
+    },
   //platform 2
   {
     position: {
