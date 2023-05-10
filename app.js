@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
     //store player object
     PLAYER_LIST[socket.id] = player;
 
-    socket.emit("clientSelections", username);
+    socket.emit("clientSelections", username, team, role);
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
 

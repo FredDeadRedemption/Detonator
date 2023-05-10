@@ -26,8 +26,8 @@ let game = {
   },
 };
 
-socket.on("usernameSelect", () => {
-  console.log("username has been selected. Starting game..");
+socket.on("clientSelections", (username, team, role) => {
+  console.log(`Username: ${username}\nTeam: ${team}\nRole: ${role}\nStarting game..`);
   game.start();
 });
 
