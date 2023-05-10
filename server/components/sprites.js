@@ -39,6 +39,7 @@ exports.Bomb = class Bomb {
     };
     this.team = team;
     this.damage = 25;
+    this.timer = 450;
   }
 };
 

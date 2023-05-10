@@ -164,16 +164,8 @@ function spawnBomb(player) {
     },
     team: bomb.team,
     damage: bomb.damage,
+    timer: bomb.timer,
   });
-}
-
-function countBombs() {}
-for (i in BOMB_LIST) {
-  if (BOMB_LIST[i].team === "red") {
-    redBombs++;
-  } else if (BOMB_LIST[i].team === "blue") {
-    blueBombs++;
-  }
 }
 
 function spawnExplosion(bomb, radius) {
@@ -224,7 +216,6 @@ function gametick() {
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
 
-
       //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
       if (
         playerFeetPos >= PLATFORM_LIST[i].position.y &&
@@ -238,24 +229,23 @@ function gametick() {
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].position.y - player.height;
         player.isJumping = false;
-        console.log("platform: "+i);
+        console.log("platform: " + i);
       }
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
         (playerFeetPos >= PLATFORM_LIST[i].position.y &&
           !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
-          (
-            (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
-            (player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x-movementSpeed && player.position.x + player.width / 2 <= platformXWidth+movementSpeed)
-          ) &&
+          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
+          player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x - movementSpeed &&
+          player.position.x + player.width / 2 <= platformXWidth + movementSpeed &&
           !player.isJumping) ||
         (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
-        console.log("platform 10: "+(PLATFORM_LIST[i].position.x-10));
-        console.log("platform x: "+PLATFORM_LIST[i].position.x);
-        console.log("player: " +(player.position.x + player.width / 2));
+        console.log("platform 10: " + (PLATFORM_LIST[i].position.x - 10));
+        console.log("platform x: " + PLATFORM_LIST[i].position.x);
+        console.log("player: " + (player.position.x + player.width / 2));
       }
     }
 
@@ -318,11 +308,22 @@ function gametick() {
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
+    bomb.timer--;
+    if (bomb.timer < 0) {
+      delete BOMB_LIST[i];
+    }
+    console.log(bomb.timer);
+
     //bomb physics
     bomb.position.x += bomb.velocity.x;
     bomb.position.y += bomb.velocity.y;
     //bomb.velocity.x = 0;
     bomb.velocity.y += bombGravity;
+    bomb.velocity.x > 0 ? bomb.velocity.x-- : bomb.velocity.x++;
+
+    if (bomb.position.y >= PLATFORM_LIST[1].position.y) {
+      bomb.velocity.y = 0;
+    }
 
     //update bomb data pack
     bombDataPacks.push({
@@ -358,7 +359,7 @@ function gametick() {
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }
-}
+} //gametick
 
 //allows us to get time from program start
 //alternative to "window.performance.now" which is not available in server environment
