@@ -1,8 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const app = express();
 
-const uri = 'mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority';
+const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 const http = require("http");
 
 const server = http.createServer(app);
@@ -11,7 +11,7 @@ const port = 420;
 
 const io = require("socket.io")(server);
 
-async function connect(){
+async function connect() {
   try {
     await mongoose.connect(uri);
     console.log("connected to MongoDB");
@@ -319,22 +319,17 @@ function gametick() {
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
+    //despawn bomb after 450 ticks
     bomb.timer--;
     if (bomb.timer < 0) {
       delete BOMB_LIST[i];
     }
-    console.log(bomb.timer);
 
     //bomb physics
     bomb.position.x += bomb.velocity.x;
     bomb.position.y += bomb.velocity.y;
     //bomb.velocity.x = 0;
     bomb.velocity.y += bombGravity;
-    bomb.velocity.x > 0 ? bomb.velocity.x-- : bomb.velocity.x++;
-
-    if (bomb.position.y >= PLATFORM_LIST[1].position.y) {
-      bomb.velocity.y = 0;
-    }
 
     //update bomb data pack
     bombDataPacks.push({
