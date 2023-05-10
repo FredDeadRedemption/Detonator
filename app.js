@@ -26,39 +26,37 @@ server.listen(port, (error) => {
 //component imports
 const Player = require("./server/components/sprites").Sprite;
 const Platform = require("./server/components/sprites").Platform;
-//const Bomb = require("./server/components/sprites").Bomb;
+const Bomb = require("./server/components/sprites").Bomb;
+const Explosion = require("./server/components/sprites").Explosion;
 const randomColor = require("./server/components/util").randomColor;
 
-//lists
-let SOCKET_LIST = []; //contains active connections
+let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
 let PLATFORM_LIST = [];
-//let BOMB_LIST = []; //contains active bombs
+let BOMB_LIST = []; //contains active bombs
+let EXPLOSION_LIST = []; //contains active bombs
 
 //settings
 let gravity = 0.6;
+let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let jumpPower = 16;
 
 //spawn platform objects
-let floor = new Platform({
+let platform = [];
+//Floor
+platform[0] = new Platform({
   position: {
     x: -100, //100 pixels off screen to avoid falling off
     y: 566,
   },
   height: 700,
   width: 1224, //100 pixels off screen to avoid falling off
-  color: "rgb(0, 0, 0, 0.1)",
+  color: "rgb(255, 255, 255)",
 });
-PLATFORM_LIST.push({
-  x: floor.position.x,
-  y: floor.position.y,
-  height: floor.height,
-  width: floor.width,
-  color: floor.color,
-  unpassable: true,
-});
-let platform1 = new Platform({
+platform[0].unpassable = true;
+//Platform 1
+platform[1] = new Platform({
   position: {
     x: 250,
     y: 400,
@@ -67,14 +65,8 @@ let platform1 = new Platform({
   width: 200,
   color: randomColor(),
 });
-PLATFORM_LIST.push({
-  x: platform1.position.x,
-  y: platform1.position.y,
-  height: platform1.height,
-  width: platform1.width,
-  color: platform1.color,
-});
-let platform2 = new Platform({
+//Platform 2
+platform[2] = new Platform({
   position: {
     x: 450,
     y: 200,
@@ -83,14 +75,8 @@ let platform2 = new Platform({
   width: 400,
   color: randomColor(),
 });
-PLATFORM_LIST.push({
-  x: platform2.position.x,
-  y: platform2.position.y,
-  height: platform2.height,
-  width: platform2.width,
-  color: platform2.color,
-});
-let platform3 = new Platform({
+//Platform 3
+platform[3] = new Platform({
   position: {
     x: 100,
     y: 100,
@@ -99,13 +85,17 @@ let platform3 = new Platform({
   width: 150,
   color: randomColor(),
 });
-PLATFORM_LIST.push({
-  x: platform3.position.x,
-  y: platform3.position.y,
-  height: platform3.height,
-  width: platform3.width,
-  color: platform3.color,
-});
+
+for (let i in platform) {
+  PLATFORM_LIST.push({
+    x: platform[i].position.x,
+    y: platform[i].position.y,
+    height: platform[i].height,
+    width: platform[i].width,
+    color: platform[i].color,
+    unpassable: platform[i].unpassable,
+  });
+}
 
 //user connect
 io.on("connection", (socket) => {
@@ -152,9 +142,11 @@ io.on("connection", (socket) => {
     switch (event) {
       case "a":
         player.pressingKey.a = true;
+        player.lastKey = "a";
         break;
       case "d":
         player.pressingKey.d = true;
+        player.lastKey = "d";
         break;
       case " ":
         if (!player.isJumping) {
@@ -165,6 +157,8 @@ io.on("connection", (socket) => {
       case "s":
         player.pressingKey.s = true;
         break;
+      case "k":
+        spawnBomb(player);
     }
   });
 
@@ -190,13 +184,74 @@ io.on("connection", (socket) => {
   });
 });
 
+function spawnBomb(player) {
+  //determine throwing direction
+  let throwingDirection;
+  player.lastKey == "a" ? (throwingDirection = -6) : (throwingDirection = 5);
+
+  //spawn bomb & store in bomb list
+  let bomb = new Bomb({
+    position: {
+      x: player.position.x,
+      y: player.position.y,
+    },
+    velocity: {
+      x: throwingDirection,
+      y: -12,
+    },
+    team: player.team,
+  });
+
+  BOMB_LIST.push({
+    position: {
+      x: bomb.position.x,
+      y: bomb.position.y,
+    },
+    velocity: {
+      x: bomb.velocity.x,
+      y: bomb.velocity.y,
+    },
+    team: bomb.team,
+    damage: bomb.damage,
+  });
+}
+
+function spawnExplosion(bomb, radius) {
+  let explosion = new Explosion({
+    position: {
+      x: bomb.position.x,
+      y: bomb.position.y,
+    },
+    radius: radius,
+  });
+  EXPLOSION_LIST.push({
+    position: {
+      x: explosion.position.x - radius / 2,
+      y: explosion.position.y - radius / 2,
+    },
+    radius: explosion.radius,
+    fadeTime: explosion.fadeTime,
+  });
+}
+
 //gametick
-setInterval(() => {
+function gametick() {
   let playerDataPacks = [];
+  let bombDataPacks = [];
+  let explosionDataPacks = [];
 
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
+
+    //player death
+    if (player.dead) {
+      player.isJumping = true;
+      player.position.y = -1000;
+      player.position.x = 512;
+      player.health = player.maxHealth;
+      player.dead = false;
+    }
 
     //player physics
     player.position.x += player.velocity.x;
@@ -227,17 +282,18 @@ setInterval(() => {
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
         (playerFeetPos >= PLATFORM_LIST[i].y &&
-          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) &&
+          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
           (player.position.x + player.width / 2 <= PLATFORM_LIST[i].x || player.position.x + player.width / 2 >= platformXWidth) &&
           !player.isJumping) ||
-        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable)
+        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].y)
       ) {
         player.isJumping = true;
       }
     }
 
     //player jumping physics
-    if (player.isJumping) {
+
+    if (player.isJumping && player.velocity.y <= player.terminalVelocity) {
       player.velocity.y += gravity;
     }
 
@@ -248,7 +304,35 @@ setInterval(() => {
       player.velocity.x = movementSpeed;
     }
 
-    //player datapack
+    //bomb collision
+    for (let i in BOMB_LIST) {
+      let bomb = BOMB_LIST[i];
+
+      //console.log("player x: " + player.position.x + ", y: " + player.position.y);
+      //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
+      //player
+      if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height && bomb.team != player.team) {
+        console.log("HIT!");
+        spawnExplosion(bomb, 100);
+        player.health = player.health - bomb.damage;
+        if (player.health <= 0) {
+          //kill player
+          player.dead = true;
+          console.log(player.username + " has died");
+        }
+
+        BOMB_LIST.splice(i, 1);
+      }
+
+      //platform
+
+      //delete on out screen
+      if (bomb.position.x < 0 || bomb.position.x > 1024 || bomb.position.y < 0 || bomb.position.y > 576) {
+        BOMB_LIST.splice(i, 1);
+      }
+    }
+
+    //update player data pack
     playerDataPacks.push({
       x: player.position.x,
       y: player.position.y,
@@ -258,14 +342,92 @@ setInterval(() => {
       },
       username: player.username,
       isJumping: player.isJumping,
+      team: player.team,
     });
   }
 
-  //emit player data packs
+  //loop bombs
+  for (let i in BOMB_LIST) {
+    let bomb = BOMB_LIST[i];
+
+    //bomb physics
+    bomb.position.x += bomb.velocity.x;
+    bomb.position.y += bomb.velocity.y;
+    //bomb.velocity.x = 0;
+    bomb.velocity.y += bombGravity;
+
+    //update bomb data pack
+    bombDataPacks.push({
+      x: bomb.position.x,
+      y: bomb.position.y,
+      team: bomb.team,
+    });
+  }
+
+  //loop explosions
+  for (let i in EXPLOSION_LIST) {
+    let explosion = EXPLOSION_LIST[i];
+    explosion.fadeTime = explosion.fadeTime - 1;
+    if (explosion.fadeTime <= 0) {
+      EXPLOSION_LIST.splice(i, 1);
+    }
+    //console.log(explosion.fadeTime);
+
+    //update bomb data pack
+    explosionDataPacks.push({
+      x: explosion.position.x,
+      y: explosion.position.y,
+      radius: explosion.radius,
+    });
+  }
+
+  //emit player & bomb data packs to all socket connections
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
+    socket.emit("bombState", bombDataPacks);
+    socket.emit("explosionState", explosionDataPacks);
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }
-}, 1000 / 156); //~64ms tick
+}
+
+//allows us to get time from program start
+//alternative to "window.performance.now" which is not available in server environment
+const { PerformanceObserver, performance } = require("node:perf_hooks");
+
+//get current time from program start
+let msPrev = performance.now();
+
+//set to desired fps
+const fps = 60;
+
+//calculate ms pr. frame
+const msPerFrame = 1000 / fps;
+
+function requestAnimationFrame(f) {
+  setImmediate(() => f(Date.now()));
+}
+
+//animate gametick in chosen fps
+function animate() {
+  //request next frame, msPrev is now actually previous time
+  requestAnimationFrame(animate);
+
+  //get current time from program start
+  const msNow = performance.now();
+
+  //time passed between current frame and previous frame
+  const msPassed = msNow - msPrev;
+
+  //execute gametick if enough time passed to match desired fps and subtract excess time, otherwise return
+  if (msPassed < msPerFrame) {
+    return;
+  } else {
+    const excessTime = msPassed % msPerFrame;
+    msPrev = msNow - excessTime;
+    gametick();
+  }
+}
+
+animate();

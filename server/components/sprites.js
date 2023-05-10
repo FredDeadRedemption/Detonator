@@ -7,9 +7,10 @@ exports.Sprite = class Sprite {
     this.velocity = velocity;
     this.width = 60;
     this.height = 60;
-    this.lastKey;
+    this.lastKey = "a";
     this.isAttacking;
-    this.health = 100;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.pressingKey = {
       a: false,
       d: false,
@@ -20,6 +21,8 @@ exports.Sprite = class Sprite {
     this.team = team;
     this.role = role;
     this.isJumping = true;
+    this.dead = false;
+    this.terminalVelocity = 6.5;
   }
 };
 
@@ -39,11 +42,21 @@ exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
     this.position = position;
     this.velocity = velocity;
+    this.width = 27; //9*3 from its sprites pixels
+    this.height = 27;
     this.blastRadius = {
-      height: 200,
-      width: 200,
+      height: 300,
+      width: 300,
     };
     this.team = team;
-    this.timer;
+    this.damage = 25;
+  }
+};
+
+exports.Explosion = class Explosion {
+  constructor({ position, radius }) {
+    this.position = position;
+    this.radius = radius;
+    this.fadeTime = 20;
   }
 };

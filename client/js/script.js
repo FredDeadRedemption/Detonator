@@ -1,4 +1,5 @@
 "use strict";
+
 //ctx
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -79,8 +80,11 @@ canvas.addEventListener("click", (event) => {
   }
 });
 
+//background sprite img
 const backgroundImg = new Image();
 backgroundImg.src = "/img/background.png";
+
+//fox sprite img
 const foxImgIdle = new Image();
 foxImgIdle.src = "/img/fox.png";
 const foxImgLeft = new Image();
@@ -91,13 +95,31 @@ const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
 console.log(foxImgIdle.src);
 
+//bomb sprite img
+const bombImg = new Image();
+bombImg.src = "/img/bomb.png";
+
+//explosion sprite img
+const explosionImg = new Image();
+explosionImg.src = "/img/explosion.png";
+
 let currentFrame = 0;
 let imageFrame = 0;
 
 let platformList = undefined;
+let bombList = undefined;
+let explosionList = undefined;
 
 socket.on("platform", (platforms) => {
   platformList = platforms;
+});
+
+socket.on("bombState", (bombData) => {
+  bombList = bombData;
+});
+
+socket.on("explosionState", (explosionData) => {
+  explosionList = explosionData;
 });
 
 //game tick
@@ -111,6 +133,26 @@ socket.on("playerState", (playerData) => {
   for (let i in platformList) {
     ctx.fillStyle = platformList[i].color;
     ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width, platformList[i].height);
+  }
+
+  //render bomb
+  for (let i in bombList) {
+    //ctx.fillStyle = "black";
+    ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
+    //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
+
+    //DEBUG
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(bombList[i].x, bombList[i].x - 32, bombList[i].y);
+    ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
+
+    ctx.font = "25px Verdana"; //back to original
+  }
+
+  //render explosion
+  for (let i in explosionList) {
+    ctx.drawImage(explosionImg, 0, imageFrame, 60, 60, explosionList[i].x, explosionList[i].y, explosionList[i].radius, explosionList[i].radius);
   }
 
   //frame for animation loop
@@ -147,9 +189,22 @@ socket.on("playerState", (playerData) => {
     //username animation
     ctx.fillStyle = "rgb(255,255,255)";
     ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
+    //temporary team color animation
+    ctx.fillStyle = playerData[i].team;
+    ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
+
+    //DEBUG
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "rgb(255,255,255)";
+    ctx.fillText(playerData[i].x, playerData[i].x - 32, playerData[i].y);
+    ctx.fillText(playerData[i].y, playerData[i].x - 32, playerData[i].y + 18);
+    ctx.fillStyle = "rgb(255,0,255)";
+    ctx.fillRect(playerData[i].x, playerData[i].y, 5, 5);
+
+    ctx.font = "25px Verdana"; //back to original
   }
 });
 
