@@ -1,6 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const passport = require("passport");
+var bodyParser = require("body-parser"),
+    LocalStrategy = require("passport-local"),
+    passportLocalMongoose = 
+        require("passport-local-mongoose")
+const User = require("./server/components/user.js");
 
 const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 const http = require("http");
@@ -19,8 +25,55 @@ async function connect() {
     console.error(error);
   }
 }
-connect();
+connect(); 
 
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(require("express-session")({
+    secret: "Rusty is a dog",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+  
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//Database
+app.post("/register", async (req, res) => {
+  const user = await User.create({
+    username: req.body.username,
+    password: req.body.password,
+  });
+  
+  return res.status(200).json(user);
+});
+
+app.post("/login", async function(req, res){
+  try {
+      // check if the user exists
+      const user = await User.findOne({ username: req.body.username });
+      if (user) {
+        //check if password matches
+        const result = req.body.password === user.password;
+        if (result) {
+          res.get("./client/index.html");
+        } else {
+          res.status(400).json({ error: "password doesn't match" });
+        }
+      } else {
+        res.status(400).json({ error: "User doesn't exist" });
+      }
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+});
+
+
+//client
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/StartPage.html");
 });
@@ -73,6 +126,7 @@ io.on("connection", (socket) => {
         y: 0,
       },
       username: username,
+      password: password,
       team: team,
       role: role,
     });

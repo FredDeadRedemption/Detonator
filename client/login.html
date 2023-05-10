@@ -14,11 +14,16 @@
         <section class="Title">
             <h3 class="form-name">Login</h3>
         </section>
-        <form action="index.html" method="get" onkeypress="">
+        <form action="/login" method="POST">
             <div class="form-group">
                 <input type="text" class="form-control" id="username" name="username" required>
                 <span></span>
                 <label for="username">Username</label>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" required>
+                <span></span>
+                <label for="password">Password</label>
             </div>
             <input id="Submit" type="submit" value="Login">
     </div>
@@ -27,5 +32,4 @@
         <button type="button" id="back"> Back</button>
     </a>
 </body>
-
 </html>
