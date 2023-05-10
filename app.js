@@ -1,7 +1,8 @@
 const express = require("express");
-
+const mongoose = require("mongoose")
 const app = express();
 
+const uri = 'mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority';
 const http = require("http");
 
 const server = http.createServer(app);
@@ -9,6 +10,16 @@ const server = http.createServer(app);
 const port = 420;
 
 const io = require("socket.io")(server);
+
+async function connect(){
+  try {
+    await mongoose.connect(uri);
+    console.log("connected to MongoDB");
+  } catch (error) {
+    console.error(error);
+  }
+}
+connect();
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/StartPage.html");
