@@ -26,9 +26,12 @@ let game = {
   },
 };
 
+let role = undefined;
+
 //DEBUG
-socket.on("clientSelections", (username, team, role) => {
-  console.log(`Username: ${username}\nTeam: ${team}\nRole: ${role}\nStarting game..`);
+socket.on("clientSelections", (selectedUsername, selectedTeam, selectedRole) => {
+  role = selectedRole;
+  console.log(`Username: ${selectedUsername}\nTeam: ${selectedTeam}\nRole: ${selectedRole}\nStarting game..`);
   game.start();
 });
 
@@ -49,11 +52,21 @@ window.addEventListener("keydown", (event) => {
         socket.emit("keydown", "s");
         break;
       case "k":
-        socket.emit("keydown", "k");
+        if (!cooldownActive & (role === "bomber")) ability();
         break;
     }
   }
 });
+
+let cooldownActive = false;
+
+function ability() {
+  socket.emit("keydown", "k");
+  cooldownActive = true;
+  setTimeout(() => {
+    cooldownActive = false;
+  }, 3000);
+}
 
 window.addEventListener("keyup", (event) => {
   //client keyup
