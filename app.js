@@ -23,13 +23,17 @@ server.listen(port, (error) => {
   }
 });
 
+//component imports
 const Player = require("./server/components/sprites").Sprite;
 const Platform = require("./server/components/sprites").Platform;
+//const Bomb = require("./server/components/sprites").Bomb;
 const randomColor = require("./server/components/util").randomColor;
 
-let SOCKET_LIST = []; //contains current connection
-let PLAYER_LIST = []; //contains current player objects
+//lists
+let SOCKET_LIST = []; //contains active connections
+let PLAYER_LIST = []; //contains active player objects
 let PLATFORM_LIST = [];
+//let BOMB_LIST = []; //contains active bombs
 
 //settings
 let gravity = 0.6;
@@ -112,7 +116,7 @@ io.on("connection", (socket) => {
   //store connection
   SOCKET_LIST[socket.id] = socket;
 
-  socket.on("usernameSelect", (username) => {
+  socket.on("clientSelections", (username, team, role) => {
     //spawn player object
     let player = new Player({
       position: {
@@ -124,12 +128,14 @@ io.on("connection", (socket) => {
         y: 0,
       },
       username: username,
+      team: team,
+      role: role,
     });
 
     //store player object
     PLAYER_LIST[socket.id] = player;
 
-    socket.emit("usernameSelect", username);
+    socket.emit("clientSelections", username);
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
 
@@ -250,7 +256,6 @@ setInterval(() => {
         a: player.pressingKey.a,
         d: player.pressingKey.d,
       },
-      imageSrc: player.imageSrc,
       username: player.username,
       isJumping: player.isJumping,
     });

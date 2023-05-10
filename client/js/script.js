@@ -47,9 +47,6 @@ window.addEventListener("keydown", (event) => {
       case "s":
         socket.emit("keydown", "s");
         break;
-      case "k":
-        socket.emit("keydown", "k");
-        break;
     }
   }
 });

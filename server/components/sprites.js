@@ -2,7 +2,7 @@
 
 //player sprite
 exports.Sprite = class Sprite {
-  constructor({ position, velocity, username }) {
+  constructor({ position, velocity, username, team, role }) {
     this.position = position;
     this.velocity = velocity;
     this.width = 60;
@@ -17,6 +17,8 @@ exports.Sprite = class Sprite {
       s: false,
     };
     this.username = username;
+    this.team = team;
+    this.role = role;
     this.isJumping = true;
   }
 };
@@ -42,5 +44,6 @@ exports.Bomb = class Bomb {
       width: 200,
     };
     this.team = team;
+    this.timer;
   }
 };

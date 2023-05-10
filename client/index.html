@@ -10,10 +10,28 @@
   <body>
     <div>
       <!--Server Message Form-->
+
+      <!--Select team-->
       <form id="form">
-        <label for="message" style="color: black">Select username:</label><br />
+        <label for="team">Select a team:</label>
+        <select id="team" onchange="ReadTeam(this)">
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </select>
+
+        <!--Select role-->
+        <label for="role">Select a role:</label>
+        <select id="role" onchange="ReadRole(this)">
+          <option value="bomber">Bomber</option>
+          <option value="detonator">Detonator</option>
+        </select>
+
+        <!--Select username-->
+        <label for="message" style="color: black">Select username:</label>
         <input type="text" id="input" name="sometext" />
       </form>
+
+      <!--main containers-->
       <div class="main">
         <div class="lobbyContainer">
           <p class="usernames" style="color: white"></p>
@@ -33,21 +51,31 @@
       import socket from "./js/script.js";
 
       var form = document.getElementById("form");
-      var input = document.getElementById("input");
+      var name = document.getElementById("input");
 
+      function ReadTeam(obj) {
+        var team = obj.value;
+      }
+
+      function ReadRole(obj) {
+        var role = obj.value;
+      }
       //test
       //sender besked til server
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-        if (input.value) {
-          socket.emit("usernameSelect", input.value);
-          input.value = "";
+        if (name.value) {
+          console.log("name selected:", name.value);
+          console.log("team selected:", team.value);
+          console.log("role selected:", role.value);
+          socket.emit("clientSelections", name.value, team.value, role.value);
+          input.name = "";
           form.remove();
         }
       });
 
       //modtager besked fra server
-      socket.on("usernameSelect", (username) => {
+      socket.on("clientSelections", (username) => {
         //document.querySelector(".text").textContent = username;
       });
     </script>
