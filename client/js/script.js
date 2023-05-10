@@ -52,7 +52,11 @@ window.addEventListener("keydown", (event) => {
         socket.emit("keydown", "s");
         break;
       case "k":
-        if (!cooldownActive & (role === "bomber")) ability();
+        if (role === "bomber" && !cooldownActive) {
+          ability();
+        } else if (role === "detonator") {
+          ability();
+        }
         break;
     }
   }
@@ -65,7 +69,7 @@ function ability() {
   cooldownActive = true;
   setTimeout(() => {
     cooldownActive = false;
-  }, 3000);
+  }, 1500);
 }
 
 window.addEventListener("keyup", (event) => {
@@ -82,18 +86,6 @@ window.addEventListener("keyup", (event) => {
         socket.emit("keyup", "s");
         break;
     }
-  }
-});
-
-//DELETE???
-canvas.addEventListener("click", (event) => {
-  //client click
-  if (game.isRunning) {
-    let click = {
-      x: event.pageX,
-      y: event.pageY,
-    };
-    socket.emit("click", click);
   }
 });
 

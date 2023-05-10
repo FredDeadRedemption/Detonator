@@ -1,7 +1,8 @@
 const express = require("express");
-
+const mongoose = require("mongoose");
 const app = express();
 
+const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 const http = require("http");
 
 const server = http.createServer(app);
@@ -9,6 +10,16 @@ const server = http.createServer(app);
 const port = 420;
 
 const io = require("socket.io")(server);
+
+async function connect() {
+  try {
+    await mongoose.connect(uri);
+    console.log("connected to MongoDB");
+  } catch (error) {
+    console.error(error);
+  }
+}
+connect();
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/StartPage.html");
@@ -104,6 +115,8 @@ io.on("connection", (socket) => {
         break;
       case "k":
         player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
+        //DEBUG
+        console.log("ability used");
         break;
       //taunt option here maybe????
     }
@@ -128,12 +141,10 @@ io.on("connection", (socket) => {
         break;
     }
   });
-
-  //user click
-  socket.on("click", (click) => {
-    console.log(click.x, click.y);
-  });
 });
+
+let redBombs = 0;
+let blueBombs = 0;
 
 function spawnBomb(player) {
   //determine throwing direction
@@ -166,6 +177,7 @@ function spawnBomb(player) {
     width: bomb.width,
     team: bomb.team,
     damage: bomb.damage,
+    timer: bomb.timer,
     isFlying: bomb.isFlying,
     friction: bomb.friction,
   });
@@ -238,10 +250,9 @@ function gametick() {
       if (
         (playerFeetPos >= PLATFORM_LIST[i].position.y &&
           !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
-          (
-            (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
-            (player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x-movementSpeed && player.position.x + player.width / 2 <= platformXWidth+movementSpeed) //avoids confusion when multiple platforms share same y level space
-          ) &&
+          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
+          player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x - movementSpeed &&
+          player.position.x + player.width / 2 <= platformXWidth + movementSpeed &&
           !player.isJumping) ||
         (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
@@ -324,6 +335,12 @@ function gametick() {
   //loop bombs
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
+
+    //despawn bomb after 450 ticks
+    bomb.timer--;
+    if (bomb.timer < 0) {
+      delete BOMB_LIST[i];
+    }
 
     //bomb physics
     if (bomb.isFlying) {
@@ -408,7 +425,7 @@ function gametick() {
     //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }
-}
+} //gametick
 
 //allows us to get time from program start
 //alternative to "window.performance.now" which is not available in server environment
