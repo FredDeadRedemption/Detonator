@@ -275,7 +275,7 @@ function gametick() {
       //platform
 
       //delete on out screen
-      if (bomb.position.x < 0 || bomb.position.x > 1024 || bomb.position.y < 0 || bomb.position.y > 576) {
+      if (bomb.position.x < -32 || bomb.position.x > 1024 || bomb.position.y > 576) {
         BOMB_LIST.splice(i, 1);
       }
     }
