@@ -6,6 +6,7 @@ const ctx = canvas.getContext("2d");
 
 const lobby = document.querySelector(".lobbyContainer");
 
+//ctx settings
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
@@ -17,9 +18,7 @@ ctx.imageSmoothingQuality = "high";
 var socket = io();
 export default socket;
 
-//initial background animation
-ctx.fillRect(0, 0, canvas.width, canvas.width);
-
+//local game state handler
 let game = {
   isRunning: false,
   start() {
@@ -27,6 +26,7 @@ let game = {
   },
 };
 
+//DEBUG
 socket.on("clientSelections", (username, team, role) => {
   console.log(`Username: ${username}\nTeam: ${team}\nRole: ${role}\nStarting game..`);
   game.start();
@@ -72,6 +72,7 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
+//DELETE???
 canvas.addEventListener("click", (event) => {
   //client click
   if (game.isRunning) {
@@ -96,7 +97,6 @@ const foxImgRight = new Image();
 foxImgRight.src = "/img/fox_right.png";
 const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
-console.log(foxImgIdle.src);
 
 //bomb sprite img
 const bombImg = new Image();
@@ -127,12 +127,10 @@ socket.on("explosionState", (explosionData) => {
 
 //game tick
 socket.on("playerState", (playerData) => {
-  //render background
-  ctx.fillStyle = "black";
+  //render background image
   ctx.drawImage(backgroundImg, 0, 0, 1856, 1024, 0, 0, canvas.width, canvas.height);
-  //ctx.fillRect(0, 0, canvas.width, canvas.width);
 
-  //render platform
+  //render platform //////Det skal bare tegnes statisk på background image
   for (let i in platformList) {
     ctx.fillStyle = platformList[i].color;
     ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);
@@ -140,7 +138,6 @@ socket.on("playerState", (playerData) => {
 
   //render bomb
   for (let i in bombList) {
-    //ctx.fillStyle = "black";
     ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
     //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
 

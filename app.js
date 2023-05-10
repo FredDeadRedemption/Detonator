@@ -27,10 +27,11 @@ server.listen(port, (error) => {
 const Player = require("./server/components/sprites").Sprite;
 const Bomb = require("./server/components/sprites").Bomb;
 const Explosion = require("./server/components/sprites").Explosion;
+const PLATFORM_LIST = require("./server/components/platforms").PLATFORM_LIST;
 
+//dynamic lists
 let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
-let PLATFORM_LIST = require("./server/components/platforms").PLATFORM_LIST;
 let BOMB_LIST = []; //contains active bombs
 let EXPLOSION_LIST = []; //contains active bombs
 
@@ -40,13 +41,13 @@ let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let jumpPower = 16;
 
-//user connect
+//suck it io
 io.on("connection", (socket) => {
-  socket.id = Math.random();
+  socket.id = Math.random(); //reject characters, embrace integers.
 
-  socket.emit("join-lobby", socket.id);
-  console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m");
-  //store connection
+  socket.emit("join-lobby", socket.id); //??
+  console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m"); //notify server
+  //store client connection
   SOCKET_LIST[socket.id] = socket;
 
   socket.on("clientSelections", (username, team, role) => {
@@ -68,11 +69,12 @@ io.on("connection", (socket) => {
     //store player object
     PLAYER_LIST[socket.id] = player;
 
+    //DEBUG
     socket.emit("clientSelections", username, team, role);
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
 
-  //user disconnect
+  //delete user data on disconnect
   socket.on("disconnect", () => {
     delete SOCKET_LIST[socket.id];
     delete PLAYER_LIST[socket.id];
@@ -103,6 +105,7 @@ io.on("connection", (socket) => {
       case "k":
         player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
         break;
+      //taunt option here maybe????
     }
   });
 
@@ -192,7 +195,7 @@ function gametick() {
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
 
-    //player death
+    //player death //lol flyver man så bare ad helvedes til???
     if (player.dead) {
       player.isJumping = true;
       player.position.y = -1000;
