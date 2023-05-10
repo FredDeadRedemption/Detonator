@@ -47,4 +47,37 @@ exports.PLATFORM_LIST = [
     color: randomColor(),
     unpassable: false,
   },
+  //platform 4
+  {
+    position: {
+      x: 522,
+      y: 220,
+    },
+    height: 30,
+    width: 350,
+    color: randomColor(),
+    unpassable: false,
+  },
+  //platform 5
+  {
+    position: {
+      x: 712,
+      y: 100,
+    },
+    height: 30,
+    width: 100,
+    color: randomColor(),
+    unpassable: false,
+  },
+  //platform 6
+  {
+    position: {
+      x: 250,
+      y: 100,
+    },
+    height: 30,
+    width: 100,
+    color: randomColor(),
+    unpassable: false,
+  },
 ];
