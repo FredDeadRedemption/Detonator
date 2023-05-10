@@ -104,6 +104,8 @@ io.on("connection", (socket) => {
         break;
       case "k":
         player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
+        //DEBUG
+        console.log("ability used");
         break;
       //taunt option here maybe????
     }
@@ -128,12 +130,10 @@ io.on("connection", (socket) => {
         break;
     }
   });
-
-  //user click
-  socket.on("click", (click) => {
-    console.log(click.x, click.y);
-  });
 });
+
+let redBombs = 0;
+let blueBombs = 0;
 
 function spawnBomb(player) {
   //determine throwing direction
@@ -165,6 +165,15 @@ function spawnBomb(player) {
     team: bomb.team,
     damage: bomb.damage,
   });
+}
+
+function countBombs() {}
+for (i in BOMB_LIST) {
+  if (BOMB_LIST[i].team === "red") {
+    redBombs++;
+  } else if (BOMB_LIST[i].team === "blue") {
+    blueBombs++;
+  }
 }
 
 function spawnExplosion(bomb, radius) {
