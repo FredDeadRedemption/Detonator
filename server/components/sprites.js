@@ -26,17 +26,6 @@ exports.Sprite = class Sprite {
   }
 };
 
-//platform sprite
-exports.Platform = class Platform {
-  constructor({ position, height, width, color }) {
-    this.position = position;
-    this.height = height;
-    this.width = width;
-    this.color = color;
-    this.unpassable = false;
-  }
-};
-
 //bomb sprite
 exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
@@ -53,6 +42,7 @@ exports.Bomb = class Bomb {
   }
 };
 
+//explosion sprite
 exports.Explosion = class Explosion {
   constructor({ position, radius }) {
     this.position = position;

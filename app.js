@@ -30,7 +30,7 @@ const Explosion = require("./server/components/sprites").Explosion;
 
 let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
-let PLATFORM_LIST = require("./server/components/platforms").allPlatforms;
+let PLATFORM_LIST = require("./server/components/platforms").PLATFORM_LIST;
 let BOMB_LIST = []; //contains active bombs
 let EXPLOSION_LIST = []; //contains active bombs
 
@@ -210,30 +210,30 @@ function gametick() {
 
     //Platform collision
     for (let i in PLATFORM_LIST) {
-      let platformXWidth = PLATFORM_LIST[i].x + PLATFORM_LIST[i].width;
+      let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
 
       //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
       if (
-        playerFeetPos >= PLATFORM_LIST[i].y &&
-        !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) &&
-        player.position.x + player.width / 2 >= PLATFORM_LIST[i].x &&
+        playerFeetPos >= PLATFORM_LIST[i].position.y &&
+        !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) &&
+        player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x &&
         player.position.x + player.width / 2 <= platformXWidth &&
         player.isJumping &&
         player.velocity.y > 0 &&
         ((!player.pressingKey.s && !PLATFORM_LIST[i].unpassable) || PLATFORM_LIST[i].unpassable)
       ) {
         player.velocity.y = 0;
-        player.position.y = PLATFORM_LIST[i].y - player.height;
+        player.position.y = PLATFORM_LIST[i].position.y - player.height;
         player.isJumping = false;
       }
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
-        (playerFeetPos >= PLATFORM_LIST[i].y &&
-          !(playerFeetPos >= PLATFORM_LIST[i].y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
-          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].x || player.position.x + player.width / 2 >= platformXWidth) &&
+        (playerFeetPos >= PLATFORM_LIST[i].position.y &&
+          !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
+          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
           !player.isJumping) ||
-        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].y)
+        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
       }

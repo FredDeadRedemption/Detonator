@@ -135,7 +135,7 @@ socket.on("playerState", (playerData) => {
   //render platform
   for (let i in platformList) {
     ctx.fillStyle = platformList[i].color;
-    ctx.fillRect(platformList[i].x, platformList[i].y, platformList[i].width, platformList[i].height);
+    ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);
   }
 
   //render bomb
