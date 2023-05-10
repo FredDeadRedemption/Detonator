@@ -14,36 +14,69 @@ exports.PLATFORM_LIST = [
     color: "rgb(255, 255, 255)",
     unpassable: true,
   },
-  //middle
+  //platform 1
   {
     position: {
-      x: 250,
+      x: 404,
       y: 400,
     },
     height: 30,
-    width: 200,
+    width: 250,
     color: randomColor(),
     unpassable: false,
   },
-  //right
+  //platform 2
   {
     position: {
-      x: 450,
-      y: 200,
+      x: 10,
+      y: 350,
     },
     height: 30,
-    width: 400,
+    width: 240,
     color: randomColor(),
     unpassable: false,
   },
-  //left
+  //platform 3
   {
     position: {
-      x: 100,
+      x: 774,
+      y: 350,
+    },
+    height: 30,
+    width: 240,
+    color: randomColor(),
+    unpassable: false,
+  },
+  //platform 4
+  {
+    position: {
+      x: 522,
+      y: 220,
+    },
+    height: 30,
+    width: 350,
+    color: randomColor(),
+    unpassable: false,
+  },
+  //platform 5
+  {
+    position: {
+      x: 712,
       y: 100,
     },
     height: 30,
-    width: 150,
+    width: 100,
+    color: randomColor(),
+    unpassable: false,
+  },
+  //platform 6
+  {
+    position: {
+      x: 250,
+      y: 100,
+    },
+    height: 30,
+    width: 100,
     color: randomColor(),
     unpassable: false,
   },
