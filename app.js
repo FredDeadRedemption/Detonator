@@ -309,13 +309,6 @@ function gametick() {
 
         BOMB_LIST.splice(i, 1);
       }
-
-      //platform
-
-      //delete on out screen
-      if (bomb.position.x < -32 || bomb.position.x > 1024) {
-        bomb.velocity.x = -bomb.velocity.x
-      }
     }
 
     //update player data pack
@@ -396,6 +389,9 @@ function gametick() {
         bomb.isFlying = true;
       }
 
+    }
+    if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width) {
+      bomb.velocity.x = -bomb.velocity.x
     }
   }
 
