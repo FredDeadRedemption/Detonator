@@ -203,6 +203,11 @@ socket.on("playerState", (playerData) => {
     //temporary team color animation
     ctx.fillStyle = playerData[i].team;
     ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
+    //healthbar
+    ctx.fillStyle = "rgb(255,0,0)";
+    ctx.fillRect(playerData[i].x , playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
+    ctx.fillStyle = "rgb(0,255,0)";
+    ctx.fillRect(playerData[i].x, playerData[i].y - 48, playerData[i].health * 32, 8);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;

@@ -201,8 +201,11 @@ function detonateBomb(detonator) {
         console.log("HIT!");
         
 
-          if(dist(player, bomb) < 200){
-          player.health = player.health - bomb.damage;
+          if(dist(player, bomb) < 200 && !player.hit){
+            player.hit = true;
+
+            player.health = player.health - bomb.damage;
+          
           if (player.health <= 0) {
             //kill player
             player.dead = true;
@@ -308,6 +311,15 @@ function gametick() {
       player.velocity.x = movementSpeed;
     }
 
+    if (player.hit) {
+      player.hitTimer--;
+      if (player.hitTimer <= 0) {
+        player.hit = false;
+        player.hitTimer = player.hitFrames;
+      }
+      //console.log(hitTimer);
+    }
+
     /*
     //bomb collision
     for (let i in BOMB_LIST) {
@@ -342,6 +354,8 @@ function gametick() {
       username: player.username,
       isJumping: player.isJumping,
       team: player.team,
+      maxHealth: player.maxHealth,
+      health: player.health
     });
   }
 
