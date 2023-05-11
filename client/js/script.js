@@ -144,11 +144,11 @@ socket.on("playerState", (playerData) => {
   //render bomb
   for (let i in bombList) {
     if (bombList[i].velocityX != 0) {
-      ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
+      ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     } else {
       //blink when bomb velocity is 0
       if (imageFrame == 60) {
-        ctx.drawImage(bombImg, 0, 0, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
+        ctx.drawImage(bombImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
       }
     }
 
