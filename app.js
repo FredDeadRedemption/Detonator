@@ -370,7 +370,7 @@ function gametick() {
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
-      bombFeetPos = bomb.position.y + bomb.height * 2;
+      bombFeetPos = bomb.position.y + bomb.height;
       platform = PLATFORM_LIST[i];
       platformWidth = platform.position.x + platform.width;
       if (
@@ -383,7 +383,7 @@ function gametick() {
       ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height * 1.9;
+        bomb.position.y = platform.position.y - bomb.height;
       }
 
       if (
