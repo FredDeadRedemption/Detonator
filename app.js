@@ -383,7 +383,7 @@ function gametick() {
       ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height;
+        bomb.position.y = platform.position.y - bomb.height + 18.5;
       }
 
       if (
