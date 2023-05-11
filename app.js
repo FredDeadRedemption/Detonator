@@ -182,8 +182,9 @@ function detonateBomb(player) {
 
     //console.log("player x: " + player.position.x + ", y: " + player.position.y);
     //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
-    //player
-    if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height) {
+
+    //hit
+    if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height && bomb.team === player.team) {
       console.log("HIT!");
       spawnExplosion(bomb, 100);
       player.health = player.health - bomb.damage;
@@ -192,9 +193,15 @@ function detonateBomb(player) {
         player.dead = true;
         console.log(player.username + " has died");
       }
-
-      BOMB_LIST.splice(i, 1);
+      console.log("bomb was a hit and exploded");
+      delete BOMB_LIST[i];
+    } else if (bomb.team === player.team) {
+      //miss
+      spawnExplosion(bomb, 100);
+      console.log("bomb was a miss: " + BOMB_LIST[i]);
+      delete BOMB_LIST[i];
     }
+    break;
   }
 }
 
