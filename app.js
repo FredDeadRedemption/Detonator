@@ -271,7 +271,7 @@ function gametick() {
       //       bomb.isFlying = false;
       //       bomb.velocity.y = 0;
       //       //bomb.position.y = PLATFORM_LIST[i].position.y;
-            
+
       //   }
 
       // }
@@ -340,17 +340,25 @@ function gametick() {
       bomb.position.y += bomb.velocity.y;
       bomb.velocity.y += bombGravity;
     }
-    bomb.position.x += bomb.velocity.x;
+
+    if (bomb.velocity.x > 0) {
+      bomb.position.x += bomb.velocity.x;
+      bomb.velocity.x += -0.05;
+    } else if (bomb.velocity.x < 0) {
+      bomb.position.x += bomb.velocity.x;
+      bomb.velocity.x += 0.05;
+    }
+    /*
     if (!bomb.isFlying) {
       if (bomb.velocity.x > 0) {
-        bomb.velocity.x -= bomb.friction
+        bomb.velocity.x -= bomb.friction;
       }
       if (bomb.velocity.x < 0) {
-        bomb.velocity.x += bomb.friction
+        bomb.velocity.x += bomb.friction;
       }
     }
+    */
     //bomb.velocity.x = 0;
-
 
     //update bomb data pack
     bombDataPacks.push({
@@ -361,9 +369,9 @@ function gametick() {
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
-      bombFeetPos = bomb.position.y + (bomb.height*2)
+      bombFeetPos = bomb.position.y + bomb.height * 2;
       platform = PLATFORM_LIST[i];
-      platformWidth = platform.position.x + platform.width
+      platformWidth = platform.position.x + platform.width;
       if (
         bombFeetPos >= platform.position.y &&
         !(bombFeetPos >= platform.position.y + platform.height) &&
@@ -371,27 +379,25 @@ function gametick() {
         bomb.position.x + bomb.width / 2 <= platformWidth &&
         bomb.velocity.y > 0 &&
         bomb.isFlying
-        ) {
+      ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height*1.9
+        bomb.position.y = platform.position.y - bomb.height * 1.9;
       }
 
       if (
-        (bombFeetPos >= platform.position.y &&
-          !(bombFeetPos >= platform.position.y + platform.height) && //The is between the top and bottom of the platform
-          (
-            (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
-            (bomb.position.x + bomb.width / 2 >= platform.position.x-20 && bomb.position.x + bomb.width / 2 <= platformWidth+20) //avoids confusion when multiple platforms share same y level space
-          ) &&
-          !bomb.isFlying)
+        bombFeetPos >= platform.position.y &&
+        !(bombFeetPos >= platform.position.y + platform.height) && //The is between the top and bottom of the platform
+        (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
+        bomb.position.x + bomb.width / 2 >= platform.position.x - 20 &&
+        bomb.position.x + bomb.width / 2 <= platformWidth + 20 && //avoids confusion when multiple platforms share same y level space
+        !bomb.isFlying
       ) {
         bomb.isFlying = true;
       }
-
     }
     if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width) {
-      bomb.velocity.x = -bomb.velocity.x
+      bomb.velocity.x = -bomb.velocity.x;
     }
   }
 
