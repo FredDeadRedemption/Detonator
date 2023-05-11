@@ -153,7 +153,7 @@ function spawnBomb(player) {
   //determine throwing direction
   let throwingDirection;
   player.lastKey == "a" ? (throwingDirection = -6) : (throwingDirection = 5);
-
+  
   //spawn bomb & store in bomb list
   let bomb = new Bomb({
     position: {
@@ -317,7 +317,6 @@ function gametick() {
         player.hit = false;
         player.hitTimer = player.hitFrames;
       }
-      //console.log(hitTimer);
     }
 
     /*
@@ -355,7 +354,8 @@ function gametick() {
       isJumping: player.isJumping,
       team: player.team,
       maxHealth: player.maxHealth,
-      health: player.health
+      health: player.health,
+      hit: player.hit
     });
   }
 

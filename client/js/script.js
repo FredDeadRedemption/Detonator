@@ -143,13 +143,8 @@ socket.on("playerState", (playerData) => {
 
   //render bomb
   for (let i in bombList) {
-    if (bombList[i].velocityX != 0) {
+    if (bombList[i].velocityX != 0 || bombList[i].velocityX == 0 && imageFrame == 60) { //Blink when bomb is still
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
-    } else {
-      //blink when bomb velocity is 0
-      if (imageFrame == 60) {
-        ctx.drawImage(bombImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
-      }
     }
 
     //DEBUG
@@ -184,18 +179,20 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (playerData[i].isJumping) {
-      //jumping
-      ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
-    } else if (playerData[i].pressingKey.a) {
-      //moving left
-      ctx.drawImage(foxImgLeft, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
-    } else if (playerData[i].pressingKey.d) {
-      //moving right
-      ctx.drawImage(foxImgRight, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
-    } else {
-      //idle
-      ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+    if (!playerData[i].hit || playerData[i].hit && imageFrame == 60) {
+      if (playerData[i].isJumping) {
+        //jumping
+        ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      } else if (playerData[i].pressingKey.a) {
+        //moving left
+        ctx.drawImage(foxImgLeft, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      } else if (playerData[i].pressingKey.d) {
+        //moving right
+        ctx.drawImage(foxImgRight, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      } else {
+        //idle
+        ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
+      }
     }
     //username animation
     ctx.fillStyle = "rgb(255,255,255)";
@@ -205,9 +202,9 @@ socket.on("playerState", (playerData) => {
     ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
     //healthbar
     ctx.fillStyle = "rgb(255,0,0)";
-    ctx.fillRect(playerData[i].x , playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
+    ctx.fillRect(playerData[i].x - ((16 * playerData[i].maxHealth) - 30), playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
     ctx.fillStyle = "rgb(0,255,0)";
-    ctx.fillRect(playerData[i].x, playerData[i].y - 48, playerData[i].health * 32, 8);
+    ctx.fillRect(playerData[i].x - ((16 * playerData[i].maxHealth) - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;
