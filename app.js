@@ -208,8 +208,8 @@ function detonateBomb(player) {
 function spawnExplosion(bomb, radius) {
   let explosion = new Explosion({
     position: {
-      x: bomb.position.x,
-      y: bomb.position.y,
+      x: bomb.position.x + bomb.width/2,
+      y: bomb.position.y + bomb.height/2,
     },
     radius: radius,
   });
@@ -280,23 +280,6 @@ function gametick() {
       ) {
         player.isJumping = true;
       }
-      //platform bomb collision
-      // for (let i in BOMB_LIST) {
-      //   let bomb = BOMB_LIST[i];
-
-      //   if (
-      //       bomb.position.y >= PLATFORM_LIST[i].position.y &&
-      //       bomb.isFlying
-
-      //     ) {
-      //       console.log(PLATFORM_LIST[i].position.y)
-      //       bomb.isFlying = false;
-      //       bomb.velocity.y = 0;
-      //       //bomb.position.y = PLATFORM_LIST[i].position.y;
-
-      //   }
-
-      // }
     }
 
     //player jumping physics
