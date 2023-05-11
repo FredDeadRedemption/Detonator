@@ -122,10 +122,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  function detonateBomb(player) {
-    console.log(player.dead);
-  }
-
   //user keyup events
   socket.on("keyup", (event) => {
     let player = PLAYER_LIST[socket.id];
@@ -142,9 +138,6 @@ io.on("connection", (socket) => {
     }
   });
 });
-
-let redBombs = 0;
-let blueBombs = 0;
 
 function spawnBomb(player) {
   //determine throwing direction
@@ -181,6 +174,28 @@ function spawnBomb(player) {
     isFlying: bomb.isFlying,
     friction: bomb.friction,
   });
+}
+
+function detonateBomb(player) {
+  for (let i in BOMB_LIST) {
+    let bomb = BOMB_LIST[i];
+
+    //console.log("player x: " + player.position.x + ", y: " + player.position.y);
+    //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
+    //player
+    if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height) {
+      console.log("HIT!");
+      spawnExplosion(bomb, 100);
+      player.health = player.health - bomb.damage;
+      if (player.health <= 0) {
+        //kill player
+        player.dead = true;
+        console.log(player.username + " has died");
+      }
+
+      BOMB_LIST.splice(i, 1);
+    }
+  }
 }
 
 function spawnExplosion(bomb, radius) {
@@ -290,6 +305,7 @@ function gametick() {
       player.velocity.x = movementSpeed;
     }
 
+    /*
     //bomb collision
     for (let i in BOMB_LIST) {
       let bomb = BOMB_LIST[i];
@@ -310,6 +326,7 @@ function gametick() {
         BOMB_LIST.splice(i, 1);
       }
     }
+    */
 
     //update player data pack
     playerDataPacks.push({
@@ -344,10 +361,9 @@ function gametick() {
     if (bomb.velocity.x > 0) {
       bomb.position.x += bomb.velocity.x;
       bomb.velocity.x += -0.05;
-        if (bomb.velocity.x < 0.05) {
-          bomb.velocity.x = 0;
-        }
-
+      if (bomb.velocity.x < 0.05) {
+        bomb.velocity.x = 0;
+      }
     } else if (bomb.velocity.x < 0) {
       bomb.position.x += bomb.velocity.x;
       bomb.velocity.x += 0.05;
@@ -366,7 +382,6 @@ function gametick() {
     }
     */
     //bomb.velocity.x = 0;
-
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
@@ -402,14 +417,13 @@ function gametick() {
     }
 
     //update bomb data pack
-  bombDataPacks.push({
-    x: bomb.position.x,
-    y: bomb.position.y,
-    velocityX: bomb.velocity.x,
-    team: bomb.team,
-  });
+    bombDataPacks.push({
+      x: bomb.position.x,
+      y: bomb.position.y,
+      velocityX: bomb.velocity.x,
+      team: bomb.team,
+    });
   }
-  
 
   //loop explosions
   for (let i in EXPLOSION_LIST) {
