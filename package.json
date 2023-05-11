@@ -13,6 +13,6 @@
     "dev": "nodemon app.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "GPL",
   "description": ""
 }

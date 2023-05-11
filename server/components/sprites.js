@@ -31,8 +31,8 @@ exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
     this.position = position;
     this.velocity = velocity;
-    this.width = 27; //9*3 from its sprites pixels
-    this.height = 27;
+    this.width = 70; //9*3 from its sprites pixels
+    this.height = 70;
     this.blastRadius = {
       height: 300,
       width: 300,
