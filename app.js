@@ -344,9 +344,16 @@ function gametick() {
     if (bomb.velocity.x > 0) {
       bomb.position.x += bomb.velocity.x;
       bomb.velocity.x += -0.05;
+        if (bomb.velocity.x < 0.05) {
+          bomb.velocity.x = 0;
+        }
+
     } else if (bomb.velocity.x < 0) {
       bomb.position.x += bomb.velocity.x;
       bomb.velocity.x += 0.05;
+      if (bomb.velocity.x > 0.05) {
+        bomb.velocity.x = 0;
+      }
     }
     /*
     if (!bomb.isFlying) {
@@ -360,12 +367,6 @@ function gametick() {
     */
     //bomb.velocity.x = 0;
 
-    //update bomb data pack
-    bombDataPacks.push({
-      x: bomb.position.x,
-      y: bomb.position.y,
-      team: bomb.team,
-    });
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
@@ -399,7 +400,16 @@ function gametick() {
     if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width) {
       bomb.velocity.x = -bomb.velocity.x;
     }
+
+    //update bomb data pack
+  bombDataPacks.push({
+    x: bomb.position.x,
+    y: bomb.position.y,
+    velocityX: bomb.velocity.x,
+    team: bomb.team,
+  });
   }
+  
 
   //loop explosions
   for (let i in EXPLOSION_LIST) {

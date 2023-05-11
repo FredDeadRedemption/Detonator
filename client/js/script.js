@@ -143,13 +143,19 @@ socket.on("playerState", (playerData) => {
 
   //render bomb
   for (let i in bombList) {
-    ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
-    //ctx.fillRect(bombData[i].x, bombData[i].y, 50, 50);
+    if (bombList[i].velocityX != 0) {
+      ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
+    } else {
+      //blink when bomb velocity is 0
+      if (imageFrame == 60) {
+        ctx.drawImage(bombImg, 0, 0, 60, 60, bombList[i].x, bombList[i].y, 70, 70);
+      }
+    }
 
     //DEBUG
-    // ctx.font = "20px Verdana";
-    // ctx.fillStyle = "rgb(255,255,255)";
-    // ctx.fillText(bombList[i].x, bombList[i].x - 32, bombList[i].y);
+    //ctx.font = "20px Verdana";
+    //ctx.fillStyle = "rgb(255,255,255)";
+    //ctx.fillText(bombList[i].velocityX, bombList[i].x - 32, bombList[i].y);
     // ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
 
     ctx.font = "25px Verdana"; //back to original
