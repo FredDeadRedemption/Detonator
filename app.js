@@ -52,6 +52,16 @@ let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let jumpPower = 16;
 
+//distance formula
+function dist(player, bomb) {
+  let x1 = (player.position.x+player.width/2)
+  let x2 = (bomb.position.x+bomb.width/2)
+  let y1 = (player.position.y+player.height/2)
+  let y2 = (bomb.position.y+bomb.height/2)
+  let d = Math.sqrt(((x2-x1)**2)+((y2-y1)**2))
+  return d;
+}
+
 //suck it io
 io.on("connection", (socket) => {
   socket.id = Math.random(); //reject characters, embrace integers.
@@ -176,33 +186,36 @@ function spawnBomb(player) {
   });
 }
 
-function detonateBomb(player) {
+function detonateBomb(detonator) {
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
-    //console.log("player x: " + player.position.x + ", y: " + player.position.y);
-    //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
+    
+      //hit
+      if (bomb.team === detonator.team) {
 
-    //hit
-    if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height && bomb.team === player.team) {
-      console.log("HIT!");
-      spawnExplosion(bomb, 100);
-      player.health = player.health - bomb.damage;
-      if (player.health <= 0) {
-        //kill player
-        player.dead = true;
-        console.log(player.username + " has died");
-      }
-      console.log("bomb was a hit and exploded");
-      delete BOMB_LIST[i];
-    } else if (bomb.team === player.team) {
-      //miss
-      spawnExplosion(bomb, 100);
-      console.log("bomb was a miss: " + BOMB_LIST[i]);
-      delete BOMB_LIST[i];
-    }
+        spawnExplosion(bomb, 200);
+
+        for (let i in PLAYER_LIST) {
+          let player = PLAYER_LIST[i];
+        console.log("HIT!");
+        
+
+          if(dist(player, bomb) < 200){
+          player.health = player.health - bomb.damage;
+          if (player.health <= 0) {
+            //kill player
+            player.dead = true;
+            console.log(player.username + " has died");  
+            }
+          console.log("bomb was a hit and exploded");
+          }
+
+        }
+    delete BOMB_LIST[i];
     break;
-  }
+    }
+  } 
 }
 
 function spawnExplosion(bomb, radius) {
