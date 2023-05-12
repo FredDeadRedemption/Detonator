@@ -104,6 +104,10 @@ const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
 
 //bomb sprite img
+const platformImg = new Image();
+platformImg.src = "/img/metalBox.png";
+
+//bomb sprite img
 const bombImg = new Image();
 bombImg.src = "/img/bomb.png";
 
@@ -137,8 +141,17 @@ socket.on("playerState", (playerData) => {
 
   //render platform //////Det skal bare tegnes statisk på background image
   for (let i in platformList) {
-    ctx.fillStyle = platformList[i].color;
-    ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);
+    for(let j = 0; j < platformList[i].width; j++) {
+      
+      //console.log(j);
+      if(j % 16 == 0) {
+        //console.log("HALLO");
+        ctx.drawImage(platformImg, 0, 0, 16, 16, platformList[i].position.x+j, platformList[i].position.y, 16, 16);
+      }
+    }
+
+    /*ctx.fillStyle = platformList[i].color;
+    ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);*/
   }
 
   //render bomb
