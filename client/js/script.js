@@ -18,7 +18,7 @@ ctx.imageSmoothingQuality = "high";
 var socket = io();
 export default socket;
 
-//local game state handler
+//game
 let game = {
   isRunning: false,
   start() {
@@ -27,10 +27,11 @@ let game = {
 };
 
 let role = undefined;
+let roleEmoji = undefined;
 
 //DEBUG
 socket.on("clientSelections", (selectedUsername, selectedTeam, selectedRole) => {
-  role = selectedRole;
+  role = selectedRole; //eventlisteners = client specific makes the sense
   console.log(`Username: ${selectedUsername}\nTeam: ${selectedTeam}\nRole: ${selectedRole}\nStarting game..`);
   game.start();
 });
@@ -141,17 +142,17 @@ socket.on("playerState", (playerData) => {
 
   //render platform //////Det skal bare tegnes statisk på background image
   for (let i in platformList) {
-    for(let j = 0; j < platformList[i].width; j++) {
-
-      if(j % 16 == 0) {
-        ctx.drawImage(platformImg, 0, 0, 16, 16, platformList[i].position.x+j, platformList[i].position.y, 16, 16);
+    for (let j = 0; j < platformList[i].width; j++) {
+      if (j % 16 == 0) {
+        ctx.drawImage(platformImg, 0, 0, 16, 16, platformList[i].position.x + j, platformList[i].position.y, 16, 16);
       }
     }
   }
 
   //render bomb
   for (let i in bombList) {
-    if (bombList[i].velocityX != 0 || bombList[i].velocityX == 0 && imageFrame == 60) { //Blink when bomb is still
+    if (bombList[i].velocityX != 0 || (bombList[i].velocityX == 0 && imageFrame == 60)) {
+      //Blink when bomb is still
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
 
@@ -187,7 +188,7 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (!playerData[i].hit || playerData[i].hit && imageFrame == 60) {
+    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 60)) {
       if (playerData[i].isJumping) {
         //jumping
         ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
@@ -202,17 +203,19 @@ socket.on("playerState", (playerData) => {
         ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
       }
     }
-    //username animation
-    ctx.fillStyle = "rgb(255,255,255)";
-    ctx.fillText(playerData[i].username, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
-    //temporary team color animation
+    //username animation with team color
+    playerData[i].role === "bomber" ? (roleEmoji = "💣") : (roleEmoji = "🕹️");
     ctx.fillStyle = playerData[i].team;
-    ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
+    ctx.fillText(playerData[i].username + roleEmoji, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
+
+    //temporary team color animation
+    //ctx.fillStyle = playerData[i].team;
+    //ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
     //healthbar
     ctx.fillStyle = "rgb(255,0,0)";
-    ctx.fillRect(playerData[i].x - ((16 * playerData[i].maxHealth) - 30), playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
+    ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
     ctx.fillStyle = "rgb(0,255,0)";
-    ctx.fillRect(playerData[i].x - ((16 * playerData[i].maxHealth) - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
+    ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
 
     //Usernames in lobby
     //usernameList.textContent = playerData[i].username;

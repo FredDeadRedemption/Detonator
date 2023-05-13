@@ -54,11 +54,11 @@ let jumpPower = 16;
 
 //distance formula
 function dist(player, bomb) {
-  let x1 = (player.position.x+player.width/2)
-  let x2 = (bomb.position.x+bomb.width/2)
-  let y1 = (player.position.y+player.height/2)
-  let y2 = (bomb.position.y+bomb.height/2)
-  let d = Math.sqrt(((x2-x1)**2)+((y2-y1)**2))
+  let x1 = player.position.x + player.width / 2;
+  let x2 = bomb.position.x + bomb.width / 2;
+  let y1 = player.position.y + player.height / 2;
+  let y2 = bomb.position.y + bomb.height / 2;
+  let d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
   return d;
 }
 
@@ -153,7 +153,7 @@ function spawnBomb(player) {
   //determine throwing direction
   let throwingDirection;
   player.lastKey == "a" ? (throwingDirection = -6) : (throwingDirection = 5);
-  
+
   //spawn bomb & store in bomb list
   let bomb = new Bomb({
     position: {
@@ -190,42 +190,38 @@ function detonateBomb(detonator) {
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
-    
-      //hit
-      if (bomb.team === detonator.team) {
+    //hit
+    if (bomb.team === detonator.team) {
+      spawnExplosion(bomb, 200);
 
-        spawnExplosion(bomb, 200);
-
-        for (let i in PLAYER_LIST) {
-          let player = PLAYER_LIST[i];
+      for (let i in PLAYER_LIST) {
+        let player = PLAYER_LIST[i];
         console.log("HIT!");
-        
 
-          if(dist(player, bomb) < 200 && !player.hit){
-            player.hit = true;
+        if (dist(player, bomb) < 200 && !player.hit) {
+          player.hit = true;
 
-            player.health = player.health - bomb.damage;
-          
+          player.health = player.health - bomb.damage;
+
           if (player.health <= 0) {
             //kill player
             player.dead = true;
-            console.log(player.username + " has died");  
-            }
-          console.log("bomb was a hit and exploded");
+            console.log(player.username + " has died");
           }
-
+          console.log("bomb was a hit and exploded");
         }
-    delete BOMB_LIST[i];
-    break;
+      }
+      delete BOMB_LIST[i];
+      break;
     }
-  } 
+  }
 }
 
 function spawnExplosion(bomb, radius) {
   let explosion = new Explosion({
     position: {
-      x: bomb.position.x + bomb.width/2,
-      y: bomb.position.y + bomb.height/2,
+      x: bomb.position.x + bomb.width / 2,
+      y: bomb.position.y + bomb.height / 2,
     },
     radius: radius,
   });
@@ -355,7 +351,8 @@ function gametick() {
       team: player.team,
       maxHealth: player.maxHealth,
       health: player.health,
-      hit: player.hit
+      hit: player.hit,
+      role: player.role,
     });
   }
 
@@ -415,7 +412,7 @@ function gametick() {
       ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height + 18.5;
+        bomb.position.y = platform.position.y - bomb.height + 25.5;
       }
 
       if (
@@ -429,7 +426,8 @@ function gametick() {
         bomb.isFlying = true;
       }
     }
-    if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width) {
+    //fix det her... kollision med væggen til venstre virker ikke
+    if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width / 2) {
       bomb.velocity.x = -bomb.velocity.x;
     }
 
