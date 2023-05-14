@@ -10,9 +10,21 @@ const lobby = document.querySelector(".lobbyContainer");
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
-ctx.font = "25px Verdana";
 ctx.imageSmoothingEnabled = true;
 ctx.imageSmoothingQuality = "high";
+
+//font stuff
+var f = new FontFace("Pixeloid", "url(/PixeloidSansBold.ttf)");
+
+f.load().then((font) => {
+  // Ready to use the font in a canvas context
+  console.log("font ready");
+
+  // Add font on the html page
+  document.fonts.add(font);
+
+  ctx.font = "25px Pixeloid";
+});
 
 //client socket
 var socket = io();
@@ -116,7 +128,6 @@ platformImg3.src = "/img/metalBox3.png";
 const bombImg = new Image();
 bombImg.src = "/img/bomb.png";
 
-
 //explosion sprite img
 const explosionImg = new Image();
 explosionImg.src = "/img/explosion.png";
@@ -147,16 +158,15 @@ socket.on("playerState", (playerData) => {
 
   //render platform //////Det skal bare tegnes statisk på background image
   for (let i in platformList) {
-    
     for (let j = 0; j < platformList[i].width; j++) {
       if (j % 32 == 0) {
-        if(platformList[i].unpassable) {
+        if (platformList[i].unpassable) {
           ctx.fillStyle = "rgb(55,55,55)";
           ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);
         } else {
-          if(j == 0) {
+          if (j == 0) {
             ctx.drawImage(platformImg2, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
-          } else if (j+ 32 == platformList[i].width) {
+          } else if (j + 32 == platformList[i].width) {
             ctx.drawImage(platformImg3, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
           } else {
             ctx.drawImage(platformImg1, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
@@ -183,7 +193,7 @@ socket.on("playerState", (playerData) => {
     //ctx.fillText(bombList[i].velocityX, bombList[i].x - 32, bombList[i].y);
     // ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
 
-    ctx.font = "25px Verdana"; //back to original
+    ctx.font = "25px Pixeloid"; //back to original
   }
 
   //render explosion
@@ -251,12 +261,4 @@ socket.on("playerState", (playerData) => {
 
     // ctx.font = "25px Verdana"; //back to original
   }
-});
-
-socket.on("username-select", (username) => {
-  const list = document.createElement("li");
-  let usernameText = document.createTextNode(username);
-  //usernameText.style.color = "white";
-  //node.appendChild(usernameText);
-  lobby.appendChild(list);
 });
