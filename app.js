@@ -2,10 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const passport = require("passport");
-var bodyParser = require("body-parser"),
-    LocalStrategy = require("passport-local"),
-    passportLocalMongoose = 
-        require("passport-local-mongoose")
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+LocalStrategy = require("passport-local"),
+  passportLocalMongoose =
+  require("passport-local-mongoose")
 const User = require("./server/components/user.js");
 
 const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
@@ -25,51 +28,52 @@ async function connect() {
     console.error(error);
   }
 }
-connect(); 
+connect();
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require("express-session")({
-    secret: "Rusty is a dog",
-    resave: false,
-    saveUninitialized: false
+  secret: "Yeet",
+  resave: false,
+  saveUninitialized: false
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-  
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 //Database
+
 app.post("/register", async (req, res) => {
+  console.log(req.body); // log the request body to the console
   const user = await User.create({
-    username: req.body.username,
     password: req.body.password,
+    username: req.body.username,
   });
-  
   return res.status(200).json(user);
 });
 
-app.post("/login", async function(req, res){
+app.post("/login", async function (req, res) {
   try {
-      // check if the user exists
-      const user = await User.findOne({ username: req.body.username });
-      if (user) {
-        //check if password matches
-        const result = req.body.password === user.password;
-        if (result) {
-          res.get("./client/index.html");
-        } else {
-          res.status(400).json({ error: "password doesn't match" });
-        }
+    // check if the user exists
+    const user = await User.findOne({ username: req.body.username });
+    if (user) {
+      //check if password matches
+      const result = req.body.password === user.password;
+      if (result) {
+        res.get("./client/index.html");
       } else {
-        res.status(400).json({ error: "User doesn't exist" });
+        res.status(400).json({ error: "password doesn't match" });
       }
-    } catch (error) {
-      res.status(400).json({ error });
+    } else {
+      res.status(400).json({ error: "User doesn't exist" });
     }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
 
@@ -126,7 +130,6 @@ io.on("connection", (socket) => {
         y: 0,
       },
       username: username,
-      password: password,
       team: team,
       role: role,
     });
@@ -325,7 +328,7 @@ function gametick() {
       //       bomb.isFlying = false;
       //       bomb.velocity.y = 0;
       //       //bomb.position.y = PLATFORM_LIST[i].position.y;
-            
+
       //   }
 
       // }
@@ -415,7 +418,7 @@ function gametick() {
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
-      bombFeetPos = bomb.position.y + (bomb.height*2)
+      bombFeetPos = bomb.position.y + (bomb.height * 2)
       platform = PLATFORM_LIST[i];
       platformWidth = platform.position.x + platform.width
       if (
@@ -425,10 +428,10 @@ function gametick() {
         bomb.position.x + bomb.width / 2 <= platformWidth &&
         bomb.velocity.y > 0 &&
         bomb.isFlying
-        ) {
+      ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height*1.9
+        bomb.position.y = platform.position.y - bomb.height * 1.9
       }
 
       if (
@@ -436,7 +439,7 @@ function gametick() {
           !(bombFeetPos >= platform.position.y + platform.height) && //The is between the top and bottom of the platform
           (
             (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
-            (bomb.position.x + bomb.width / 2 >= platform.position.x-20 && bomb.position.x + bomb.width / 2 <= platformWidth+20) //avoids confusion when multiple platforms share same y level space
+            (bomb.position.x + bomb.width / 2 >= platform.position.x - 20 && bomb.position.x + bomb.width / 2 <= platformWidth + 20) //avoids confusion when multiple platforms share same y level space
           ) &&
           !bomb.isFlying)
       ) {
