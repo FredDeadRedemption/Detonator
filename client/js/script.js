@@ -105,12 +105,17 @@ const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
 
 //bomb sprite img
-const platformImg = new Image();
-platformImg.src = "/img/metalBox.png";
+const platformImg1 = new Image();
+platformImg1.src = "/img/metalBox1.png";
+const platformImg2 = new Image();
+platformImg2.src = "/img/metalBox2.png";
+const platformImg3 = new Image();
+platformImg3.src = "/img/metalBox3.png";
 
 //bomb sprite img
 const bombImg = new Image();
 bombImg.src = "/img/bomb.png";
+
 
 //explosion sprite img
 const explosionImg = new Image();
@@ -142,11 +147,27 @@ socket.on("playerState", (playerData) => {
 
   //render platform //////Det skal bare tegnes statisk på background image
   for (let i in platformList) {
+    
     for (let j = 0; j < platformList[i].width; j++) {
-      if (j % 16 == 0) {
-        ctx.drawImage(platformImg, 0, 0, 16, 16, platformList[i].position.x + j, platformList[i].position.y, 16, 16);
+      if (j % 32 == 0) {
+        if(platformList[i].unpassable) {
+          ctx.fillStyle = "rgb(55,55,55)";
+          ctx.fillRect(platformList[i].position.x, platformList[i].position.y, platformList[i].width, platformList[i].height);
+        } else {
+          if(j == 0) {
+            ctx.drawImage(platformImg2, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
+          } else if (j+ 32 == platformList[i].width) {
+            ctx.drawImage(platformImg3, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
+          } else {
+            ctx.drawImage(platformImg1, 0, 0, 32, 32, platformList[i].position.x + j, platformList[i].position.y, 32, 32);
+          }
+        }
       }
     }
+
+    // DEBUG
+    // ctx.fillStyle = "rgb(255,0,0)";
+    // ctx.fillRect(platformList[i].position.x, platformList[i].position.y-8, platformList[i].width, 8);
   }
 
   //render bomb
