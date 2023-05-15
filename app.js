@@ -1,8 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
+
 const app = express();
 
-const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 const http = require("http");
 
 const server = http.createServer(app);
@@ -10,16 +9,6 @@ const server = http.createServer(app);
 const port = 420;
 
 const io = require("socket.io")(server);
-
-async function connect() {
-  try {
-    await mongoose.connect(uri);
-    console.log("connected to MongoDB");
-  } catch (error) {
-    console.error(error);
-  }
-}
-connect();
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/StartPage.html");
@@ -34,33 +23,41 @@ server.listen(port, (error) => {
   }
 });
 
+//mongoDB
+const mongoose = require("mongoose");
+
+const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
+
+async function connect() {
+  try {
+    await mongoose.connect(uri);
+    console.log("connected to MongoDB");
+  } catch (error) {
+    console.error(error);
+  }
+}
+connect();
+
 //component imports
 const Player = require("./server/components/sprites").Sprite;
 const Bomb = require("./server/components/sprites").Bomb;
 const Explosion = require("./server/components/sprites").Explosion;
 const PLATFORM_LIST = require("./server/components/platforms").PLATFORM_LIST;
+const dist = require("./server/components/util").distanceformula;
 
 //dynamic lists
 let SOCKET_LIST = []; //contains active connection
 let PLAYER_LIST = []; //contains active player objects
 let BOMB_LIST = []; //contains active bombs
-let EXPLOSION_LIST = []; //contains active bombs
+let EXPLOSION_LIST = []; //contains active explosions
 
 //settings
 let gravity = 0.6;
 let bombGravity = 0.5;
 let movementSpeed = 5.5;
+let throwingSpeed = 6.2;
 let jumpPower = 16;
-
-//distance formula
-function dist(player, bomb) {
-  let x1 = player.position.x + player.width / 2;
-  let x2 = bomb.position.x + bomb.width / 2;
-  let y1 = player.position.y + player.height / 2;
-  let y2 = bomb.position.y + bomb.height / 2;
-  let d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-  return d;
-}
+let blastRadius = 300;
 
 //suck it io
 io.on("connection", (socket) => {
@@ -90,8 +87,10 @@ io.on("connection", (socket) => {
     //store player object
     PLAYER_LIST[socket.id] = player;
 
-    //DEBUG
+    //send info to client
     socket.emit("clientSelections", username, team, role);
+
+    //DEBUG
     console.log("new player object spawned: ", PLAYER_LIST[socket.id]);
   });
 
@@ -125,10 +124,7 @@ io.on("connection", (socket) => {
         break;
       case "k":
         player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
-        //DEBUG
-        console.log("ability used");
         break;
-      //taunt option here maybe????
     }
   });
 
@@ -152,7 +148,7 @@ io.on("connection", (socket) => {
 function spawnBomb(player) {
   //determine throwing direction
   let throwingDirection;
-  player.lastKey == "a" ? (throwingDirection = -6) : (throwingDirection = 5);
+  player.lastKey === "a" ? (throwingDirection = -throwingSpeed) : (throwingDirection = throwingSpeed);
 
   //spawn bomb & store in bomb list
   let bomb = new Bomb({
@@ -187,20 +183,22 @@ function spawnBomb(player) {
 }
 
 function detonateBomb(detonator) {
+  //loop all bombs
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
-    //hit
+    //identify first bomb belonging to team
     if (bomb.team === detonator.team) {
-      spawnExplosion(bomb, 200);
+      spawnExplosion(bomb, blastRadius);
 
+      //hit req for all players
       for (let i in PLAYER_LIST) {
         let player = PLAYER_LIST[i];
-        console.log("HIT!");
 
-        if (dist(player, bomb) < 200 && !player.hit) {
+        //in blast range
+        if (dist(player, bomb) < blastRadius && !player.hit) {
+          //hit
           player.hit = true;
-
           player.health = player.health - bomb.damage;
 
           if (player.health <= 0) {
@@ -245,7 +243,7 @@ function gametick() {
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
 
-    //player death //lol flyver man så bare ad helvedes til???
+    //player respawn
     if (player.dead) {
       player.isJumping = true;
       player.position.y = -1000;
@@ -261,7 +259,7 @@ function gametick() {
 
     let playerFeetPos = player.position.y + player.height;
 
-    //Platform collision
+    //player / platform collision
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
 
@@ -295,7 +293,6 @@ function gametick() {
     }
 
     //player jumping physics
-
     if (player.isJumping && player.velocity.y <= player.terminalVelocity) {
       player.velocity.y += gravity;
     }
@@ -307,6 +304,7 @@ function gametick() {
       player.velocity.x = movementSpeed;
     }
 
+    //invinsibility frames
     if (player.hit) {
       player.hitTimer--;
       if (player.hitTimer <= 0) {
@@ -314,29 +312,6 @@ function gametick() {
         player.hitTimer = player.hitFrames;
       }
     }
-
-    /*
-    //bomb collision
-    for (let i in BOMB_LIST) {
-      let bomb = BOMB_LIST[i];
-
-      //console.log("player x: " + player.position.x + ", y: " + player.position.y);
-      //console.log("bomb x: " + bomb.position.x + ", y: " + bomb.position.y);
-      //player
-      if (bomb.position.x >= player.position.x && bomb.position.x <= player.position.x + player.width && bomb.position.y >= player.position.y && bomb.position.y <= player.position.y + player.height && bomb.team != player.team) {
-        console.log("HIT!");
-        spawnExplosion(bomb, 100);
-        player.health = player.health - bomb.damage;
-        if (player.health <= 0) {
-          //kill player
-          player.dead = true;
-          console.log(player.username + " has died");
-        }
-
-        BOMB_LIST.splice(i, 1);
-      }
-    }
-    */
 
     //update player data pack
     playerDataPacks.push({
@@ -372,6 +347,7 @@ function gametick() {
       bomb.velocity.y += bombGravity;
     }
 
+    //bomb losing momentum
     if (bomb.velocity.x > 0) {
       bomb.position.x += bomb.velocity.x;
       bomb.velocity.x += -0.05;
@@ -385,17 +361,6 @@ function gametick() {
         bomb.velocity.x = 0;
       }
     }
-    /*
-    if (!bomb.isFlying) {
-      if (bomb.velocity.x > 0) {
-        bomb.velocity.x -= bomb.friction;
-      }
-      if (bomb.velocity.x < 0) {
-        bomb.velocity.x += bomb.friction;
-      }
-    }
-    */
-    //bomb.velocity.x = 0;
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
@@ -426,9 +391,10 @@ function gametick() {
         bomb.isFlying = true;
       }
     }
-    //fix det her... kollision med væggen til venstre virker ikke
-    if (bomb.position.x < -bomb.width || bomb.position.x > 1024 - bomb.width / 2) {
-      bomb.velocity.x = -bomb.velocity.x;
+
+    //bombs bouncing off walls
+    if (bomb.position.x < 15 - bomb.width / 2 || bomb.position.x > 1024 - bomb.width / 2) {
+      bomb.velocity.x = -bomb.velocity.x * 1.2; //1.2 lil xtra bounce
     }
 
     //update bomb data pack
@@ -437,6 +403,7 @@ function gametick() {
       y: bomb.position.y,
       velocityX: bomb.velocity.x,
       team: bomb.team,
+      timer: bomb.timer,
     });
   }
 
@@ -447,9 +414,8 @@ function gametick() {
     if (explosion.fadeTime <= 0) {
       EXPLOSION_LIST.splice(i, 1);
     }
-    //console.log(explosion.fadeTime);
 
-    //update bomb data pack
+    //update explosion data pack
     explosionDataPacks.push({
       x: explosion.position.x,
       y: explosion.position.y,

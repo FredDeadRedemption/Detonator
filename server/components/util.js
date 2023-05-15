@@ -16,3 +16,24 @@ exports.randomColor = function randomColor() {
 
   return color;
 };
+
+exports.distanceformula = function dist(player, bomb) {
+  let x1 = player.position.x + player.width / 2;
+  let x2 = bomb.position.x + bomb.width / 2;
+  let y1 = player.position.y + player.height / 2;
+  let y2 = bomb.position.y + bomb.height / 2;
+  let d = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  return d;
+};
+
+exports.usernameIsInvalid = function usernameIsInvalid(username, userlist) {
+  if (username.length > 36) {
+    return false;
+  }
+  for (let i = 0; i < 4; i++) {
+    if (username == userlist[i]) {
+      return false;
+    }
+  }
+  return true;
+};

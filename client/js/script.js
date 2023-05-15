@@ -151,12 +151,27 @@ socket.on("explosionState", (explosionData) => {
   explosionList = explosionData;
 });
 
-//game tick
+//game tick / animations
 socket.on("playerState", (playerData) => {
+  //frame for animation loop
+  currentFrame++;
+  if (currentFrame > 30) {
+    currentFrame = 0;
+  }
+
+  //update imageFrame based on gameframe
+  if (currentFrame < 10) {
+    imageFrame = 0;
+  } else if (currentFrame > 10 && currentFrame < 20) {
+    imageFrame = 60;
+  } else if (currentFrame > 20) {
+    imageFrame = 120;
+  }
+
   //render background image
   ctx.drawImage(backgroundImg, 0, 0, 1856, 1024, 0, 0, canvas.width, canvas.height);
 
-  //render platform //////Det skal bare tegnes statisk på background image
+  //render platform
   for (let i in platformList) {
     for (let j = 0; j < platformList[i].width; j++) {
       if (j % 32 == 0) {
@@ -174,46 +189,25 @@ socket.on("playerState", (playerData) => {
         }
       }
     }
-
-    // DEBUG
-    // ctx.fillStyle = "rgb(255,0,0)";
-    // ctx.fillRect(platformList[i].position.x, platformList[i].position.y-8, platformList[i].width, 8);
   }
 
   //render bomb
   for (let i in bombList) {
-    if (bombList[i].velocityX != 0 || (bombList[i].velocityX == 0 && imageFrame == 60)) {
-      //Blink when bomb is still
+    if (bombList[i].velocityX != 0 && bombList[i].timer > 200) {
+      //bomb rolling / flying
+      ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
+    } else if (bombList[i].timer > 200) {
+      //bomb standing still
+      ctx.drawImage(bombImg, 0, 60, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
+    } else if (bombList[i].timer < 200 && imageFrame == 60) {
+      //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
-
-    //DEBUG
-    //ctx.font = "20px Verdana";
-    //ctx.fillStyle = "rgb(255,255,255)";
-    //ctx.fillText(bombList[i].velocityX, bombList[i].x - 32, bombList[i].y);
-    // ctx.fillText(bombList[i].y, bombList[i].x - 32, bombList[i].y + 18);
-
-    ctx.font = "25px Pixeloid"; //back to original
   }
 
   //render explosion
   for (let i in explosionList) {
     ctx.drawImage(explosionImg, 0, imageFrame, 60, 60, explosionList[i].x, explosionList[i].y, explosionList[i].radius, explosionList[i].radius);
-  }
-
-  //frame for animation loop
-  currentFrame++;
-  if (currentFrame > 30) {
-    currentFrame = 0;
-  }
-
-  //update imageFrame based on gameframe
-  if (currentFrame < 10) {
-    imageFrame = 0;
-  } else if (currentFrame > 10 && currentFrame < 20) {
-    imageFrame = 60;
-  } else if (currentFrame > 20) {
-    imageFrame = 120;
   }
 
   //render playerdata
@@ -234,31 +228,15 @@ socket.on("playerState", (playerData) => {
         ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
       }
     }
-    //username animation with team color
+    //username animation with team color && role tag
     playerData[i].role === "bomber" ? (roleEmoji = "💣") : (roleEmoji = "🕹️");
     ctx.fillStyle = playerData[i].team;
     ctx.fillText(playerData[i].username + roleEmoji, playerData[i].x + (25 - (playerData[i].username.length / 2) * (25 / 2)), playerData[i].y - 20);
 
-    //temporary team color animation
-    //ctx.fillStyle = playerData[i].team;
-    //ctx.fillRect(playerData[i].x + (playerData[i].username.length * (25 / 2) + 8), playerData[i].y - 36, 24, 24);
     //healthbar
     ctx.fillStyle = "rgb(255,0,0)";
     ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
     ctx.fillStyle = "rgb(0,255,0)";
     ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
-
-    //Usernames in lobby
-    //usernameList.textContent = playerData[i].username;
-
-    //DEBUG
-    // ctx.font = "20px Verdana";
-    // ctx.fillStyle = "rgb(255,255,255)";
-    // ctx.fillText(playerData[i].x, playerData[i].x - 32, playerData[i].y);
-    // ctx.fillText(playerData[i].y, playerData[i].x - 32, playerData[i].y + 18);
-    // ctx.fillStyle = "rgb(255,0,255)";
-    // ctx.fillRect(playerData[i].x, playerData[i].y, 5, 5);
-
-    // ctx.font = "25px Verdana"; //back to original
   }
 });
