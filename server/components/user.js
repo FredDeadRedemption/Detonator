@@ -8,12 +8,12 @@ var User= new Schema;({
   username: {
         type: String, require: true
     },
-  password: {
+/*   password: {
         type: String, require: true
-    }
+    } */
 });
 
-User.pre('save', function (next) {
+/* User.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
     bcrypt.hash(this.password, 10, (err, hashed) => {
       if (err) return next (err);
@@ -23,7 +23,7 @@ User.pre('save', function (next) {
 } else {
     next();
   }
-});
+}); */
 User.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", User);

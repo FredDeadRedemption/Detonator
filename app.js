@@ -8,7 +8,7 @@ var bodyParser = require("body-parser"),
         require("passport-local-mongoose")
 const User = require("./server/components/user.js");
 
-const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://Admin:EM1207sp@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 const http = require("http");
 
 const server = http.createServer(app);
@@ -46,7 +46,7 @@ passport.deserializeUser(User.deserializeUser());
 app.post("/register", async (req, res) => {
   const user = await User.create({
     username: req.body.username,
-    password: req.body.password,
+    /* password: req.body.password, */
   });
   
   return res.status(200).json(user);
@@ -58,11 +58,11 @@ app.post("/login", async function(req, res){
       const user = await User.findOne({ username: req.body.username });
       if (user) {
         //check if password matches
-        const result = req.body.password === user.password;
+        const result = req.body.username === user.username;/* req.body.password === user.password; */
         if (result) {
-          res.get("./client/index.html");
+          res.redirect("/index.html");
         } else {
-          res.status(400).json({ error: "password doesn't match" });
+          res.status(400).json({ error: "username doesn't match" });
         }
       } else {
         res.status(400).json({ error: "User doesn't exist" });
