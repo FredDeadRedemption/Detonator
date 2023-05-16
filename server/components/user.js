@@ -4,7 +4,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 
 let bcrypt = require('bcrypt');
 
-var User= new Schema;({
+var User = new Schema; ({
   username: {
         type: String, require: true
     },
