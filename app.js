@@ -26,7 +26,7 @@ server.listen(port, (error) => {
 //mongoDB
 const mongoose = require("mongoose");
 
-const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://Admin:EM1207sp@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 
 async function connect() {
   try {
