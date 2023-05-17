@@ -33,7 +33,7 @@ connect();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require("express-session")({
-  secret: "Yeet",
+  secret: "mysecret",
   resave: false,
   saveUninitialized: false
 }));
@@ -51,24 +51,23 @@ app.post("/register", async (req, res) => {
   console.log(req.body); // log the request body to the console
   const user = await User.create({
     username: req.body.username,
-    /* password: req.body.password, */
   });
   return res.status(200).json(user);
 });
 
 app.post("/login", async function (req, res) {
   try {
-      // check if the user exists
-      const user = await User.findOne({ username: req.body.username });
-      if (user) {
-        //check if password matches
-        const result = req.body.username === user.username;/* req.body.password === user.password; */
-        if (result) {
-          res.redirect("/index.html");
-        } else {
-          res.status(400).json({ error: "username doesn't match" });
-        }
+    // check if the user exists
+    const user = await User.findOne({ username: req.body.username });
+    if (user) {
+      //check if usernames matches
+      const result = req.body.username === user.username;
+      if (result) {
+        res.redirect("/index.html");
       } else {
+        res.status(400).json({ error: "username doesn't match" });
+      }
+    } else {
       res.status(400).json({ error: "User doesn't exist" });
     }
   } catch (error) {
