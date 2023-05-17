@@ -163,6 +163,8 @@ function spawnBomb(player) {
     team: player.team,
   });
 
+  
+
   BOMB_LIST.push({
     position: {
       x: bomb.position.x,
@@ -399,13 +401,16 @@ function gametick() {
       bomb.velocity.x = -bomb.velocity.x; //1.2 lil xtra bounce
     }
 
+    //indication of which bomb is next
+    
+
     //update bomb data pack
     bombDataPacks.push({
       x: bomb.position.x,
       y: bomb.position.y,
       velocityX: bomb.velocity.x,
       team: bomb.team,
-      timer: bomb.timer,
+      timer: bomb.timer
     });
   }
 

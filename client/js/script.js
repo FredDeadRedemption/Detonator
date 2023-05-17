@@ -197,8 +197,11 @@ socket.on("playerState", (playerData) => {
   for (let i in bombList) {
 
     //Show which bomb explodes next
-    /*ctx.fillStyle = "rgb(255,0,255)";
-    ctx.fillRect(bombList[i].x, bombList[i].y, 70, 70);*/
+    if (i == 0) {
+      ctx.fillStyle = "rgb(255,0,255)";
+      ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
+      
+    }
 
     let bombImg = undefined;
     if (bombList[i].team == "red") {
@@ -216,8 +219,6 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
-
-    
   }
 
   //render explosion
