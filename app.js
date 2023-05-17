@@ -25,8 +25,17 @@ server.listen(port, (error) => {
 
 //mongoDB
 const mongoose = require("mongoose");
+const passport = require("passport");
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-const uri = "mongodb+srv://Admin:EM1207sp@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
+LocalStrategy = require("passport-local"),
+  passportLocalMongoose =
+  require("passport-local-mongoose")
+const User = require("./server/components/user.js");
+
+const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 
 async function connect() {
   try {
@@ -37,6 +46,50 @@ async function connect() {
   }
 }
 connect();
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(require("express-session")({
+  secret: "mysecret",
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//Register and login
+
+app.post("/register", async (req, res) => {
+  console.log(req.body); // log the request body to the console
+  const user = await User.create({
+    username: req.body.username,
+  });
+  return res.status(200).json(user)
+});
+
+app.post("/login", async function (req, res) {
+  try {
+    // check if the user exists
+    const user = await User.findOne({ username: req.body.username });
+    if (user) {
+      //check if usernames matches
+      const result = req.body.username === user.username;
+      if (result) {
+        res.redirect("/index.html");
+      } else {
+        res.status(400).json({ error: "username doesn't match" });
+      }
+    } else {
+      res.status(400).json({ error: "User doesn't exist" });
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
 
 //component imports
 const Player = require("./server/components/sprites").Sprite;
