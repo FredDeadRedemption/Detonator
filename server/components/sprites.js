@@ -35,10 +35,7 @@ exports.Bomb = class Bomb {
     this.velocity = velocity;
     this.width = 70;
     this.height = 70;
-    this.blastRadius = {
-      height: 300,
-      width: 300,
-    };
+    this.blastRadius = 300;
     this.team = team;
     this.damage = 1;
     this.timer = 450;

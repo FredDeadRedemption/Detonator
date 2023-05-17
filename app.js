@@ -189,14 +189,14 @@ function detonateBomb(detonator) {
 
     //identify first bomb belonging to team
     if (bomb.team === detonator.team) {
-      spawnExplosion(bomb, blastRadius);
+      spawnExplosion(bomb, bomb.blastRadius);
 
       //hit req for all players
       for (let i in PLAYER_LIST) {
         let player = PLAYER_LIST[i];
 
         //in blast range
-        if (dist(player, bomb) < blastRadius && !player.hit) {
+        if (dist(player, bomb) < bomb.blastRadius && !player.hit) {
           //hit
           player.hit = true;
           player.health = player.health - bomb.damage;
