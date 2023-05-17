@@ -179,6 +179,7 @@ function spawnBomb(player) {
     timer: bomb.timer,
     isFlying: bomb.isFlying,
     friction: bomb.friction,
+    blastRadius: bomb.blastRadius
   });
 }
 
@@ -196,7 +197,7 @@ function detonateBomb(detonator) {
         let player = PLAYER_LIST[i];
 
         //in blast range
-        if (dist(player, bomb) < bomb.blastRadius && !player.hit) {
+        if (dist(player, bomb) < bomb.blastRadius / 2 && !player.hit) {
           //hit
           player.hit = true;
           player.health = player.health - bomb.damage;
@@ -216,6 +217,7 @@ function detonateBomb(detonator) {
 }
 
 function spawnExplosion(bomb, radius) {
+  console.log(radius);
   let explosion = new Explosion({
     position: {
       x: bomb.position.x + bomb.width / 2,
@@ -394,7 +396,7 @@ function gametick() {
 
     //bombs bouncing off walls
     if (bomb.position.x < 15 - bomb.width / 2 || bomb.position.x > 1024 - bomb.width / 2) {
-      bomb.velocity.x = -bomb.velocity.x * 1.2; //1.2 lil xtra bounce
+      bomb.velocity.x = -bomb.velocity.x; //1.2 lil xtra bounce
     }
 
     //update bomb data pack

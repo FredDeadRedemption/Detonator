@@ -104,7 +104,7 @@ window.addEventListener("keyup", (event) => {
 
 //background sprite img
 const backgroundImg = new Image();
-backgroundImg.src = "/img/background.png";
+backgroundImg.src = "/img/cathedralBackground.png";
 
 //fox sprite img
 const foxImgIdle = new Image();
@@ -125,8 +125,10 @@ const platformImg3 = new Image();
 platformImg3.src = "/img/metalBox3.png";
 
 //bomb sprite img
-const bombImg = new Image();
-bombImg.src = "/img/bomb.png";
+const bombRedImg = new Image();
+bombRedImg.src = "/img/bombRed.png";
+const bombBlueImg = new Image();
+bombBlueImg.src = "/img/bombBlue.png";
 
 //explosion sprite img
 const explosionImg = new Image();
@@ -169,7 +171,7 @@ socket.on("playerState", (playerData) => {
   }
 
   //render background image
-  ctx.drawImage(backgroundImg, 0, 0, 1856, 1024, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(backgroundImg, 0, 0, 682, 358, 0, 0, canvas.width, canvas.height);
 
   //render platform
   for (let i in platformList) {
@@ -193,6 +195,17 @@ socket.on("playerState", (playerData) => {
 
   //render bomb
   for (let i in bombList) {
+
+    //Show which bomb explodes next
+    /*ctx.fillStyle = "rgb(255,0,255)";
+    ctx.fillRect(bombList[i].x, bombList[i].y, 70, 70);*/
+
+    let bombImg = undefined;
+    if (bombList[i].team == "red") {
+      bombImg = bombRedImg; 
+    } else if (bombList[i].team == "blue") {
+      bombImg = bombBlueImg;
+    }
     if (bombList[i].velocityX != 0 && bombList[i].timer > 200) {
       //bomb rolling / flying
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
@@ -203,6 +216,8 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
+
+    
   }
 
   //render explosion
