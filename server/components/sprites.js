@@ -8,8 +8,7 @@ exports.Sprite = class Sprite {
     this.width = 60;
     this.height = 60;
     this.lastKey = "a";
-    this.isAttacking;
-    this.maxHealth = 100;
+    this.maxHealth = 2;
     this.health = this.maxHealth;
     this.pressingKey = {
       a: false,
@@ -23,6 +22,9 @@ exports.Sprite = class Sprite {
     this.isJumping = true;
     this.dead = false;
     this.terminalVelocity = 6.5;
+    this.hit = false;
+    this.hitTimer = 60 * 1.5;
+    this.hitFrames = this.hitTimer;
   }
 };
 
@@ -31,14 +33,14 @@ exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
     this.position = position;
     this.velocity = velocity;
-    this.width = 70; //9*3 from its sprites pixels
+    this.width = 70;
     this.height = 70;
     this.blastRadius = {
       height: 300,
       width: 300,
     };
     this.team = team;
-    this.damage = 25;
+    this.damage = 1;
     this.timer = 450;
     this.isFlying = true;
     this.friction = 0.01;
