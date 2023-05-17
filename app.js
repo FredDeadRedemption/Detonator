@@ -458,7 +458,7 @@ function gametick() {
 
 //allows us to get time from program start
 //alternative to "window.performance.now" which is not available in server environment
-const { PerformanceObserver, performance } = require("node:perf_hooks");
+const  performance  = require("perf_hooks").performance;
 
 //get current time from program start
 let msPrev = performance.now();
