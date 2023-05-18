@@ -202,17 +202,20 @@ socket.on("playerState", (playerData) => {
   //render bomb
   for (let i in bombList) {
     //Show which bomb explodes next
-    for (let j = 0; j < bombList.length; j++) {
+    /*for (let j = 0; j < bombList.length; j++) {
       console.log("i + j" + i + j);
       if (bombList[i].team != bombList[j].team && i <= j) {
         console.log("HALLLOO");
-        if (bombList[j].team == "red") {
+        if (bombList[i].team == "red") {
           lowestTeamBombRed = j;
           break;
-        } else if (bombList[j].team == "blue") {
+        } else if (bombList[i].team == "blue") {
           lowestTeamBombBlue = j;
           break;
         }
+      } else if (j == 0) {
+        lowestTeamBombRed = j;
+        lowestTeamBombBlue = j;
       }
     }
     console.log("blue " + lowestTeamBombBlue);
@@ -222,7 +225,7 @@ socket.on("playerState", (playerData) => {
       //ctx.fillStyle = "rgb(255,0,255)";
       //ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
       ctx.drawImage(bombAuraImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
-    }
+    }*/
 
     let bombImg = undefined;
     if (bombList[i].team == "red") {
