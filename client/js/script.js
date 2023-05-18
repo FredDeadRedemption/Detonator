@@ -195,17 +195,25 @@ socket.on("playerState", (playerData) => {
 
   //render bomb
   for (let i in bombList) {
-
     //Show which bomb explodes next
     if (i == 0) {
+      /*
       ctx.fillStyle = "rgb(255,0,255)";
       ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
-      
+      */
+      //drawCircle(bombList[i].position.x / 2, bombList[i].position.y / 2, 200, "rgb(255, 140, 0, 0.5)", 20, 20);
+
+      ctx.lineWidth = 12;
+      bombList[i].team === "red" ? (ctx.strokeStyle = "rgb(255, 140, 0, 0.5)") : (ctx.strokeStyle = "rgb(30, 144, 255, 0.5)");
+
+      ctx.beginPath();
+      ctx.arc(bombList[i].x + 30, bombList[i].y + 30, 25, 0, 2 * Math.PI, false);
+      ctx.stroke();
     }
 
     let bombImg = undefined;
     if (bombList[i].team == "red") {
-      bombImg = bombRedImg; 
+      bombImg = bombRedImg;
     } else if (bombList[i].team == "blue") {
       bombImg = bombBlueImg;
     }
