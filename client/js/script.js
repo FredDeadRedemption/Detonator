@@ -199,40 +199,37 @@ socket.on("playerState", (playerData) => {
     }
   }
 
-  //render bomb
+//render bomb
+  //Find which bomb explodes next
   for (let i in bombList) {
-    //Show which bomb explodes next
-    /*for (let j = 0; j < bombList.length; j++) {
-      console.log("i + j" + i + j);
-      if (bombList[i].team != bombList[j].team && i <= j) {
-        console.log("HALLLOO");
-        if (bombList[i].team == "red") {
-          lowestTeamBombRed = j;
-          break;
-        } else if (bombList[i].team == "blue") {
-          lowestTeamBombBlue = j;
-          break;
-        }
-      } else if (j == 0) {
-        lowestTeamBombRed = j;
-        lowestTeamBombBlue = j;
+      if (bombList[i].team == "red") {
+        lowestTeamBombRed = i;
+        break;
       }
-    }
-    console.log("blue " + lowestTeamBombBlue);
-    console.log("red " + lowestTeamBombRed);
+  }
+  for (let i in bombList) {
+      if (bombList[i].team == "blue") {
+        lowestTeamBombBlue = i;
+        break;
+      }
+  }
+
+  for (let i in bombList) {
 
     if (i == lowestTeamBombBlue || i == lowestTeamBombRed) {
       //ctx.fillStyle = "rgb(255,0,255)";
       //ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
       ctx.drawImage(bombAuraImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
-    }*/
+    }
 
+    //Determine the color of the bomb
     let bombImg = undefined;
     if (bombList[i].team == "red") {
       bombImg = bombRedImg;
     } else if (bombList[i].team == "blue") {
       bombImg = bombBlueImg;
     }
+    //draw the bombss
     if (bombList[i].velocityX != 0 && bombList[i].timer > 200) {
       //bomb rolling / flying
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
