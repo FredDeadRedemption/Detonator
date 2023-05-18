@@ -199,7 +199,7 @@ socket.on("playerState", (playerData) => {
     }
   }
 
-//render bomb
+  //render bomb
   //Find which bomb explodes next
   for (let i in bombList) {
       if (bombList[i].team == "red") {

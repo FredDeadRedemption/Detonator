@@ -8,7 +8,7 @@ exports.Sprite = class Sprite {
     this.width = 60;
     this.height = 60;
     this.lastKey = "a";
-    this.maxHealth = 2;
+    this.maxHealth = 3;
     this.health = this.maxHealth;
     this.pressingKey = {
       a: false,
