@@ -202,20 +202,19 @@ socket.on("playerState", (playerData) => {
   //render bomb
   //Find which bomb explodes next
   for (let i in bombList) {
-      if (bombList[i].team == "red") {
-        lowestTeamBombRed = i;
-        break;
-      }
+    if (bombList[i].team == "red") {
+      lowestTeamBombRed = i;
+      break;
+    }
   }
   for (let i in bombList) {
-      if (bombList[i].team == "blue") {
-        lowestTeamBombBlue = i;
-        break;
-      }
+    if (bombList[i].team == "blue") {
+      lowestTeamBombBlue = i;
+      break;
+    }
   }
 
   for (let i in bombList) {
-
     if (i == lowestTeamBombBlue || i == lowestTeamBombRed) {
       //ctx.fillStyle = "rgb(255,0,255)";
       //ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
@@ -240,7 +239,8 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
-    ctx.fillText(i, bombList[i].x, bombList[i].y);
+    let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
+    ctx.fillText(j, bombList[i].x, bombList[i].y);
   }
 
   //render explosion

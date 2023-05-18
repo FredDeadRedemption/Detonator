@@ -25,7 +25,7 @@ server.listen(port, (error) => {
 
 //mongoDB
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const User = require("./server/components/user.js");
 
 const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
@@ -48,7 +48,7 @@ app.post("/register", async (req, res) => {
   const user = await User.create({
     username: req.body.username,
   });
-  return res.redirect("/login.html"); 
+  return res.redirect("/login.html");
 });
 
 app.post("/login", async function (req, res) {
@@ -96,7 +96,6 @@ let blastRadius = 300;
 io.on("connection", (socket) => {
   socket.id = Math.random(); //reject characters, embrace integers.
 
-  socket.emit("join-lobby", socket.id); //??
   console.log("\x1b[32m", "user connected: " + socket.id, "\x1b[0m"); //notify server
   //store client connection
   SOCKET_LIST[socket.id] = socket;
@@ -196,8 +195,6 @@ function spawnBomb(player) {
     team: player.team,
   });
 
-  
-
   BOMB_LIST.push({
     position: {
       x: bomb.position.x,
@@ -214,7 +211,7 @@ function spawnBomb(player) {
     timer: bomb.timer,
     isFlying: bomb.isFlying,
     friction: bomb.friction,
-    blastRadius: bomb.blastRadius
+    blastRadius: bomb.blastRadius,
   });
 }
 
@@ -430,12 +427,11 @@ function gametick() {
     }
 
     //bombs bouncing off walls
-    if ((bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0 ) || (bomb.position.x > 1024 - bomb.width / 2 && bomb.velocity.x > 0) ){
-      bomb.velocity.x = -bomb.velocity.x * 1.2 //lil xtra bounce
+    if ((bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0) || (bomb.position.x > 1024 - bomb.width / 2 && bomb.velocity.x > 0)) {
+      bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce
     }
 
     //indication of which bomb is next
-    
 
     //update bomb data pack
     bombDataPacks.push({
@@ -443,7 +439,7 @@ function gametick() {
       y: bomb.position.y,
       velocityX: bomb.velocity.x,
       team: bomb.team,
-      timer: bomb.timer
+      timer: bomb.timer,
     });
   }
 
@@ -476,7 +472,7 @@ function gametick() {
 
 //allows us to get time from program start
 //alternative to "window.performance.now" which is not available in server environment
-const  performance  = require("perf_hooks").performance;
+const performance = require("perf_hooks").performance;
 
 //get current time from program start
 let msPrev = performance.now();
