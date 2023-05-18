@@ -129,6 +129,9 @@ const bombRedImg = new Image();
 bombRedImg.src = "/img/bombRed.png";
 const bombBlueImg = new Image();
 bombBlueImg.src = "/img/bombBlue.png";
+//aura
+const bombAuraImg = new Image();
+bombAuraImg.src = "/img/aura.png";
 
 //explosion sprite img
 const explosionImg = new Image();
@@ -140,6 +143,9 @@ let imageFrame = 0;
 let platformList = undefined;
 let bombList = undefined;
 let explosionList = undefined;
+
+let lowestTeamBombRed = 0;
+let lowestTeamBombBlue = 0;
 
 socket.on("platform", (platforms) => {
   platformList = platforms;
@@ -196,19 +202,26 @@ socket.on("playerState", (playerData) => {
   //render bomb
   for (let i in bombList) {
     //Show which bomb explodes next
-    if (i == 0) {
-      /*
-      ctx.fillStyle = "rgb(255,0,255)";
-      ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
-      */
-      //drawCircle(bombList[i].position.x / 2, bombList[i].position.y / 2, 200, "rgb(255, 140, 0, 0.5)", 20, 20);
+    for (let j = 0; j < bombList.length; j++) {
+      console.log("i + j" + i + j);
+      if (bombList[i].team != bombList[j].team && i <= j) {
+        console.log("HALLLOO");
+        if (bombList[j].team == "red") {
+          lowestTeamBombRed = j;
+          break;
+        } else if (bombList[j].team == "blue") {
+          lowestTeamBombBlue = j;
+          break;
+        }
+      }
+    }
+    console.log("blue " + lowestTeamBombBlue);
+    console.log("red " + lowestTeamBombRed);
 
-      ctx.lineWidth = 12;
-      bombList[i].team === "red" ? (ctx.strokeStyle = "rgb(255, 140, 0, 0.5)") : (ctx.strokeStyle = "rgb(30, 144, 255, 0.5)");
-
-      ctx.beginPath();
-      ctx.arc(bombList[i].x + 30, bombList[i].y + 30, 25, 0, 2 * Math.PI, false);
-      ctx.stroke();
+    if (i == lowestTeamBombBlue || i == lowestTeamBombRed) {
+      //ctx.fillStyle = "rgb(255,0,255)";
+      //ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
+      ctx.drawImage(bombAuraImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
 
     let bombImg = undefined;
@@ -227,6 +240,7 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
+    ctx.fillText(i, bombList[i].x, bombList[i].y);
   }
 
   //render explosion
