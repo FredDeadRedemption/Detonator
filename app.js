@@ -39,14 +39,8 @@ async function connect() {
   }
 }
 connect();
- app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(require("express-session")({
-  secret: "mysecret",
-  resave: false,
-  saveUninitialized: false
-})); 
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Register and login
 app.post("/register", async (req, res) => {
