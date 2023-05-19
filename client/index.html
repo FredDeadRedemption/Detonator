@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detonator</title>
     <link href="./style.css" type="text/css" rel="stylesheet" />
-    <link rel="icon" type="image" href="/client/img/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/client/img/favicon.ico" />
   </head>
   <body>
     <!--main container-->
@@ -41,22 +41,20 @@
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script type="module" src="./js/script.js"></script>
     <script type="module">
-      //init connection
       import socket from "./js/script.js";
 
-      var selectionMenu = document.getElementById("SM");
-      var form = document.getElementById("form");
-      var name = document.getElementById("input");
+      let selectionMenu = document.getElementById("SM");
+      let form = document.getElementById("form");
+      let name = document.getElementById("input");
 
       function readTeam(obj) {
-        var team = obj.value;
+        let team = obj.value;
       }
 
       function readRole(obj) {
-        var role = obj.value;
+        let role = obj.value;
       }
-      //test
-      //sender besked til server
+
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         if (name.value) {

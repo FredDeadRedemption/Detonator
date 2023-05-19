@@ -18,8 +18,8 @@ let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
 
+//suck it io
 module.exports = (io) => {
-  //suck it io
   io.on("connection", (socket) => {
     socket.id = Math.random(); //reject characters, embrace integers.
 
@@ -46,7 +46,7 @@ module.exports = (io) => {
       //store player object
       PLAYER_LIST[socket.id] = player;
 
-      //send info to client
+      //sent data back to client to render
       socket.emit("clientSelections", username, team, role);
 
       //DEBUG
@@ -109,7 +109,7 @@ module.exports = (io) => {
     let throwingDirection;
     player.lastKey === "a" ? (throwingDirection = -throwingSpeed) : (throwingDirection = throwingSpeed);
 
-    //spawn bomb & store in bomb list
+    //spawn bomb
     let bomb = new Bomb({
       position: {
         x: player.position.x,
@@ -121,7 +121,7 @@ module.exports = (io) => {
       },
       team: player.team,
     });
-
+    //store in bomb list
     BOMB_LIST.push({
       position: {
         x: bomb.position.x,
@@ -176,7 +176,7 @@ module.exports = (io) => {
   }
 
   function spawnExplosion(bomb, radius) {
-    console.log(radius);
+    //boom!
     let explosion = new Explosion({
       position: {
         x: bomb.position.x + bomb.width / 2,
@@ -359,8 +359,6 @@ function gametick() {
       bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce
     }
 
-    //indication of which bomb is next
-
     //update bomb data pack
     bombDataPacks.push({
       x: bomb.position.x,
@@ -387,17 +385,17 @@ function gametick() {
     });
   }
 
-  //emit player & bomb data packs to all socket connections
+  //emit player, platform and bomb data packs to all socket connections
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
     socket.emit("bombState", bombDataPacks);
     socket.emit("explosionState", explosionDataPacks);
-    //emit platform datapacks
     socket.emit("platform", PLATFORM_LIST);
   }
-} //gametick
+} //gametick end
 
+//performance town!!!
 //allows us to get time from program start
 //alternative to "window.performance.now" which is not available in server environment
 const performance = require("perf_hooks").performance;

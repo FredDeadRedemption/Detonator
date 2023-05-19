@@ -8,7 +8,7 @@ const port = 420;
 
 const io = require("socket.io")(server);
 
-require("./server/gamelogic.js")(io);
+require("./server/gamelogic.js")(io); //pass io server to constructor func in gamelogic.js
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/StartPage.html");
@@ -27,9 +27,9 @@ server.listen(port, (error) => {
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("./server/components/user.js");
-
 const uri = "mongodb+srv://Admin:p2projekt@userdata.htaltmo.mongodb.net/?retryWrites=true&w=majority";
 
+//connect
 async function connect() {
   try {
     await mongoose.connect(uri);
@@ -71,3 +71,5 @@ app.post("/login", async function (req, res) {
     res.status(400).json({ error });
   }
 });
+
+//yeehaw!
