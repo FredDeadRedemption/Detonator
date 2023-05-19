@@ -15,24 +15,24 @@
         <!---->
         <!--Select team-->
         <form id="form">
-          <label class="label" for="team">Select a team:</label>
-          <select id="team" onchange="readTeam(this)">
+          <label for="team">Select a team:</label>
+          <select class="select" id="team" onchange="readTeam(this)">
             <option value="red">Red</option>
             <option value="blue">Blue</option>
           </select>
           <br />
           <!---->
           <!--Select role-->
-          <label class="label" for="role">Select a role:</label>
-          <select id="role" onchange="readRole(this)">
+          <label for="role">Select a role:</label>
+          <select class="select" id="role" onchange="readRole(this)">
             <option value="bomber">Bomber</option>
             <option value="detonator">Detonator</option>
           </select>
           <br />
           <!---->
           <!--Select username-->
-          <label class="label" for="message">Select username:</label>
-          <input type="text" id="input" name="sometext" />
+          <label for="message">Select username:</label>
+          <input class="select" type="text" id="input" name="sometext" />
         </form>
       </div>
       <canvas class="canvas"></canvas>
