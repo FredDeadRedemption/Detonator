@@ -47,6 +47,7 @@ app.post("/register", async (req, res) => {
   console.log(req.body); // log the request body to the console
   const user = await User.create({
     username: req.body.username,
+    password: req.body.password,
   });
   return res.redirect("/login.html");
 });
@@ -57,12 +58,14 @@ app.post("/login", async function (req, res) {
     const user = await User.findOne({ username: req.body.username });
     if (user) {
       //check if usernames matches
-      const result = req.body.username === user.username;
+      const result = req.body.password === user.password;
       if (result) {
         res.redirect("/index.html");
+      } else {
+        res.status(400).json({ error: "password doesn't match" });
       }
     } else {
-      res.status(400).json({ error: "Username doesn't exist" });
+      res.status(400).json({ error: "User doesn't exist" });
     }
   } catch (error) {
     res.status(400).json({ error });
