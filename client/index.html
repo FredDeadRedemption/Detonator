@@ -4,46 +4,38 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BangBros</title>
+    <title>Detonator</title>
     <link href="./style.css" type="text/css" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="/client/img/favicon.png" />
   </head>
   <body>
-    <div class="selectionMenu">
-      <!---->
-      <!--Select team-->
-      <form id="form">
-        <label for="team">Select a team:</label>
-        <select id="team" onchange="readTeam(this)">
-          <option value="red">Red</option>
-          <option value="blue">Blue</option>
-        </select>
-        <!---->
-        <!--Select role-->
-        <label for="role">Select a role:</label>
-        <select id="role" onchange="readRole(this)">
-          <option value="bomber">Bomber</option>
-          <option value="detonator">Detonator</option>
-        </select>
-        <!---->
-        <!--Select username-->
-        <label for="message" style="color: black">Select username:</label>
-        <input type="text" id="input" name="sometext" />
-      </form>
-    </div>
     <!--main container-->
     <div class="mainContainer">
-      <!--lobby-->
-      <div class="lobbyContainer">
-        <p class="usernames" style="color: white"></p>
+      <div class="selectionMenu" id="SM">
+        <!---->
+        <!--Select team-->
+        <form id="form">
+          <label for="team">Select a team:</label>
+          <select class="select" id="team" onchange="readTeam(this)">
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+          </select>
+          <br />
+          <!---->
+          <!--Select role-->
+          <label for="role">Select a role:</label>
+          <select class="select" id="role" onchange="readRole(this)">
+            <option value="bomber">Bomber</option>
+            <option value="detonator">Detonator</option>
+          </select>
+          <br />
+          <!---->
+          <!--Select username-->
+          <label for="message">Select username:</label>
+          <input class="select" type="text" id="input" name="sometext" />
+        </form>
       </div>
-      <!--game screen-->
-      <div class="canvasContainer">
-        <canvas class="canvas"></canvas>
-        <!-- skal muligvis ændres til "game"-->
-        <canvas class="lobby"></canvas>
-        <!-- skal muligvis indeholde mere end lobby, som fx scoreboard-->
-      </div>
+      <canvas class="canvas"></canvas>
     </div>
 
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
@@ -52,6 +44,7 @@
       //init connection
       import socket from "./js/script.js";
 
+      var selectionMenu = document.getElementById("SM");
       var form = document.getElementById("form");
       var name = document.getElementById("input");
 
@@ -69,6 +62,7 @@
         if (name.value) {
           socket.emit("clientSelections", name.value, team.value, role.value);
           input.name = "";
+          selectionMenu.remove();
           form.remove();
         }
       });
