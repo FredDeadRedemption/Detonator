@@ -69,6 +69,9 @@ window.addEventListener("keydown", (event) => {
           ability();
         }
         break;
+      case "Escape":
+        canvas.requestFullscreen();
+        break;
     }
   }
 });
