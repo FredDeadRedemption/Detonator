@@ -60,11 +60,9 @@ app.post("/login", async function (req, res) {
       const result = req.body.username === user.username;
       if (result) {
         res.redirect("/index.html");
-      } else {
-        res.status(400).json({ error: "username doesn't match" });
       }
     } else {
-      res.status(400).json({ error: "User doesn't exist" });
+      res.status(400).json({ error: "Username doesn't exist" });
     }
   } catch (error) {
     res.status(400).json({ error });
