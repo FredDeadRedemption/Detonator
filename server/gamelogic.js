@@ -411,14 +411,10 @@ const fps = 60;
 //calculate ms pr. frame
 const msPerFrame = 1000 / fps;
 
-function requestAnimationFrame(f) {
-  setImmediate(() => f(Date.now()));
-}
-
 //animate gametick in chosen fps
 function animate() {
   //request next frame, msPrev is now actually previous time
-  requestAnimationFrame(animate);
+  setImmediate(animate);
 
   //get current time from program start
   const msNow = performance.now();
