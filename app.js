@@ -472,7 +472,7 @@ function gametick() {
 } //gametick
 
 //allows us to get time from program start
-//alternative to "window.performance.now" which is not available in server environment
+//alternative to "window.performance" which is not available in server environment
 const performance = require("perf_hooks").performance;
 
 //get current time from program start
@@ -484,14 +484,11 @@ const fps = 60;
 //calculate ms pr. frame
 const msPerFrame = 1000 / fps;
 
-function requestAnimationFrame(f) {
-  setImmediate(() => f(Date.now()));
-}
 
 //animate gametick in chosen fps
 function animate() {
-  //request next frame, msPrev is now actually previous time
-  requestAnimationFrame(animate);
+  //fires the next tick of animate, msPrev is now actually previous time
+  setImmediate(animate);
 
   //get current time from program start
   const msNow = performance.now();
