@@ -57,7 +57,7 @@ app.post("/login", async function (req, res) {
     // check if the user exists
     const user = await User.findOne({ username: req.body.username });
     if (user) {
-      //check if usernames matches
+      //check if passwords matches
       const result = req.body.password === user.password;
       if (result) {
         res.redirect("/index.html");
