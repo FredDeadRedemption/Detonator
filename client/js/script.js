@@ -4,6 +4,8 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+ctx.imageSmoothingEnabled = false;
+
 const lobby = document.querySelector(".lobbyContainer");
 
 //ctx settings
@@ -116,6 +118,16 @@ foxImgRight.src = "/img/fox_right.png";
 const foxImgJump = new Image();
 foxImgJump.src = "/img/fox_jump.png";
 
+//panda sprite img
+const pandaImgIdle = new Image();
+pandaImgIdle.src = "/img/players/panda/mega_man_panda_idle-sheet2x.png";
+const pandaImgLeft = new Image();
+pandaImgLeft.src = "/img/players/panda/mega_man_panda_running_left-sheet.png";
+const pandaImgRight = new Image();
+pandaImgRight.src = "/img/players/panda/mega_man_panda_running_right-sheet.png";
+const pandaImgJump = new Image();
+pandaImgJump.src ="/img/players/panda/mega_man_panda_falling.png"
+
 //bomb sprite img
 const platformImg1 = new Image();
 platformImg1.src = "/img/metalBox1.png";
@@ -173,7 +185,7 @@ socket.on("playerState", (playerData) => {
   } else if (currentFrame > 10 && currentFrame < 20) {
     imageFrame = 60;
   } else if (currentFrame > 20) {
-    imageFrame = 120;
+    imageFrame = 60*2;
   }
 
   //render background image
@@ -251,7 +263,7 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 60)) {
+    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 64)) {
       if (playerData[i].isJumping) {
         //jumping
         ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
