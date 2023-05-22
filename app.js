@@ -44,11 +44,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Register and login
 app.post("/register", async (req, res) => {
-  console.log(req.body); // log the request body to the console
+  //Creating a User with the username and password from the post method
   const user = await User.create({
     username: req.body.username,
     password: req.body.password,
   });
+  //Redirecting to the login page
   return res.redirect("/login.html");
 });
 
@@ -60,6 +61,7 @@ app.post("/login", async function (req, res) {
       //check if passwords matches
       const result = req.body.password === user.password;
       if (result) {
+        //redirecting to index.html
         res.redirect("/index.html");
       } else {
         res.status(400).json({ error: "password doesn't match" });
