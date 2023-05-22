@@ -252,8 +252,8 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
-    let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
-    ctx.fillText(j, bombList[i].x, bombList[i].y);
+    //let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
+    //ctx.fillText(j, bombList[i].x, bombList[i].y);
   }
 
   //render explosion
