@@ -242,13 +242,23 @@ function gametick() {
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
-        (playerFeetPos >= PLATFORM_LIST[i].position.y &&
-          !(playerFeetPos >= PLATFORM_LIST[i].position.y + PLATFORM_LIST[i].height) && //The is between the top and bottom of the platform
-          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
+        (
+          playerFeetPos == PLATFORM_LIST[i].position.y &&
+          (
+            player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || 
+            player.position.x + player.width / 2 >= platformXWidth
+          ) &&
           player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x - movementSpeed &&
           player.position.x + player.width / 2 <= platformXWidth + movementSpeed &&
-          !player.isJumping) ||
-        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
+          !player.isJumping
+        ) ||
+        (
+          player.pressingKey.s && 
+          !PLATFORM_LIST[i].unpassable && 
+          player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && 
+          player.position.x + player.width / 2 <= platformXWidth && 
+          playerFeetPos == PLATFORM_LIST[i].position.y
+        )
       ) {
         player.isJumping = true;
       }

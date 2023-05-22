@@ -1,5 +1,7 @@
 "use strict";
 
+const defaultHeight = 16;
+
 exports.PLATFORM_LIST = [
   //floor
   {
@@ -17,7 +19,7 @@ exports.PLATFORM_LIST = [
       x: 404,
       y: 400,
     },
-    height: 30,
+    height: defaultHeight,
     width: 256,
     unpassable: false,
   },
@@ -27,7 +29,7 @@ exports.PLATFORM_LIST = [
       x: 10,
       y: 349,
     },
-    height: 30,
+    height: defaultHeight,
     width: 224,
     unpassable: false,
   },
@@ -37,7 +39,7 @@ exports.PLATFORM_LIST = [
       x: 774,
       y: 351,
     },
-    height: 30,
+    height: defaultHeight,
     width: 224,
     unpassable: false,
   },
@@ -47,7 +49,7 @@ exports.PLATFORM_LIST = [
       x: 522,
       y: 220,
     },
-    height: 30,
+    height: defaultHeight,
     width: 320,
     unpassable: false,
   },
@@ -57,7 +59,7 @@ exports.PLATFORM_LIST = [
       x: 712,
       y: 101,
     },
-    height: 30,
+    height: defaultHeight,
     width: 128,
     unpassable: false,
   },
@@ -67,7 +69,7 @@ exports.PLATFORM_LIST = [
       x: 250,
       y: 99,
     },
-    height: 30,
+    height: defaultHeight,
     width: 128,
     unpassable: false,
   },
