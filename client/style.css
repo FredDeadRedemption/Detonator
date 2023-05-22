@@ -1,31 +1,39 @@
 body {
   background-color: floralwhite;
+  margin-top: 0;
+  margin-left: 0;
 }
 
 .mainContainer {
   position: absolute;
-  width: 1174px;
-  height: 576px;
-}
-
-.lobbyContainer {
-  position: absolute;
-  display: inline-block;
-  width: 12.8%;
-  height: 100%;
-  left: 0;
-  background-color: rgb(34, 34, 34);
-  padding: auto;
-  box-shadow: rgb(143, 188, 255, 0.55) 0px 0px 36px 0px inset;
-}
-
-.canvasContainer {
-  position: absolute;
-  display: inline-block;
   width: 1024px;
   height: 576px;
-  right: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-.canvas {
+
+.selectionMenu {
+  background-color: rgb(0, 0, 0, 0.5);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Pixeloid";
+  font-size: larger;
+  border: 5px solid;
+  margin: auto;
+  padding: 10px;
+  color: floralwhite;
+}
+
+.select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: "Pixeloid";
+}
+
+.canvas #overlay {
   position: absolute;
 }

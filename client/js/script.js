@@ -19,10 +19,10 @@ ctx.imageSmoothingQuality = "high";
 var f = new FontFace("Pixeloid", "url(/PixeloidSansBold.ttf)");
 
 f.load().then((font) => {
-  // Ready to use the font in a canvas context
+  //ready to use the font in a canvas context
   console.log("font ready");
 
-  // Add font on the html page
+  //add font on the html page
   document.fonts.add(font);
 
   ctx.font = "25px Pixeloid";
@@ -45,7 +45,7 @@ let roleEmoji = undefined;
 
 //DEBUG
 socket.on("clientSelections", (selectedUsername, selectedTeam, selectedRole) => {
-  role = selectedRole; //eventlisteners = client specific makes the sense
+  role = selectedRole;
   console.log(`Username: ${selectedUsername}\nTeam: ${selectedTeam}\nRole: ${selectedRole}\nStarting game..`);
   game.start();
 });
@@ -72,6 +72,9 @@ window.addEventListener("keydown", (event) => {
         } else if (role === "detonator") {
           ability();
         }
+        break;
+      case "Escape":
+        canvas.requestFullscreen();
         break;
     }
   }
@@ -128,7 +131,7 @@ pandaImgRight.src = "/img/players/panda/mega_man_panda_running_right-sheet.png";
 const pandaImgJump = new Image();
 pandaImgJump.src ="/img/players/panda/mega_man_panda_falling.png"
 
-//bomb sprite img
+//platform sprite img
 const platformImg1 = new Image();
 platformImg1.src = "/img/metalBox1.png";
 const platformImg2 = new Image();
@@ -211,37 +214,34 @@ socket.on("playerState", (playerData) => {
     }
   }
 
-  //render bomb
-  //Find which bomb explodes next
+  //find which bomb explodes next for each team
   for (let i in bombList) {
-      if (bombList[i].team == "red") {
-        lowestTeamBombRed = i;
-        break;
-      }
+    if (bombList[i].team == "red") {
+      lowestTeamBombRed = i;
+      break;
+    }
   }
   for (let i in bombList) {
-      if (bombList[i].team == "blue") {
-        lowestTeamBombBlue = i;
-        break;
-      }
+    if (bombList[i].team == "blue") {
+      lowestTeamBombBlue = i;
+      break;
+    }
   }
 
+  //only the freshest of bombs deserve an aura
   for (let i in bombList) {
-
     if (i == lowestTeamBombBlue || i == lowestTeamBombRed) {
-      //ctx.fillStyle = "rgb(255,0,255)";
-      //ctx.fillRect(bombList[i].x, bombList[i].y, 60, 60);
       ctx.drawImage(bombAuraImg, 0, 0, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
 
-    //Determine the color of the bomb
+    //determine the color of the bomb
     let bombImg = undefined;
     if (bombList[i].team == "red") {
       bombImg = bombRedImg;
     } else if (bombList[i].team == "blue") {
       bombImg = bombBlueImg;
     }
-    //draw the bombss
+    //render bombs
     if (bombList[i].velocityX != 0 && bombList[i].timer > 200) {
       //bomb rolling / flying
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
@@ -252,7 +252,8 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
     }
-    ctx.fillText(i, bombList[i].x, bombList[i].y);
+    let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
+    ctx.fillText(j, bombList[i].x, bombList[i].y);
   }
 
   //render explosion
@@ -290,3 +291,5 @@ socket.on("playerState", (playerData) => {
     ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
   }
 });
+
+//yeehaw!
