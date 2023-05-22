@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Register and login
 app.post("/register", async (req, res) => {
-  console.log(req.body); // log the request body to the console
+  //Creating a User with the username and password from the post method
   const user = await User.create({
     username: req.body.username,
     password: req.body.password,
