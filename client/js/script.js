@@ -244,13 +244,13 @@ socket.on("playerState", (playerData) => {
     //render bombs
     if (bombList[i].velocityX != 0 && bombList[i].timer > 200) {
       //bomb rolling / flying
-      ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
+      ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 60, 60);
     } else if (bombList[i].timer > 200) {
       //bomb standing still
-      ctx.drawImage(bombImg, 0, 60, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
+      ctx.drawImage(bombImg, 0, 60, 60, 60, bombList[i].x, bombList[i].y, 60, 60);
     } else if (bombList[i].timer < 200 && imageFrame == 60) {
       //bomb blinking / despawning
-      ctx.drawImage(bombImg, 0, imageFrame, 70, 70, bombList[i].x, bombList[i].y, 70, 70);
+      ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 60, 60);
     }
     //let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
     //ctx.fillText(j, bombList[i].x, bombList[i].y);

@@ -336,7 +336,7 @@ function gametick() {
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
-      bombFeetPos = bomb.position.y + bomb.height;
+      bombFeetPos = bomb.position.y + bomb.height*0.733; //ratio to avoid floating bomb (sprite has empty space)
       platform = PLATFORM_LIST[i];
       platformWidth = platform.position.x + platform.width;
       if (
@@ -349,12 +349,11 @@ function gametick() {
       ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height + 25.5;
+        bomb.position.y = platform.position.y - bomb.height*0.733; //ratio to avoid floating bomb (sprite has empty space)
       }
 
       if (
-        bombFeetPos >= platform.position.y &&
-        !(bombFeetPos >= platform.position.y + platform.height) && //The is between the top and bottom of the platform
+        bomb.position.y == platform.position.y - bomb.height*0.733 &&
         (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
         bomb.position.x + bomb.width / 2 >= platform.position.x - 20 &&
         bomb.position.x + bomb.width / 2 <= platformWidth + 20 && //avoids confusion when multiple platforms share same y level space

@@ -33,8 +33,8 @@ exports.Bomb = class Bomb {
   constructor({ position, velocity, team }) {
     this.position = position;
     this.velocity = velocity;
-    this.width = 70;
-    this.height = 70;
+    this.width = 60;
+    this.height = 60;
     this.blastRadius = 250;
     this.team = team;
     this.damage = 1;
