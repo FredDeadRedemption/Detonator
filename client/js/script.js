@@ -12,8 +12,6 @@ const lobby = document.querySelector(".lobbyContainer");
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
-ctx.imageSmoothingEnabled = true;
-ctx.imageSmoothingQuality = "high";
 
 //font stuff
 var f = new FontFace("Pixeloid", "url(/PixeloidSansBold.ttf)");
