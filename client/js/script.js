@@ -4,14 +4,13 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-ctx.imageSmoothingEnabled = false;
 
-const lobby = document.querySelector(".lobbyContainer");
 
 //ctx settings
 canvas.width = 1024;
 canvas.height = 576;
 canvas.middle = canvas.width / 2; //y axis middle
+ctx.imageSmoothingEnabled = false;
 
 //font stuff
 var f = new FontFace("Pixeloid", "url(/PixeloidSansBold.ttf)");
@@ -262,7 +261,7 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 64)) {
+    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 60)) {
       if (playerData[i].isJumping) {
         //jumping
         ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
