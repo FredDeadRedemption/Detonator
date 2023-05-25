@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Register and login
 app.post("/register", async (req, res) => {
-  const exists = (User.findOne({ username: req.body.username }));
+  const exists = await (User.findOne({ username: req.body.username }));
   if (exists) {
     res.status(400).json({ error: "Username already exists" });
   } else {
