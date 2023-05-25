@@ -44,13 +44,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Register and login
 app.post("/register", async (req, res) => {
-  //Creating a User with the username and password from the post method
-  const user = await User.create({
-    username: req.body.username,
-    password: req.body.password,
-  });
-  //Redirecting to the login page
-  return res.redirect("/login.html");
+  const exists = (User.findOne({ username: req.body.username }));
+  if (exists) {
+    res.status(400).json({ error: "Username already exists" });
+  } else {
+    //Creating a User with the username and password from the post method
+    const user = await User.create({
+      username: req.body.username,
+      password: req.body.password,
+    });
+    //Redirecting to the login page
+    return res.redirect("/login.html");
+  }
 });
 
 app.post("/login", async function (req, res) {
