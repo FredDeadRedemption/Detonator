@@ -17,6 +17,10 @@ let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
+let winCondition = 10;
+
+let redScore = 0;
+let blueScore = 0;
 
 //suck it io
 module.exports = (io) => {
@@ -170,6 +174,11 @@ module.exports = (io) => {
               //kill player
               player.dead = true;
               console.log(player.username + " has died");
+              if (player.team == "red") {
+                redScore++;
+              } else if (player.team == "blue") {
+                blueScore++;
+              }
             }
             console.log("bomb was a hit and exploded");
           }
@@ -200,11 +209,36 @@ module.exports = (io) => {
   }
 };
 
+function respawnAllPlayers() {
+  for (i in PLAYER_LIST) {
+    PLAYER_LIST[i].dead = true;
+  }
+}
+
+function clearBombs() {
+  for (i in BOMB_LIST) {
+    delete BOMB_LIST[i];
+  }
+}
+
 //gametick
 function gametick() {
   let playerDataPacks = [];
   let bombDataPacks = [];
   let explosionDataPacks = [];
+
+  //Win condition
+  if (redScore >= winCondition) {
+    console.log("RED WON!");
+    respawnAllPlayers();
+    clearBombs();
+    redScore = 0;
+  } else if (blueScore >= winCondition) {
+    console.log("BLUE WON!");
+    respawnAllPlayers();
+    clearBombs();
+    blueScore = 0;
+  }
 
   //loop players
   for (let i in PLAYER_LIST) {
