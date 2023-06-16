@@ -126,7 +126,7 @@ pandaImgLeft.src = "/img/players/panda/mega_man_panda_running_left-sheet.png";
 const pandaImgRight = new Image();
 pandaImgRight.src = "/img/players/panda/mega_man_panda_running_right-sheet.png";
 const pandaImgJump = new Image();
-pandaImgJump.src ="/img/players/panda/mega_man_panda_falling.png"
+pandaImgJump.src = "/img/players/panda/mega_man_panda_falling.png"
 
 //platform sprite img
 const platformImg1 = new Image();
@@ -185,7 +185,7 @@ socket.on("playerState", (playerData) => {
   } else if (currentFrame > 10 && currentFrame < 20) {
     imageFrame = 60;
   } else if (currentFrame > 20) {
-    imageFrame = 60*2;
+    imageFrame = 60 * 2;
   }
 
   //render background image
@@ -289,4 +289,4 @@ socket.on("playerState", (playerData) => {
   }
 });
 
-//yeehaw!
+
