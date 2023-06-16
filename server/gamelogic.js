@@ -17,6 +17,7 @@ let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
+let winCondition = 10;
 
 let redScore = 0;
 let blueScore = 0;
@@ -222,7 +223,6 @@ function gametick() {
   let explosionDataPacks = [];
 
   //Win condition
-  const winCondition = 10;
   if (redScore >= winCondition) {
     console.log("RED WON!");
     respawnAllPlayers();
