@@ -31,7 +31,7 @@ module.exports = (io) => {
       //spawn player object
       let player = new Player({
         position: {
-          x: 300,
+          x: 512,
           y: 175,
         },
         velocity: {
@@ -42,6 +42,11 @@ module.exports = (io) => {
         team: team,
         role: role,
       });
+
+      if(player.team == "red")
+        player.position.x -= 400;
+      if(player.team == "blue")
+        player.position.x += 400;
 
       //store player object
       PLAYER_LIST[socket.id] = player;
@@ -212,7 +217,12 @@ function gametick() {
       player.position.x = 512;
       player.health = player.maxHealth;
       player.dead = false;
+      if(player.team == "red")
+        player.position.x -= 400;
+      if(player.team == "blue")
+        player.position.x += 400;
     }
+    
 
     //player physics
     player.position.x += player.velocity.x;
