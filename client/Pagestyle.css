@@ -7,7 +7,10 @@ h1 {
     transform: translate(-50%, 50%);
     position: absolute;
 }
-
+h2 {
+    color:white;
+    font-family: "Pixeloid";
+}
 h3 {
     color: white;
     font-family: 'Times New Roman', Times, serif;
