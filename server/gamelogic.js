@@ -17,8 +17,8 @@ let bombGravity = 0.5;
 let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
-let winCondition = 10;
 
+let winCondition = 10;
 let redScore = 0;
 let blueScore = 0;
 
@@ -221,6 +221,13 @@ function clearBombs() {
   }
 }
 
+function reset() {
+  respawnAllPlayers();
+  clearBombs();
+  redScore = 0;
+  blueScore = 0;
+}
+
 //gametick
 function gametick() {
   let playerDataPacks = [];
@@ -230,14 +237,10 @@ function gametick() {
   //Win condition
   if (redScore >= winCondition) {
     console.log("RED WON!");
-    respawnAllPlayers();
-    clearBombs();
-    redScore = 0;
+    reset();
   } else if (blueScore >= winCondition) {
     console.log("BLUE WON!");
-    respawnAllPlayers();
-    clearBombs();
-    blueScore = 0;
+    reset();
   }
 
   //loop players
