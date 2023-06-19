@@ -360,12 +360,6 @@ function gametick() {
   for (let i in BOMB_LIST) {
     let bomb = BOMB_LIST[i];
 
-    //despawn bomb after 450 ticks
-    bomb.timer--;
-    if (bomb.timer < 0) {
-      delete BOMB_LIST[i];
-    }
-
     //bomb physics
     bomb.position.x += bomb.velocity.x;
     bomb.position.y += bomb.velocity.y;
@@ -381,8 +375,22 @@ function gametick() {
     }
 
     //stop bomb
-    if (bomb.velocity.x < bomb.friction && bomb.velocity.x > -bomb.friction) {
+    if (
+      bomb.velocity.x < bomb.friction && 
+      bomb.velocity.x > -bomb.friction
+        ) {
       bomb.velocity.x = 0;
+    }
+
+    //bombs bouncing off walls
+    if ((bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0) || (bomb.position.x > 1024 - bomb.width / 2 && bomb.velocity.x > 0)) {
+      bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce
+    }
+
+    //despawn bomb after 450 ticks
+    bomb.timer--;
+    if (bomb.timer < 0) {
+      delete BOMB_LIST[i];
     }
 
     //bomb platform collision
@@ -414,11 +422,6 @@ function gametick() {
       }
     }
 
-    //bombs bouncing off walls
-    if ((bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0) || (bomb.position.x > 1024 - bomb.width / 2 && bomb.velocity.x > 0)) {
-      bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce
-    }
-
     //update bomb data pack
     bombDataPacks.push({
       x: bomb.position.x,
@@ -432,9 +435,9 @@ function gametick() {
   //loop explosions
   for (let i in EXPLOSION_LIST) {
     let explosion = EXPLOSION_LIST[i];
-    explosion.fadeTime = explosion.fadeTime - 1;
+    explosion.fadeTime--;
     if (explosion.fadeTime <= 0) {
-      EXPLOSION_LIST.splice(i, 1);
+      delete EXPLOSION_LIST[i];
     }
 
     //update explosion data pack
