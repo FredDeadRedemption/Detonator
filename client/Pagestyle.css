@@ -1,19 +1,26 @@
+@font-face {
+    font-family: "Pixeloid";
+    src: url(PixeloidSansBold.ttf);
+}
+
 h1 {
     color: white;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Pixeloid";
     font-size: 50px;
     top: 0;
     left: 50%;
     transform: translate(-50%, 50%);
     position: absolute;
 }
+
 h2 {
-    color:white;
+    color: white;
     font-family: "Pixeloid";
 }
+
 h3 {
     color: white;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Pixeloid";
     left: 50%;
 }
 
@@ -47,7 +54,7 @@ div.Center {
 }
 
 button {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Pixeloid";
     font-size: 18px;
     background: transparent;
     color: white;
@@ -68,7 +75,7 @@ button {
 
 .form-name {
     color: white;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Pixeloid";
     font-weight: bold;
     padding-bottom: 25px;
     text-align: center;
@@ -86,7 +93,7 @@ form .form-group {
 .form-group {
     position: relative;
     border-bottom: 2px solid #adadad;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Pixeloid";
     font-weight: bold;
     color: white;
     width: 200px;
@@ -143,6 +150,7 @@ input[type="submit"] {
     height: 50px;
     border: 1px solid;
     background: red;
+    font-family: "Pixeloid";
     border-radius: 25px;
     font-size: 18px;
     color: white;
