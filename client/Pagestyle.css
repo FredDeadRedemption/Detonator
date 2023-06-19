@@ -114,6 +114,7 @@ form .form-group {
     border: none;
     background: none;
     outline: none;
+    font-family: "Pixeloid";
 }
 
 .form-group label {
