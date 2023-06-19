@@ -367,24 +367,22 @@ function gametick() {
     }
 
     //bomb physics
+    bomb.position.x += bomb.velocity.x;
+    bomb.position.y += bomb.velocity.y;
     if (bomb.isFlying) {
-      bomb.position.y += bomb.velocity.y;
       bomb.velocity.y += bombGravity;
     }
 
-    //bomb losing momentum
+    //bomb friction
     if (bomb.velocity.x > 0) {
-      bomb.position.x += bomb.velocity.x;
-      bomb.velocity.x += -0.05;
-      if (bomb.velocity.x < 0.05) {
-        bomb.velocity.x = 0;
-      }
+      bomb.velocity.x -= bomb.friction;
     } else if (bomb.velocity.x < 0) {
-      bomb.position.x += bomb.velocity.x;
-      bomb.velocity.x += 0.05;
-      if (bomb.velocity.x > 0.05) {
-        bomb.velocity.x = 0;
-      }
+      bomb.velocity.x += bomb.friction;
+    }
+
+    //stop bomb
+    if (bomb.velocity.x < bomb.friction && bomb.velocity.x > -bomb.friction) {
+      bomb.velocity.x = 0;
     }
 
     //bomb platform collision

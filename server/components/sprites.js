@@ -48,7 +48,7 @@ exports.Bomb = class Bomb {
     this.damage = 1;
     this.timer = 450;
     this.isFlying = true;
-    this.friction = 0.01;
+    this.friction = 0.05;
   }
 };
 
