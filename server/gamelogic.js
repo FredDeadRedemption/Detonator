@@ -25,10 +25,10 @@ let blueScore = 0;
 let winner = undefined;
 
 //datapacks
+let scoreDataPack = [];
 let playerDataPacks = [];
 let bombDataPacks = [];
 let explosionDataPacks = [];
-let scoreDataPack = [];
 
 //suck it io
 module.exports = (io) => {
@@ -261,11 +261,16 @@ function win() {
     blueScore: blueScore,
   });
 }
-win();
 
+//call win to update score datapack
+win();
 
 //gametick
 function gametick() {
+  playerDataPacks = [];
+  bombDataPacks = [];
+  explosionDataPacks = [];
+
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
