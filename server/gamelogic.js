@@ -18,11 +18,16 @@ let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
 
+//win condition
 let winCondition = 10;
 let redScore = 0;
 let blueScore = 0;
 let winner = undefined;
 
+//datapacks
+let playerDataPacks = [];
+let bombDataPacks = [];
+let explosionDataPacks = [];
 let scoreDataPack = [];
 
 //suck it io
@@ -261,12 +266,6 @@ win();
 
 //gametick
 function gametick() {
-  let playerDataPacks = [];
-  let bombDataPacks = [];
-  let explosionDataPacks = [];
-
-
-
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
@@ -287,11 +286,31 @@ function gametick() {
     player.position.y += player.velocity.y;
     player.velocity.x = 0;
 
-    let playerFeetPos = player.position.y + player.height;
+    //player jumping physics
+    if (player.isJumping && player.velocity.y <= player.terminalVelocity) {
+      player.velocity.y += gravity;
+    }
+
+    //player left/right movement
+    if (player.pressingKey.a && player.position.x + player.width / 2 >= 0) {
+      player.velocity.x = -movementSpeed;
+    } else if (player.pressingKey.d && player.position.x + player.width / 2 <= 1024) {
+      player.velocity.x = movementSpeed;
+    }
+
+    //invinsibility frames
+    if (player.hit) {
+      player.hitTimer--;
+      if (player.hitTimer <= 0) {
+        player.hit = false;
+        player.hitTimer = player.hitFrames;
+      }
+    }
 
     //player / platform collision
     for (let i in PLATFORM_LIST) {
       let platformXWidth = PLATFORM_LIST[i].position.x + PLATFORM_LIST[i].width;
+      let playerFeetPos = player.position.y + player.height;
 
       //handle player collission with platform while falling (isJumping = true and velocity y > 0) and not holding s
       if (
@@ -318,27 +337,6 @@ function gametick() {
         (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
-      }
-    }
-
-    //player jumping physics
-    if (player.isJumping && player.velocity.y <= player.terminalVelocity) {
-      player.velocity.y += gravity;
-    }
-
-    //player left/right movement
-    if (player.pressingKey.a && player.position.x + player.width / 2 >= 0) {
-      player.velocity.x = -movementSpeed;
-    } else if (player.pressingKey.d && player.position.x + player.width / 2 <= 1024) {
-      player.velocity.x = movementSpeed;
-    }
-
-    //invinsibility frames
-    if (player.hit) {
-      player.hitTimer--;
-      if (player.hitTimer <= 0) {
-        player.hit = false;
-        player.hitTimer = player.hitFrames;
       }
     }
 
