@@ -50,10 +50,8 @@ module.exports = (io) => {
         role: role,
       });
 
-      if(player.team == "red")
-        player.position.x -= 400;
-      if(player.team == "blue")
-        player.position.x += 400;
+      if (player.team == "red") player.position.x -= 400;
+      if (player.team == "blue") player.position.x += 400;
 
       //store player object
       PLAYER_LIST[socket.id] = player;
@@ -75,43 +73,47 @@ module.exports = (io) => {
     //user keydown events
     socket.on("keydown", (event) => {
       let player = PLAYER_LIST[socket.id];
-      switch (event) {
-        case "a":
-          player.pressingKey.a = true;
-          player.lastKey = "a";
-          break;
-        case "d":
-          player.pressingKey.d = true;
-          player.lastKey = "d";
-          break;
-        case " ":
-          if (!player.isJumping) {
-            player.velocity.y = -jumpPower;
-            player.isJumping = true;
-          }
-          break;
-        case "s":
-          player.pressingKey.s = true;
-          break;
-        case "k":
-          player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
-          break;
+      if (player != undefined) {
+        switch (event) {
+          case "a":
+            player.pressingKey.a = true;
+            player.lastKey = "a";
+            break;
+          case "d":
+            player.pressingKey.d = true;
+            player.lastKey = "d";
+            break;
+          case " ":
+            if (!player.isJumping) {
+              player.velocity.y = -jumpPower;
+              player.isJumping = true;
+            }
+            break;
+          case "s":
+            player.pressingKey.s = true;
+            break;
+          case "k":
+            player.role === "bomber" ? spawnBomb(player) : detonateBomb(player);
+            break;
+        }
       }
     });
 
     //user keyup events
     socket.on("keyup", (event) => {
       let player = PLAYER_LIST[socket.id];
-      switch (event) {
-        case "a":
-          player.pressingKey.a = false;
-          break;
-        case "d":
-          player.pressingKey.d = false;
-          break;
-        case "s":
-          player.pressingKey.s = false;
-          break;
+      if (player != undefined) {
+        switch (event) {
+          case "a":
+            player.pressingKey.a = false;
+            break;
+          case "d":
+            player.pressingKey.d = false;
+            break;
+          case "s":
+            player.pressingKey.s = false;
+            break;
+        }
       }
     });
   });
@@ -276,12 +278,9 @@ function gametick() {
       player.position.x = 512;
       player.health = player.maxHealth;
       player.dead = false;
-      if(player.team == "red")
-        player.position.x -= 400;
-      if(player.team == "blue")
-        player.position.x += 400;
+      if (player.team == "red") player.position.x -= 400;
+      if (player.team == "blue") player.position.x += 400;
     }
-    
 
     //player physics
     player.position.x += player.velocity.x;
@@ -311,23 +310,12 @@ function gametick() {
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
       if (
-        (
-          playerFeetPos == PLATFORM_LIST[i].position.y &&
-          (
-            player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || 
-            player.position.x + player.width / 2 >= platformXWidth
-          ) &&
+        (playerFeetPos == PLATFORM_LIST[i].position.y &&
+          (player.position.x + player.width / 2 <= PLATFORM_LIST[i].position.x || player.position.x + player.width / 2 >= platformXWidth) &&
           player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x - movementSpeed &&
           player.position.x + player.width / 2 <= platformXWidth + movementSpeed &&
-          !player.isJumping
-        ) ||
-        (
-          player.pressingKey.s && 
-          !PLATFORM_LIST[i].unpassable && 
-          player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && 
-          player.position.x + player.width / 2 <= platformXWidth && 
-          playerFeetPos == PLATFORM_LIST[i].position.y
-        )
+          !player.isJumping) ||
+        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
       ) {
         player.isJumping = true;
       }
@@ -405,7 +393,7 @@ function gametick() {
 
     //bomb platform collision
     for (i in PLATFORM_LIST) {
-      bombFeetPos = bomb.position.y + bomb.height*0.733; //ratio to avoid floating bomb (sprite has empty space)
+      bombFeetPos = bomb.position.y + bomb.height * 0.733; //ratio to avoid floating bomb (sprite has empty space)
       platform = PLATFORM_LIST[i];
       platformWidth = platform.position.x + platform.width;
       if (
@@ -418,11 +406,11 @@ function gametick() {
       ) {
         bomb.velocity.y = 0;
         bomb.isFlying = false;
-        bomb.position.y = platform.position.y - bomb.height*0.733; //ratio to avoid floating bomb (sprite has empty space)
+        bomb.position.y = platform.position.y - bomb.height * 0.733; //ratio to avoid floating bomb (sprite has empty space)
       }
 
       if (
-        bomb.position.y == platform.position.y - bomb.height*0.733 &&
+        bomb.position.y == platform.position.y - bomb.height * 0.733 &&
         (bomb.position.x + bomb.width / 2 <= platform.position.x || bomb.position.x + bomb.width / 2 >= platformWidth) &&
         bomb.position.x + bomb.width / 2 >= platform.position.x - 20 &&
         bomb.position.x + bomb.width / 2 <= platformWidth + 20 && //avoids confusion when multiple platforms share same y level space
