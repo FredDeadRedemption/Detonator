@@ -78,12 +78,13 @@ module.exports = (io) => {
     //user keydown events
     socket.on("keydown", (event) => {
       let player = PLAYER_LIST[socket.id];
-      if (player != undefined) {
+      if ((player != undefined) && (!player.dead)) {
         switch (event) {
           case "a":
             player.pressingKey.a = true;
             player.lastKey = "a";
             break;
+
           case "d":
             player.pressingKey.d = true;
             player.lastKey = "d";
@@ -271,12 +272,11 @@ function gametick() {
     let player = PLAYER_LIST[i];
 
     //player respawn
-    if (player.dead) {
+    if (player.dead && player.health != player.maxHealth) {
       player.isJumping = true;
       player.position.y = -1000;
       player.position.x = 512;
       player.health = player.maxHealth;
-      player.dead = false;
       if (player.team == "red") player.position.x -= 400;
       if (player.team == "blue") player.position.x += 400;
     }
@@ -325,6 +325,10 @@ function gametick() {
         player.velocity.y = 0;
         player.position.y = PLATFORM_LIST[i].position.y - player.height;
         player.isJumping = false;
+        //player can move after dead, until platform collision
+        if(player.dead) {
+          player.dead = false;
+        }
       }
 
       //handle player walking off edge by setting isjumping to true if the player walks off or holds s
