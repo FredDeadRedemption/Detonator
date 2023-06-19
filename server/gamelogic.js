@@ -183,7 +183,6 @@ function detonateBomb(detonator) {
           if (player.health <= 0) {
             //kill player
             player.dead = true;
-            console.log(player.username + " has died");
             if (player.team == "red") {
               blueScore++;
             } else if (player.team == "blue") {
@@ -194,7 +193,6 @@ function detonateBomb(detonator) {
           } else {
             player.makeInvincible(1500);
           }
-          console.log("bomb was a hit and exploded");
         }
       }
       delete BOMB_LIST[i];
