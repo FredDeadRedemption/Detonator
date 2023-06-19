@@ -266,7 +266,7 @@ socket.on("playerState", (playerData) => {
   //render playerdata
   for (let i = 0; i < playerData.length; i++) {
     //sprite animations
-    if (!playerData[i].hit || (playerData[i].hit && imageFrame == 60)) {
+    if (!playerData[i].invincible || (playerData[i].invincible && imageFrame == 60)) {
       if (playerData[i].isJumping) {
         //jumping
         ctx.drawImage(foxImgJump, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);

@@ -22,9 +22,17 @@ exports.Sprite = class Sprite {
     this.isJumping = true;
     this.dead = false;
     this.terminalVelocity = 6.5;
-    this.hit = false;
-    this.hitTimer = 60 * 1.5;
-    this.hitFrames = this.hitTimer;
+    this.invincible = false;
+  }
+
+  makeInvincible(duration) {
+    if (!this.invincible) {
+      this.invincible = true;
+      let that = this;
+      setTimeout(function() {
+        that.invincible = false;
+      }, duration);
+    }
   }
 };
 

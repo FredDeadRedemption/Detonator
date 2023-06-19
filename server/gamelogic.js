@@ -176,9 +176,8 @@ function detonateBomb(detonator) {
         let player = PLAYER_LIST[i];
 
         //in blast range
-        if (dist(player, bomb) < bomb.blastRadius / 2 && !player.hit) {
+        if (dist(player, bomb) < bomb.blastRadius / 2 && !player.invincible) {
           //hit
-          player.hit = true;
           player.health = player.health - bomb.damage;
 
           if (player.health <= 0) {
@@ -191,6 +190,9 @@ function detonateBomb(detonator) {
               redScore++;
             }
             win();
+            player.makeInvincible(4500);
+          } else {
+            player.makeInvincible(1500);
           }
           console.log("bomb was a hit and exploded");
         }
@@ -265,12 +267,9 @@ function win() {
 //call win to update score datapack
 win();
 
+
 //gametick
 function gametick() {
-  playerDataPacks = [];
-  bombDataPacks = [];
-  explosionDataPacks = [];
-
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
@@ -283,6 +282,7 @@ function gametick() {
       player.health = player.maxHealth;
       if (player.team == "red") player.position.x -= 400;
       if (player.team == "blue") player.position.x += 400;
+      //invincible(player, 3000);
     }
 
     //player physics
@@ -300,15 +300,6 @@ function gametick() {
       player.velocity.x = -movementSpeed;
     } else if (player.pressingKey.d && player.position.x + player.width / 2 <= 1024) {
       player.velocity.x = movementSpeed;
-    }
-
-    //invinsibility frames
-    if (player.hit) {
-      player.hitTimer--;
-      if (player.hitTimer <= 0) {
-        player.hit = false;
-        player.hitTimer = player.hitFrames;
-      }
     }
 
     //player / platform collision
@@ -361,7 +352,7 @@ function gametick() {
       team: player.team,
       maxHealth: player.maxHealth,
       health: player.health,
-      hit: player.hit,
+      invincible: player.invincible,
       role: player.role,
     });
   }
@@ -457,7 +448,7 @@ function gametick() {
     });
   }
 
-  //emit player, platform and bomb data packs to all socket connections
+  //emit player, platform and bomb data packs to all socket connections & reset datapacks
   for (let i in SOCKET_LIST) {
     let socket = SOCKET_LIST[i];
     socket.emit("playerState", playerDataPacks);
@@ -466,6 +457,9 @@ function gametick() {
     socket.emit("platform", PLATFORM_LIST);
     socket.emit("scoreState", scoreDataPack);
   }
+  playerDataPacks = [];
+  bombDataPacks = [];
+  explosionDataPacks = [];
 } //gametick end
 
 //performance town!!!
