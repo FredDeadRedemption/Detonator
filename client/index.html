@@ -1,69 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detonator</title>
-    <link href="./style.css" type="text/css" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="/client/img/favicon.ico" />
-  </head>
-  <body>
-    <!--main container-->
-    <div class="mainContainer">
-      <div class="selectionMenu" id="SM">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detonator</title>
+  <link href="./style.css" type="text/css" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="/client/img/favicon.ico" />
+</head>
+
+<body>
+  <!--main container-->
+  <div class="mainContainer">
+    <div class="selectionMenu" id="SM">
+      <!---->
+      <!--Select team-->
+      <form id="form">
+        <label for="team">Select a team:</label>
+        <select class="select" id="team" onchange="readTeam(this)">
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+        </select>
+        <br />
         <!---->
-        <!--Select team-->
-        <form id="form">
-          <label for="team">Select a team:</label>
-          <select class="select" id="team" onchange="readTeam(this)">
-            <option value="red">Red</option>
-            <option value="blue">Blue</option>
-          </select>
-          <br />
-          <!---->
-          <!--Select role-->
-          <label for="role">Select a role:</label>
-          <select class="select" id="role" onchange="readRole(this)">
-            <option value="bomber">Bomber</option>
-            <option value="detonator">Detonator</option>
-          </select>
-          <br />
-          <!---->
-          <!--Select username-->
-          <label for="message">Select username:</label>
-          <input class="select" type="text" id="input" name="sometext" />
-        </form>
-      </div>
-      <canvas class="canvas"></canvas>
+        <!--Select role-->
+        <label for="role">Select a role:</label>
+        <select class="select" id="role" onchange="readRole(this)">
+          <option value="bomber">Bomber</option>
+          <option value="detonator">Detonator</option>
+        </select>
+        <br />
+        <!---->
+        <!--Select username-->
+        <label for="message">Select username:</label>
+        <input class="select" type="text" id="input" name="sometext" />
+      </form>
     </div>
+    <button class="playerControls" id="myButton">
+      Player controls
+    </button>
+    <div id="myPopup" class="popup">
+      <div class="popup-content">
+        <h1>
+          a - move left <br>
+          d - move right <br>
+          s - move through platforms <br>
+          space - jump <br>
+          k - throw bomb / detonate bomb <br>
+        </h1>
+        <button id="closePopup">
+          Close
+        </button>
+      </div>
+    </div>
+    <canvas class="canvas"></canvas>
+  </div>
 
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-    <script type="module" src="./js/script.js"></script>
-    <script type="module">
-      import socket from "./js/script.js";
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+    integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+    crossorigin="anonymous"></script>
+  <script type="module" src="./js/script.js"></script>
+  <script type="module">
+    import socket from "./js/script.js";
 
-      let selectionMenu = document.getElementById("SM");
-      let form = document.getElementById("form");
-      let name = document.getElementById("input");
+    let selectionMenu = document.getElementById("SM");
+    let form = document.getElementById("form");
+    let name = document.getElementById("input");
 
-      function readTeam(obj) {
-        let team = obj.value;
+    function readTeam(obj) {
+      let team = obj.value;
+    }
+
+    function readRole(obj) {
+      let role = obj.value;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (name.value) {
+        socket.emit("clientSelections", name.value, team.value, role.value);
+        input.name = "";
+        selectionMenu.remove();
+        form.remove();
       }
-
-      function readRole(obj) {
-        let role = obj.value;
+    });
+  </script>
+  <script>
+    myButton.addEventListener("click", function () {
+      myPopup.classList.add("show");
+    });
+    closePopup.addEventListener("click", function () {
+      myPopup.classList.remove("show");
+    });
+    window.addEventListener("click", function (event) {
+      if (event.target == myPopup) {
+        myPopup.classList.remove("show");
       }
+    });
+  </script>
+</body>
 
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (name.value) {
-          socket.emit("clientSelections", name.value, team.value, role.value);
-          input.name = "";
-          selectionMenu.remove();
-          form.remove();
-        }
-      });
-    </script>
-  </body>
 </html>
