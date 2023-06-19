@@ -21,6 +21,9 @@ let jumpPower = 16;
 let winCondition = 10;
 let redScore = 0;
 let blueScore = 0;
+let winner = undefined;
+
+let scoreDataPack = [];
 
 //suck it io
 module.exports = (io) => {
@@ -177,10 +180,11 @@ module.exports = (io) => {
               player.dead = true;
               console.log(player.username + " has died");
               if (player.team == "red") {
-                redScore++;
-              } else if (player.team == "blue") {
                 blueScore++;
+              } else if (player.team == "blue") {
+                redScore++;
               }
+              win();
             }
             console.log("bomb was a hit and exploded");
           }
@@ -226,9 +230,34 @@ function clearBombs() {
 function reset() {
   respawnAllPlayers();
   clearBombs();
-  redScore = 0;
-  blueScore = 0;
+  setTimeout(function() {
+    scoreDataPack = ({
+      winner: undefined,
+      redScore: 0,
+      blueScore: 0,
+    });
+  }, 3000);
 }
+
+function win() {
+  //Win condition
+  if (redScore >= winCondition || blueScore >= winCondition) {
+    if (redScore >= winCondition) {
+      winner = "red";
+    } else if (blueScore >= winCondition) {
+      winner = "blue";
+    }
+    reset();
+  }
+
+  scoreDataPack = ({
+    winner: winner,
+    redScore: redScore,
+    blueScore: blueScore,
+  });
+}
+win();
+
 
 //gametick
 function gametick() {
@@ -236,14 +265,7 @@ function gametick() {
   let bombDataPacks = [];
   let explosionDataPacks = [];
 
-  //Win condition
-  if (redScore >= winCondition) {
-    console.log("RED WON!");
-    reset();
-  } else if (blueScore >= winCondition) {
-    console.log("BLUE WON!");
-    reset();
-  }
+
 
   //loop players
   for (let i in PLAYER_LIST) {
@@ -436,6 +458,7 @@ function gametick() {
     socket.emit("bombState", bombDataPacks);
     socket.emit("explosionState", explosionDataPacks);
     socket.emit("platform", PLATFORM_LIST);
+    socket.emit("scoreState", scoreDataPack);
   }
 } //gametick end
 

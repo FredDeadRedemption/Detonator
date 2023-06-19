@@ -155,6 +155,7 @@ let imageFrame = 0;
 let platformList = undefined;
 let bombList = undefined;
 let explosionList = undefined;
+let score = undefined;
 
 let lowestTeamBombRed = 0;
 let lowestTeamBombBlue = 0;
@@ -169,6 +170,10 @@ socket.on("bombState", (bombData) => {
 
 socket.on("explosionState", (explosionData) => {
   explosionList = explosionData;
+});
+
+socket.on("scoreState", (scoreData) => {
+  score = scoreData;
 });
 
 //game tick / animations
@@ -286,6 +291,16 @@ socket.on("playerState", (playerData) => {
     ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].maxHealth * 32, 8);
     ctx.fillStyle = "rgb(0,255,0)";
     ctx.fillRect(playerData[i].x - (16 * playerData[i].maxHealth - 30), playerData[i].y - 48, playerData[i].health * 32, 8);
+  }
+
+  //Render score data
+  ctx.fillStyle = "red";
+  ctx.fillText(score.redScore, canvas.width * (1/3), 30);
+  ctx.fillStyle = "blue";
+  ctx.fillText(score.blueScore, canvas.width * (2/3), 30);
+  if (score.winner != undefined) {
+    ctx.fillstyle = score.winner;
+    ctx.fillText(score.winner + " wins!", canvas.width * (1/2) - 70, 30);
   }
 });
 
