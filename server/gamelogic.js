@@ -18,11 +18,16 @@ let movementSpeed = 5.5;
 let throwingSpeed = 6.2;
 let jumpPower = 16;
 
+//win condition
 let winCondition = 10;
 let redScore = 0;
 let blueScore = 0;
 let winner = undefined;
 
+//datapacks
+let playerDataPacks = [];
+let bombDataPacks = [];
+let explosionDataPacks = [];
 let scoreDataPack = [];
 
 //suck it io
@@ -261,12 +266,6 @@ win();
 
 //gametick
 function gametick() {
-  let playerDataPacks = [];
-  let bombDataPacks = [];
-  let explosionDataPacks = [];
-
-
-
   //loop players
   for (let i in PLAYER_LIST) {
     let player = PLAYER_LIST[i];
