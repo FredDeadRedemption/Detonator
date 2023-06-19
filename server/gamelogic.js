@@ -332,7 +332,13 @@ function gametick() {
           player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x - movementSpeed &&
           player.position.x + player.width / 2 <= platformXWidth + movementSpeed &&
           !player.isJumping) ||
-        (player.pressingKey.s && !PLATFORM_LIST[i].unpassable && player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x && player.position.x + player.width / 2 <= platformXWidth && playerFeetPos == PLATFORM_LIST[i].position.y)
+        (
+          player.pressingKey.s && 
+          !PLATFORM_LIST[i].unpassable && 
+          player.position.x + player.width / 2 >= PLATFORM_LIST[i].position.x &&
+          player.position.x + player.width / 2 <= platformXWidth && 
+          playerFeetPos == PLATFORM_LIST[i].position.y
+        )
       ) {
         player.isJumping = true;
       }
