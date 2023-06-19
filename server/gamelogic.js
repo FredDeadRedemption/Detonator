@@ -117,103 +117,103 @@ module.exports = (io) => {
       }
     });
   });
+};
 
-  function spawnBomb(player) {
-    //determine throwing direction
-    let throwingDirection;
-    player.lastKey === "a" ? (throwingDirection = -throwingSpeed) : (throwingDirection = throwingSpeed);
+function spawnBomb(player) {
+  //determine throwing direction
+  let throwingDirection;
+  player.lastKey === "a" ? (throwingDirection = -throwingSpeed) : (throwingDirection = throwingSpeed);
 
-    //spawn bomb
-    let bomb = new Bomb({
-      position: {
-        x: player.position.x,
-        y: player.position.y,
-      },
-      velocity: {
-        x: throwingDirection,
-        y: -12,
-      },
-      team: player.team,
-    });
-    //store in bomb list
-    BOMB_LIST.push({
-      position: {
-        x: bomb.position.x,
-        y: bomb.position.y,
-      },
-      velocity: {
-        x: bomb.velocity.x,
-        y: bomb.velocity.y,
-      },
-      height: bomb.height,
-      width: bomb.width,
-      team: bomb.team,
-      damage: bomb.damage,
-      timer: bomb.timer,
-      isFlying: bomb.isFlying,
-      friction: bomb.friction,
-      blastRadius: bomb.blastRadius,
-    });
-  }
+  //spawn bomb
+  let bomb = new Bomb({
+    position: {
+      x: player.position.x,
+      y: player.position.y,
+    },
+    velocity: {
+      x: throwingDirection,
+      y: -12,
+    },
+    team: player.team,
+  });
+  //store in bomb list
+  BOMB_LIST.push({
+    position: {
+      x: bomb.position.x,
+      y: bomb.position.y,
+    },
+    velocity: {
+      x: bomb.velocity.x,
+      y: bomb.velocity.y,
+    },
+    height: bomb.height,
+    width: bomb.width,
+    team: bomb.team,
+    damage: bomb.damage,
+    timer: bomb.timer,
+    isFlying: bomb.isFlying,
+    friction: bomb.friction,
+    blastRadius: bomb.blastRadius,
+  });
+}
 
-  function detonateBomb(detonator) {
-    //loop all bombs
-    for (let i in BOMB_LIST) {
-      let bomb = BOMB_LIST[i];
+function detonateBomb(detonator) {
+  //loop all bombs
+  for (let i in BOMB_LIST) {
+    let bomb = BOMB_LIST[i];
 
-      //identify first bomb belonging to team
-      if (bomb.team === detonator.team) {
-        spawnExplosion(bomb, bomb.blastRadius);
+    //identify first bomb belonging to team
+    if (bomb.team === detonator.team) {
+      spawnExplosion(bomb, bomb.blastRadius);
 
-        //hit req for all players
-        for (let i in PLAYER_LIST) {
-          let player = PLAYER_LIST[i];
+      //hit req for all players
+      for (let i in PLAYER_LIST) {
+        let player = PLAYER_LIST[i];
 
-          //in blast range
-          if (dist(player, bomb) < bomb.blastRadius / 2 && !player.hit) {
-            //hit
-            player.hit = true;
-            player.health = player.health - bomb.damage;
+        //in blast range
+        if (dist(player, bomb) < bomb.blastRadius / 2 && !player.hit) {
+          //hit
+          player.hit = true;
+          player.health = player.health - bomb.damage;
 
-            if (player.health <= 0) {
-              //kill player
-              player.dead = true;
-              console.log(player.username + " has died");
-              if (player.team == "red") {
-                blueScore++;
-              } else if (player.team == "blue") {
-                redScore++;
-              }
-              win();
+          if (player.health <= 0) {
+            //kill player
+            player.dead = true;
+            console.log(player.username + " has died");
+            if (player.team == "red") {
+              blueScore++;
+            } else if (player.team == "blue") {
+              redScore++;
             }
-            console.log("bomb was a hit and exploded");
+            win();
           }
+          console.log("bomb was a hit and exploded");
         }
-        delete BOMB_LIST[i];
-        break;
       }
+      delete BOMB_LIST[i];
+      break;
     }
   }
+}
 
-  function spawnExplosion(bomb, radius) {
-    //boom!
-    let explosion = new Explosion({
-      position: {
-        x: bomb.position.x + bomb.width / 2,
-        y: bomb.position.y + bomb.height / 2,
-      },
-      radius: radius,
-    });
-    EXPLOSION_LIST.push({
-      position: {
-        x: explosion.position.x - radius / 2,
-        y: explosion.position.y - radius / 2,
-      },
-      radius: explosion.radius,
-      fadeTime: explosion.fadeTime,
-    });
-  }
-};
+function spawnExplosion(bomb, radius) {
+  //boom!
+  let explosion = new Explosion({
+    position: {
+      x: bomb.position.x + bomb.width / 2,
+      y: bomb.position.y + bomb.height / 2,
+    },
+    radius: radius,
+  });
+  EXPLOSION_LIST.push({
+    position: {
+      x: explosion.position.x - radius / 2,
+      y: explosion.position.y - radius / 2,
+    },
+    radius: explosion.radius,
+    fadeTime: explosion.fadeTime,
+  });
+}
 
 function respawnAllPlayers() {
   for (i in PLAYER_LIST) {
