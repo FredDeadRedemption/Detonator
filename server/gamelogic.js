@@ -282,7 +282,6 @@ function gametick() {
       player.health = player.maxHealth;
       if (player.team == "red") player.position.x -= 400;
       if (player.team == "blue") player.position.x += 400;
-      //invincible(player, 3000);
     }
 
     //player physics
