@@ -294,16 +294,8 @@ socket.on("playerState", (playerData) => {
   }
 
   //Render score data
-  ctx.fillStyle = "rgba(50,0,0,0.6)";
-  ctx.fillRect((canvas.width * (1/3))-8,4,32,32);
-  ctx.fillStyle = "rgba(50,50,50,0.6)";
-  ctx.strokeRect((canvas.width * (1/3))-8,4,32,32);
   ctx.fillStyle = "red";
   ctx.fillText(score.redScore, canvas.width * (1/3), 30);
-  ctx.fillStyle = "rgba(0,0,50,0.6)";
-  ctx.fillRect((canvas.width * (2/3))-8,4,32,32);
-  ctx.fillStyle = "rgba(50,50,50,0.6)";
-  ctx.strokeRect((canvas.width * (2/3))-8,4,32,32);
   ctx.fillStyle = "blue";
   ctx.fillText(score.blueScore, canvas.width * (2/3), 30);
   if (score.winner != undefined) {
