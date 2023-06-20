@@ -224,7 +224,6 @@ function respawnAllPlayers() {
     let player = PLAYER_LIST[i];
     player.health = player.maxHealth-1;
     player.dead = true;
-    player.invincible = false;
   }
 }
 
