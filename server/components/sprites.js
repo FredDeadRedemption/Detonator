@@ -9,7 +9,7 @@ exports.Sprite = class Sprite {
     this.height = 60;
     this.lastKey = "a";
     this.maxHealth = 3;
-    this.health = this.maxHealth;
+    this.health = this.maxHealth-1;
     this.pressingKey = {
       a: false,
       d: false,
@@ -20,7 +20,7 @@ exports.Sprite = class Sprite {
     this.team = team;
     this.role = role;
     this.isJumping = true;
-    this.dead = false;
+    this.dead = true;
     this.terminalVelocity = 6.5;
     this.invincible = false;
   }

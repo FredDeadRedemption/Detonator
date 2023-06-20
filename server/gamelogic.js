@@ -189,7 +189,6 @@ function detonateBomb(detonator) {
               redScore++;
             }
             win();
-            player.makeInvincible(4500);
           } else {
             player.makeInvincible(1500);
           }
@@ -222,7 +221,10 @@ function spawnExplosion(bomb, radius) {
 
 function respawnAllPlayers() {
   for (i in PLAYER_LIST) {
-    PLAYER_LIST[i].dead = true;
+    let player = PLAYER_LIST[i];
+    player.health = player.maxHealth-1;
+    player.dead = true;
+    player.invincible = false;
   }
 }
 
@@ -236,10 +238,13 @@ function reset() {
   respawnAllPlayers();
   clearBombs();
   setTimeout(function() {
+    winner = undefined;
+    redScore = 0;
+    blueScore = 0;
     scoreDataPack = ({
-      winner: undefined,
-      redScore: 0,
-      blueScore: 0,
+      winner: winner,
+      redScore: redScore,
+      blueScore: blueScore,
     });
   }, 3000);
 }
@@ -280,6 +285,7 @@ function gametick() {
       player.health = player.maxHealth;
       if (player.team == "red") player.position.x -= 400;
       if (player.team == "blue") player.position.x += 400;
+      player.makeInvincible(4500);
     }
 
     //player physics
