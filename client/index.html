@@ -37,11 +37,30 @@
         <input class="select" type="text" id="input" name="sometext" />
       </form>
     </div>
+    <div id="gameStartPopup" class="popup">
+      <div class="popup-content">
+        <h1>Welcome to Detonator!</h1>
+        <h1>Here is the controls for the game:</h1>
+        <hr>
+        <h1>
+          a - move left <br>
+          d - move right <br>
+          s - move through platforms <br>
+          space - jump <br>
+          k - throw bomb / detonate bomb <br>
+        </h1>
+        <button id="startGame">
+          Start game
+        </button>
+      </div>
+    </div>
     <button class="playerControls" id="myButton">
       Player controls
     </button>
     <div id="myPopup" class="popup">
       <div class="popup-content">
+        <h1>Game controls:</h1>
+        <hr>
         <h1>
           a - move left <br>
           d - move right <br>
@@ -83,6 +102,7 @@
         input.name = "";
         selectionMenu.remove();
         form.remove();
+        gameStartPopup.classList.add("show");
       }
     });
   </script>
@@ -92,6 +112,9 @@
     });
     closePopup.addEventListener("click", function () {
       myPopup.classList.remove("show");
+    });
+    startGame.addEventListener("click", function () {
+      gameStartPopup.classList.remove("show");
     });
   </script>
 </body>
