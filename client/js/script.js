@@ -156,6 +156,12 @@ blueArrowImg.src = "/img/blue_arrow.png";
 const redArrowImg = new Image();
 redArrowImg.src = "/img/red_arrow.png";
 
+const blueArrowBombImg = new Image();
+blueArrowBombImg.src = "/img/blue_arrow_bomb.png";
+
+const redArrowBombImg = new Image();
+redArrowBombImg.src = "/img/red_arrow_bomb.png";
+
 let currentFrame = 0;
 let imageFrame = 0;
 
@@ -264,11 +270,11 @@ socket.on("playerState", (playerData) => {
     //out of screen bomb arrow
     if(bombList[i].y < -10) {
       if(bombList[i].team === "red") {
-        ctx.drawImage(redArrowImg, 0, 0, 32, 18, bombList[i].x, 4, 64, 36);
+        ctx.drawImage(redArrowBombImg, 0, 0, 32, 32, bombList[i].x, 4, 48, 48);
       }
 
       if(bombList[i].team === "blue") {
-        ctx.drawImage(blueArrowImg, 0, 0, 32, 18, bombList[i].x, 4, 64, 36);
+        ctx.drawImage(blueArrowBombImg, 0, 0, 32, 32, bombList[i].x, 4, 48, 48);
       }
     }
     //let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
