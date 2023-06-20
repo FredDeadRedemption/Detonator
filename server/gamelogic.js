@@ -235,11 +235,14 @@ function clearBombs() {
 function reset() {
   respawnAllPlayers();
   clearBombs();
+  winner = undefined
+  redScore = 0
+  blueScore = 0
   setTimeout(function() {
     scoreDataPack = ({
-      winner: undefined,
-      redScore: 0,
-      blueScore: 0,
+      winner: winner,
+      redScore: redScore,
+      blueScore: blueScore,
     });
   }, 3000);
 }
