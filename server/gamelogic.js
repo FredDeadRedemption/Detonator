@@ -19,7 +19,7 @@ let throwingSpeed = 6.2;
 let jumpPower = 16;
 
 //win condition
-let winCondition = 10;
+let winCondition = 5;
 let redScore = 0;
 let blueScore = 0;
 let winner = undefined;
