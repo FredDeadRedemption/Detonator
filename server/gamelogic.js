@@ -393,8 +393,8 @@ function gametick() {
 
     //bombs bouncing off walls
     if (
-      (bomb.position.x < 15 - bomb.width / 2) || 
-      (bomb.position.x > 1024 - bomb.width / 2)
+      (bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0) || 
+      (bomb.position.x > 1024 - bomb.width / 2  && bomb.velocity.x > 0)
       ) {
       bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce
     }
