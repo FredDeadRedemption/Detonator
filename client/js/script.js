@@ -149,6 +149,13 @@ bombAuraImg.src = "/img/aura.png";
 const explosionImg = new Image();
 explosionImg.src = "/img/explosion.png";
 
+//explosion sprite img
+const blueArrowImg = new Image();
+blueArrowImg.src = "/img/blue_arrow.png";
+
+const redArrowImg = new Image();
+redArrowImg.src = "/img/red_arrow.png";
+
 let currentFrame = 0;
 let imageFrame = 0;
 
@@ -281,6 +288,18 @@ socket.on("playerState", (playerData) => {
         ctx.drawImage(foxImgIdle, 0, imageFrame, 60, 60, playerData[i].x, playerData[i].y, 60, 60);
       }
     }
+
+    //out of screen arrow
+    if(playerData[i].y < -10) {
+      if(playerData[i].team === "red") {
+        ctx.drawImage(redArrowImg, 0, 0, 32, 18, playerData[i].x, 4, 64, 36);
+      }
+
+      if(playerData[i].team === "blue") {
+        ctx.drawImage(blueArrowImg, 0, 0, 32, 18, playerData[i].x, 4, 64, 36);
+      }
+    }
+
     //username animation with team color && role tag
     playerData[i].role === "bomber" ? (roleEmoji = "💣") : (roleEmoji = "🕹️");
     ctx.fillStyle = playerData[i].team;
