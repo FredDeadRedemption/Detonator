@@ -261,6 +261,16 @@ socket.on("playerState", (playerData) => {
       //bomb blinking / despawning
       ctx.drawImage(bombImg, 0, imageFrame, 60, 60, bombList[i].x, bombList[i].y, 60, 60);
     }
+    //out of screen bomb arrow
+    if(bombList[i].y < -10) {
+      if(bombList[i].team === "red") {
+        ctx.drawImage(redArrowImg, 0, 0, 32, 18, bombList[i].x, 4, 64, 36);
+      }
+
+      if(bombList[i].team === "blue") {
+        ctx.drawImage(blueArrowImg, 0, 0, 32, 18, bombList[i].x, 4, 64, 36);
+      }
+    }
     //let j = parseInt(i) + 1; //renders bombcount starting at 1 instead of 0
     //ctx.fillText(j, bombList[i].x, bombList[i].y);
   }
@@ -289,7 +299,7 @@ socket.on("playerState", (playerData) => {
       }
     }
 
-    //out of screen arrow
+    //out of screen player arrow
     if(playerData[i].y < -10) {
       if(playerData[i].team === "red") {
         ctx.drawImage(redArrowImg, 0, 0, 32, 18, playerData[i].x, 4, 64, 36);
