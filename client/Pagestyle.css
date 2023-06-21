@@ -128,16 +128,6 @@ form .form-group {
     transition: .5s;
 }
 
-.form-group span::before {
-    content: '';
-    position: absolute;
-    top: 40px;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background: red;
-    transition: .5s;
-}
 
 /* moving the input label up 8 pixels when clicking on it */
 .form-group input:focus~label,
