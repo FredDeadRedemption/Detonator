@@ -159,6 +159,7 @@ function spawnBomb(player) {
     isFlying: bomb.isFlying,
     friction: bomb.friction,
     blastRadius: bomb.blastRadius,
+    terminalVelocity: bomb.terminalVelocity,
   });
 }
 
@@ -374,7 +375,7 @@ function gametick() {
     //bomb physics
     bomb.position.x += bomb.velocity.x;
     bomb.position.y += bomb.velocity.y;
-    if (bomb.isFlying) {
+    if (bomb.isFlying && bomb.velocity.y < bomb.terminalVelocity) {
       bomb.velocity.y += bombGravity;
     }
 
@@ -395,7 +396,7 @@ function gametick() {
 
     //bombs bouncing off walls
     if (
-      (bomb.position.x < 15 - bomb.width / 2 && bomb.velocity.x < 0) || 
+      (bomb.position.x < 0 - bomb.width / 2 && bomb.velocity.x < 0) || 
       (bomb.position.x > 1024 - bomb.width / 2  && bomb.velocity.x > 0)
       ) {
       bomb.velocity.x = -bomb.velocity.x * 1.2; //lil xtra bounce

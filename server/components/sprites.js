@@ -49,6 +49,7 @@ exports.Bomb = class Bomb {
     this.timer = 450;
     this.isFlying = true;
     this.friction = 0.05;
+    this.terminalVelocity = 12;
   }
 };
 
