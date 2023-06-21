@@ -278,6 +278,8 @@ function gametick() {
 
     //player respawn
     if (player.dead && player.health != player.maxHealth) {
+      player.pressingKey.a = false;
+      player.pressingKey.d = false;
       player.isJumping = true;
       player.position.y = -1000;
       player.position.x = 512;

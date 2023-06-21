@@ -18,7 +18,7 @@
       <!--Select team-->
       <form id="form">
         <label for="team">Select a team:</label>
-        <select class="select" id="team" onchange="readTeam(this)">
+        <select class="select" id="team">
           <option value="red">Red</option>
           <option value="blue">Blue</option>
         </select>
@@ -26,7 +26,7 @@
         <!---->
         <!--Select role-->
         <label for="role">Select a role:</label>
-        <select class="select" id="role" onchange="readRole(this)">
+        <select class="select" id="role">
           <option value="bomber">Bomber</option>
           <option value="detonator">Detonator</option>
         </select>
@@ -87,26 +87,21 @@
     let form = document.getElementById("form");
     let name = document.getElementById("input");
 
-    function readTeam(obj) {
-      let team = obj.value;
-    }
-
-    function readRole(obj) {
-      let role = obj.value;
-    }
+    let roleInput;
+    let teamInput;
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (name.value) {
-        socket.emit("clientSelections", name.value, team.value, role.value);
+        roleInput = role.value;
+        teamInput = team.value;
         input.name = "";
         selectionMenu.remove();
         form.remove();
         gameStartPopup.classList.add("show");
       }
     });
-  </script>
-  <script>
+  
     myButton.addEventListener("click", function () {
       myPopup.classList.add("show");
     });
@@ -115,6 +110,7 @@
     });
     startGame.addEventListener("click", function () {
       gameStartPopup.classList.remove("show");
+      socket.emit("clientSelections", name.value, teamInput, roleInput);
     });
   </script>
 </body>
